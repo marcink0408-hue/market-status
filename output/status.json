@@ -2,7 +2,7 @@
   {
     "symbol": "w20",
     "name": "WIG20",
-    "updated": "2026-10-29T22:09:03.244595+00:00",
+    "updated": "2026-10-29T22:12:54.937818+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -108,7 +108,7 @@
   {
     "symbol": "us500",
     "name": "S&P 500",
-    "updated": "2026-10-29T22:09:03.904515+00:00",
+    "updated": "2026-10-29T22:12:55.534554+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -314,7 +314,7 @@
   {
     "symbol": "gold",
     "name": "Gold",
-    "updated": "2026-10-29T22:09:04.666822+00:00",
+    "updated": "2026-10-29T22:12:56.245905+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -323,9 +323,9 @@
           "last_reversal": true,
           "local_high": false,
           "local_low": true,
-          "bricks_total": 847,
-          "last_close": 4031.6369803292278,
-          "prev_leg_length": 6
+          "bricks_total": 905,
+          "last_close": 4028.5618024553432,
+          "prev_leg_length": 7
         },
         "harmonics": [],
         "candles": [
@@ -342,27 +342,13 @@
             "bar": 1134,
             "time": "2026-10-29 09:00:00-04:00",
             "strength": "medium"
-          },
-          {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 1132,
-            "time": "2026-10-29 07:00:00-04:00",
-            "strength": "strong"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 1132,
-            "time": "2026-10-29 07:00:00-04:00",
-            "strength": "strong"
           }
         ],
         "bias": "WATCH",
         "confidence": 12,
         "action": "Obserwuj – cos sie formuje",
         "summary": "Gold (1H): Renko (1H): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Doji (neutral), Shooting Star (bearish). -> Obserwuj – cos sie formuje.",
-        "bars": 1142
+        "bars": 1143
       },
       "4H": {
         "renko": {
@@ -425,12 +411,19 @@
           "last_reversal": true,
           "local_high": false,
           "local_low": true,
-          "bricks_total": 463,
-          "last_close": 4042.1384800502165,
+          "bricks_total": 499,
+          "last_close": 4044.9781930105955,
           "prev_leg_length": 5
         },
         "harmonics": [],
         "candles": [
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 503,
+            "time": "2026-10-29 00:00:00",
+            "strength": "medium"
+          },
           {
             "name": "Bearish Engulfing",
             "direction": "bearish",
@@ -440,9 +433,9 @@
           }
         ],
         "bias": "NIC",
-        "confidence": 7,
+        "confidence": 0,
         "action": "Na razie odpusc – brak setupu",
-        "summary": "Gold (Daily): Renko (Daily): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Bearish Engulfing (bearish). -> Na razie odpusc – brak setupu.",
+        "summary": "Gold (Daily): Renko (Daily): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Shooting Star (bearish), Bearish Engulfing (bearish). -> Na razie odpusc – brak setupu.",
         "bars": 504
       }
     },
@@ -454,21 +447,28 @@
   {
     "symbol": "silver",
     "name": "Silver",
-    "updated": "2026-10-29T22:09:05.417617+00:00",
+    "updated": "2026-10-29T22:12:57.048183+00:00",
     "timeframes": {
       "1H": {
         "renko": {
-          "direction": "down",
-          "consecutive": 2,
-          "last_reversal": false,
+          "direction": "up",
+          "consecutive": 1,
+          "last_reversal": true,
           "local_high": false,
-          "local_low": false,
-          "bricks_total": 692,
-          "last_close": 52.217848096575025,
-          "prev_leg_length": 1
+          "local_low": true,
+          "bricks_total": 716,
+          "last_close": 52.30249786376939,
+          "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 1141,
+            "time": "2026-10-29 18:00:00-04:00",
+            "strength": "medium"
+          },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
@@ -482,20 +482,13 @@
             "bar": 1132,
             "time": "2026-10-29 08:00:00-04:00",
             "strength": "weak"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 1131,
-            "time": "2026-10-29 07:00:00-04:00",
-            "strength": "strong"
           }
         ],
         "bias": "WATCH",
-        "confidence": 21,
+        "confidence": 24,
         "action": "Obserwuj – cos sie formuje",
-        "summary": "Silver (1H): Renko (1H): trend spadkowy (2 cegielek w dol), Bullish Engulfing (bullish), Doji (neutral). -> Obserwuj – cos sie formuje.",
-        "bars": 1141
+        "summary": "Silver (1H): Renko (1H): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Shooting Star (bearish), Bullish Engulfing (bullish). -> Obserwuj – cos sie formuje.",
+        "bars": 1142
       },
       "4H": {
         "renko": {
@@ -540,29 +533,29 @@
       "Daily": {
         "renko": {
           "direction": "down",
-          "consecutive": 8,
+          "consecutive": 3,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 893,
-          "last_close": 52.814758845738034,
-          "prev_leg_length": 3
+          "bricks_total": 969,
+          "last_close": 52.61701093401238,
+          "prev_leg_length": 1
         },
         "harmonics": [],
         "candles": [
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 503,
+            "time": "2026-10-29 00:00:00",
+            "strength": "medium"
+          },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
             "bar": 496,
             "time": "2026-10-20 00:00:00",
             "strength": "strong"
-          },
-          {
-            "name": "Shooting Star",
-            "direction": "bearish",
-            "bar": 495,
-            "time": "2026-10-19 00:00:00",
-            "strength": "medium"
           },
           {
             "name": "Doji",
@@ -572,22 +565,22 @@
             "strength": "weak"
           }
         ],
-        "bias": "SHORT",
-        "confidence": 30,
-        "action": "Szykuj shorta – warunki sprzyjaja",
-        "summary": "Silver (Daily): Renko (Daily): trend spadkowy (8 cegielek w dol), Bullish Engulfing (bullish), Shooting Star (bearish). -> Szykuj shorta – warunki sprzyjaja.",
+        "bias": "WATCH",
+        "confidence": 19,
+        "action": "Obserwuj – cos sie formuje",
+        "summary": "Silver (Daily): Renko (Daily): trend spadkowy (3 cegielek w dol), Shooting Star (bearish), Bullish Engulfing (bullish). -> Obserwuj – cos sie formuje.",
         "bars": 504
       }
     },
-    "overall_bias": "SHORT",
-    "overall_confidence": 30,
-    "overall_action": "Szykuj shorta – warunki sprzyjaja",
-    "overall_summary": "Silver (1H): Renko (1H): trend spadkowy (2 cegielek w dol), Bullish Engulfing (bullish), Doji (neutral). -> Obserwuj – cos sie formuje. | Silver (4H): Renko (4H): trend spadkowy (6 cegielek w dol), Butterfly bullish (ukonczona), Hammer (bullish). -> Na razie odpusc – brak setupu."
+    "overall_bias": "WATCH",
+    "overall_confidence": 24,
+    "overall_action": "Obserwuj – cos sie formuje",
+    "overall_summary": "Silver (1H): Renko (1H): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Shooting Star (bearish), Bullish Engulfing (bullish). -> Obserwuj – cos sie formuje. | Silver (4H): Renko (4H): trend spadkowy (6 cegielek w dol), Butterfly bullish (ukonczona), Hammer (bullish). -> Na razie odpusc – brak setupu."
   },
   {
     "symbol": "eurpln",
     "name": "EUR/PLN",
-    "updated": "2026-10-29T22:09:06.227264+00:00",
+    "updated": "2026-10-29T22:12:57.821816+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -603,18 +596,18 @@
         "harmonics": [],
         "candles": [
           {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 1428,
+            "time": "2026-10-29 22:00:00+00:00",
+            "strength": "weak"
+          },
+          {
             "name": "Bearish Engulfing",
             "direction": "bearish",
             "bar": 1425,
             "time": "2026-10-29 19:00:00+00:00",
             "strength": "strong"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 1422,
-            "time": "2026-10-29 16:00:00+00:00",
-            "strength": "weak"
           },
           {
             "name": "Hammer",
@@ -627,7 +620,7 @@
         "bias": "WATCH",
         "confidence": 14,
         "action": "Obserwuj – cos sie formuje",
-        "summary": "EUR/PLN (1H): Renko (1H): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Bearish Engulfing (bearish), Doji (neutral). -> Obserwuj – cos sie formuje.",
+        "summary": "EUR/PLN (1H): Renko (1H): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Doji (neutral), Bearish Engulfing (bearish). -> Obserwuj – cos sie formuje.",
         "bars": 1429
       },
       "4H": {
@@ -727,12 +720,12 @@
     "overall_bias": "LONG",
     "overall_confidence": 27,
     "overall_action": "Szykuj longa – warunki sprzyjaja",
-    "overall_summary": "EUR/PLN (1H): Renko (1H): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Bearish Engulfing (bearish), Doji (neutral). -> Obserwuj – cos sie formuje. | EUR/PLN (4H): Renko (4H): trend spadkowy (6 cegielek w dol), Deep Crab bullish (ukonczona), Butterfly bullish (ukonczona), Bearish Engulfing (bearish), Hammer (bullish). -> Obserwuj – cos sie formuje."
+    "overall_summary": "EUR/PLN (1H): Renko (1H): trend wzrostowy (1 cegielek w gore), lokalny dolek na Renko, swieze odwrocenie kierunku Renko, Doji (neutral), Bearish Engulfing (bearish). -> Obserwuj – cos sie formuje. | EUR/PLN (4H): Renko (4H): trend spadkowy (6 cegielek w dol), Deep Crab bullish (ukonczona), Butterfly bullish (ukonczona), Bearish Engulfing (bearish), Hammer (bullish). -> Obserwuj – cos sie formuje."
   },
   {
     "symbol": "eurusd",
     "name": "EUR/USD",
-    "updated": "2026-10-29T22:09:07.043158+00:00",
+    "updated": "2026-10-29T22:12:58.543163+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -879,7 +872,7 @@
   {
     "symbol": "usdpln",
     "name": "USD/PLN",
-    "updated": "2026-10-29T22:09:07.855105+00:00",
+    "updated": "2026-10-29T22:12:59.298000+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -972,14 +965,14 @@
       },
       "Daily": {
         "renko": {
-          "direction": "up",
-          "consecutive": 3,
-          "last_reversal": false,
-          "local_high": false,
+          "direction": "down",
+          "consecutive": 1,
+          "last_reversal": true,
+          "local_high": true,
           "local_low": false,
-          "bricks_total": 317,
-          "last_close": 3.9382826771054944,
-          "prev_leg_length": 2
+          "bricks_total": 318,
+          "last_close": 3.9219851834433412,
+          "prev_leg_length": 3
         },
         "harmonics": [],
         "candles": [
@@ -1006,9 +999,9 @@
           }
         ],
         "bias": "WATCH",
-        "confidence": 24,
+        "confidence": 19,
         "action": "Obserwuj – cos sie formuje",
-        "summary": "USD/PLN (Daily): Renko (Daily): trend wzrostowy (3 cegielek w gore), Morning Star (bullish), Doji (neutral). -> Obserwuj – cos sie formuje.",
+        "summary": "USD/PLN (Daily): Renko (Daily): trend spadkowy (1 cegielek w dol), lokalny szczyt na Renko, swieze odwrocenie kierunku Renko, Morning Star (bullish), Doji (neutral). -> Obserwuj – cos sie formuje.",
         "bars": 518
       }
     },
@@ -1020,17 +1013,17 @@
   {
     "symbol": "usdjpy",
     "name": "USD/JPY",
-    "updated": "2026-10-29T22:09:08.629144+00:00",
+    "updated": "2026-10-29T22:12:59.954156+00:00",
     "timeframes": {
       "1H": {
         "renko": {
           "direction": "down",
-          "consecutive": 3,
+          "consecutive": 4,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 1070,
-          "last_close": 157.71156529017867,
+          "bricks_total": 1071,
+          "last_close": 157.6238866533553,
           "prev_leg_length": 2
         },
         "harmonics": [],
@@ -1058,9 +1051,9 @@
           }
         ],
         "bias": "SHORT",
-        "confidence": 48,
+        "confidence": 51,
         "action": "Szykuj shorta – warunki sprzyjaja",
-        "summary": "USD/JPY (1H): Renko (1H): trend spadkowy (3 cegielek w dol), Doji (neutral), Evening Star (bearish). -> Szykuj shorta – warunki sprzyjaja.",
+        "summary": "USD/JPY (1H): Renko (1H): trend spadkowy (4 cegielek w dol), Doji (neutral), Evening Star (bearish). -> Szykuj shorta – warunki sprzyjaja.",
         "bars": 1420
       },
       "4H": {
@@ -1175,12 +1168,12 @@
     "overall_bias": "SHORT",
     "overall_confidence": 34,
     "overall_action": "Szykuj shorta – warunki sprzyjaja",
-    "overall_summary": "USD/JPY (1H): Renko (1H): trend spadkowy (3 cegielek w dol), Doji (neutral), Evening Star (bearish). -> Szykuj shorta – warunki sprzyjaja. | USD/JPY (4H): Renko (4H): trend spadkowy (2 cegielek w dol), Butterfly bearish (ukonczona), Morning Star (bullish), Bullish Engulfing (bullish). -> Szykuj shorta – warunki sprzyjaja."
+    "overall_summary": "USD/JPY (1H): Renko (1H): trend spadkowy (4 cegielek w dol), Doji (neutral), Evening Star (bearish). -> Szykuj shorta – warunki sprzyjaja. | USD/JPY (4H): Renko (4H): trend spadkowy (2 cegielek w dol), Butterfly bearish (ukonczona), Morning Star (bullish), Bullish Engulfing (bullish). -> Szykuj shorta – warunki sprzyjaja."
   },
   {
     "symbol": "copper",
     "name": "Copper",
-    "updated": "2026-10-29T22:09:09.395872+00:00",
+    "updated": "2026-10-29T22:13:00.652908+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -1189,8 +1182,8 @@
           "last_reversal": true,
           "local_high": true,
           "local_low": false,
-          "bricks_total": 632,
-          "last_close": 6.592214107513428,
+          "bricks_total": 693,
+          "last_close": 6.599678567477637,
           "prev_leg_length": 3
         },
         "harmonics": [],
@@ -1201,20 +1194,13 @@
             "bar": 1135,
             "time": "2026-10-29 14:00:00-04:00",
             "strength": "strong"
-          },
-          {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 1128,
-            "time": "2026-10-29 07:00:00-04:00",
-            "strength": "strong"
           }
         ],
-        "bias": "WATCH",
-        "confidence": 19,
-        "action": "Obserwuj – cos sie formuje",
-        "summary": "Copper (1H): Renko (1H): trend spadkowy (1 cegielek w dol), lokalny szczyt na Renko, swieze odwrocenie kierunku Renko, Bullish Engulfing (bullish), Evening Star (bearish). -> Obserwuj – cos sie formuje.",
-        "bars": 1138
+        "bias": "NIC",
+        "confidence": 7,
+        "action": "Na razie odpusc – brak setupu",
+        "summary": "Copper (1H): Renko (1H): trend spadkowy (1 cegielek w dol), lokalny szczyt na Renko, swieze odwrocenie kierunku Renko, Bullish Engulfing (bullish). -> Na razie odpusc – brak setupu.",
+        "bars": 1139
       },
       "4H": {
         "renko": {
@@ -1273,24 +1259,17 @@
       },
       "Daily": {
         "renko": {
-          "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": true,
+          "direction": "up",
+          "consecutive": 6,
+          "last_reversal": false,
+          "local_high": false,
           "local_low": false,
-          "bricks_total": 608,
-          "last_close": 6.5926455089024,
-          "prev_leg_length": 6
+          "bricks_total": 685,
+          "last_close": 6.6094488246100145,
+          "prev_leg_length": 8
         },
         "harmonics": [],
         "candles": [
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 503,
-            "time": "2026-10-29 00:00:00",
-            "strength": "strong"
-          },
           {
             "name": "Morning Star",
             "direction": "bullish",
@@ -1320,22 +1299,22 @@
             "strength": "medium"
           }
         ],
-        "bias": "WATCH",
-        "confidence": 19,
-        "action": "Obserwuj – cos sie formuje",
-        "summary": "Copper (Daily): Renko (Daily): trend spadkowy (1 cegielek w dol), lokalny szczyt na Renko, swieze odwrocenie kierunku Renko, Bearish Engulfing (bearish), Morning Star (bullish). -> Obserwuj – cos sie formuje.",
+        "bias": "LONG",
+        "confidence": 45,
+        "action": "Szykuj longa – warunki sprzyjaja",
+        "summary": "Copper (Daily): Renko (Daily): trend wzrostowy (6 cegielek w gore), Morning Star (bullish), Doji (neutral). -> Szykuj longa – warunki sprzyjaja.",
         "bars": 504
       }
     },
-    "overall_bias": "WATCH",
-    "overall_confidence": 19,
-    "overall_action": "Obserwuj – cos sie formuje",
-    "overall_summary": "Copper (1H): Renko (1H): trend spadkowy (1 cegielek w dol), lokalny szczyt na Renko, swieze odwrocenie kierunku Renko, Bullish Engulfing (bullish), Evening Star (bearish). -> Obserwuj – cos sie formuje. | Copper (4H): Renko (4H): trend spadkowy (5 cegielek w dol), Evening Star (bearish), Hammer (bullish). -> Na razie odpusc – brak setupu."
+    "overall_bias": "LONG",
+    "overall_confidence": 45,
+    "overall_action": "Szykuj longa – warunki sprzyjaja",
+    "overall_summary": "Copper (1H): Renko (1H): trend spadkowy (1 cegielek w dol), lokalny szczyt na Renko, swieze odwrocenie kierunku Renko, Bullish Engulfing (bullish). -> Na razie odpusc – brak setupu. | Copper (4H): Renko (4H): trend spadkowy (5 cegielek w dol), Evening Star (bearish), Hammer (bullish). -> Na razie odpusc – brak setupu."
   },
   {
     "symbol": "eu50",
     "name": "Euro Stoxx 50",
-    "updated": "2026-10-29T22:09:10.148653+00:00",
+    "updated": "2026-10-29T22:13:01.760880+00:00",
     "timeframes": {
       "1H": {
         "renko": {
@@ -1475,7 +1454,7 @@
   {
     "symbol": "uk100",
     "name": "FTSE 100",
-    "updated": "2026-10-29T22:09:10.814800+00:00",
+    "updated": "2026-10-29T22:13:02.623105+00:00",
     "timeframes": {
       "1H": {
         "renko": {

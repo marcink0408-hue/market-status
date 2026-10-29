@@ -1,0 +1,37 @@
+name: Daily Analysis
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install yfinance pandas numpy
+
+      - name: Run analysis
+        run: |
+          export PYTHONPATH="${GITHUB_WORKSPACE}"
+          python run_daily.py
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add output/status.json output/status_previous.json || true
+          git diff --staged --quiet || git commit -m "Daily update"
+          git push

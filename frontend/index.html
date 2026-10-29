@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Market Status – CFD Dashboard</title>
+  <style>
+    :root { --bg:#0f1419; --card:#1a2332; --border:#2a3544; --text:#e7ecf3; --muted:#8b9bb4; --long:#22c55e; --short:#ef4444; --watch:#eab308; --none:#64748b; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:24px; }
+    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:12px; }
+    h1 { font-size:1.6rem; font-weight:600; }
+    .updated { color:var(--muted); font-size:0.85rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; cursor:pointer; transition:transform .15s,border-color .15s; }
+    .card:hover { transform:translateY(-2px); border-color:#3b4a5e; }
+    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .symbol { font-size:1.15rem; font-weight:600; }
+    .name { color:var(--muted); font-size:0.8rem; }
+    .badge { font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:999px; text-transform:uppercase; }
+    .badge.LONG { background:rgba(34,197,94,.15); color:var(--long); }
+    .badge.SHORT { background:rgba(239,68,68,.15); color:var(--short); }
+    .badge.WATCH { background:rgba(234,179,8,.15); color:var(--watch); }
+    .badge.NIC { background:rgba(100,116,139,.2); color:var(--none); }
+    .conf { font-size:0.8rem; color:var(--muted); margin-top:4px; }
+    .action { margin-top:12px; font-size:0.9rem; line-height:1.4; }
+    .summary-preview { margin-top:10px; font-size:0.8rem; color:var(--muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:100; align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--card); border:1px solid var(--border); border-radius:16px; max-width:720px; width:100%; max-height:90vh; overflow-y:auto; padding:28px; }
+    .modal-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; }
+    .modal-header h2 { font-size:1.4rem; }
+    .close-btn { background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
+    .tf-block { background:rgba(0,0,0,.25); border-radius:10px; padding:16px; margin-bottom:14px; }
+    .tf-title { font-weight:600; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+    .section { margin-top:10px; }
+    .section-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+    .tag { display:inline-block; background:rgba(255,255,255,.06); border-radius:6px; padding:3px 8px; font-size:0.8rem; margin:2px 4px 2px 0; }
+    .tag.bull { color:var(--long); }
+    .tag.bear { color:var(--short); }
+    .empty { color:var(--muted); font-size:0.85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Market Status</h1>
+      <div class="updated" id="updated">Ladowanie...</div>
+    </div>
+  </header>
+  <div class="grid" id="grid"></div>
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="m-title">—</h2>
+          <div id="m-badge" style="margin-top:8px"></div>
+        </div>
+        <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      <div id="m-body"></div>
+    </div>
+  </div>
+  <script>
+    let DATA = [];
+    async function load() {
+      try {
+        const res = await fetch('../output/status.json?t=' + Date.now());
+        DATA = await res.json();
+        render();
+      } catch(e) {
+        document.getElementById('updated').textContent = 'Blad ladowania – uruchom python run_daily.py';
+      }
+    }
+    function biasClass(b) { return ['LONG','SHORT','WATCH','NIC'].includes(b) ? b : 'NIC'; }
+    function render() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      let latest = '';
+      DATA.forEach((item, idx) => {
+        if (item.updated) latest = item.updated;
+        const bias = item.overall_bias || 'NIC';
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => openModal(idx);
+        card.innerHTML = `
+          <div class="card-header">
+            <div><div class="symbol">${item.symbol.toUpperCase()}</div><div class="name">${item.name||''}</div></div>
+            <span class="badge ${biasClass(bias)}">${bias}</span>
+          </div>
+          <div class="conf">Pewnosc: ${item.overall_confidence||0}%</div>
+          <div class="action">${item.overall_action||''}</div>
+          <div class="summary-preview">${item.overall_summary||''}</div>`;
+        grid.appendChild(card);
+      });
+      if (latest) document.getElementById('updated').textContent = 'Aktualizacja: ' + new Date(latest).toLocaleString('pl-PL');
+    }
+    function openModal(idx) {
+      const item = DATA[idx];
+      document.getElementById('m-title').textContent = `${item.symbol.toUpperCase()} – ${item.name}`;
+      const bias = item.overall_bias || 'NIC';
+      document.getElementById('m-badge').innerHTML = `<span class="badge ${biasClass(bias)}">${bias}</span> <span class="conf">pewnosc ${item.overall_confidence||0}%</span>`;
+      let html = '';
+      const tfs = item.timeframes || {};
+      for (const [tf, d] of Object.entries(tfs)) {
+        if (d.error) { html += `<div class="tf-block"><div class="tf-title">${tf}</div><div class="empty">Blad: ${d.error}</div></div>`; continue; }
+        html += `<div class="tf-block"><div class="tf-title">${tf} <span class="badge ${biasClass(d.bias)}">${d.bias}</span></div>
+          <div class="action" style="margin-bottom:10px">${d.summary||d.action||''}</div>`;
+        const r = d.renko || {};
+        html += `<div class="section"><div class="section-label">Renko</div>`;
+        if (r.direction) {
+          html += `<span class="tag ${r.direction==='up'?'bull':'bear'}">${r.direction==='up'?'wzrostowy':'spadkowy'} x${r.consecutive||0}</span>`;
+          if (r.local_low) html += `<span class="tag bull">lokalny dolek</span>`;
+          if (r.local_high) html += `<span class="tag bear">lokalny szczyt</span>`;
+          if (r.last_reversal) html += `<span class="tag">odwrocenie</span>`;
+        } else html += `<span class="empty">brak</span>`;
+        html += `</div><div class="section"><div class="section-label">Formacje harmoniczne</div>`;
+        if (d.harmonics && d.harmonics.length) d.harmonics.forEach(h => { html += `<span class="tag ${h.direction==='bullish'?'bull':'bear'}">${h.name} ${h.direction} (${h.status})</span>`; });
+        else html += `<span class="empty">brak</span>`;
+        html += `</div><div class="section"><div class="section-label">Swiece</div>`;
+        if (d.candles && d.candles.length) d.candles.forEach(c => { const cls = c.direction==='bullish'?'bull':(c.direction==='bearish'?'bear':''); html += `<span class="tag ${cls}">${c.name}</span>`; });
+        else html += `<span class="empty">brak</span>`;
+        html += `</div></div>`;
+      }
+      document.getElementById('m-body').innerHTML = html || '<div class="empty">Brak danych</div>';
+      document.getElementById('modal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('modal').classList.remove('open'); }
+    document.getElementById('modal').addEventListener('click', e => { if (e.target.id==='modal') closeModal(); });
+    load();
+  </script>
+</body>
+</html>

@@ -95,7 +95,100 @@
       "outcome": null,
       "outcome_checked_at": null,
       "outcome_result": null
+    },
+    {
+      "id": "2026-10-29 12:00:00-04:00T00:00:00Z_US500_4H",
+      "timestamp": "2026-10-30T10:44:20Z",
+      "symbol": "us500",
+      "timeframe": "4H",
+      "candle_close_time": "2026-10-29 12:00:00-04:00T00:00:00Z",
+      "decision": "LONG",
+      "confidence": 65,
+      "entry": 7721.02002,
+      "stop": 7364.46071,
+      "target": 8255.85898,
+      "rr": 1.5,
+      "filars": {
+        "renko": false,
+        "harmonic": true,
+        "candle": true
+      },
+      "confluence": "2/3",
+      "reasons": [
+        "Harmoniczna: Deep Crab bullish (ukonczona)",
+        "Swieca: Hammer (potwierdzenie)",
+        "Daily: zgodny kierunek Renko"
+      ],
+      "daily_context": "LONG",
+      "atr_4h": 46.15716,
+      "candle_stale": null,
+      "gap_weekend": null,
+      "outcome": null,
+      "outcome_checked_at": null,
+      "outcome_result": null
+    },
+    {
+      "id": "2026-10-30T07:00:00Z_EURPLN_4H",
+      "timestamp": "2026-10-30T10:44:20Z",
+      "symbol": "eurpln",
+      "timeframe": "4H",
+      "candle_close_time": "2026-10-30T07:00:00Z",
+      "decision": "LONG",
+      "confidence": 69,
+      "entry": 4.3523,
+      "stop": 4.34603,
+      "target": 4.36171,
+      "rr": 1.5,
+      "filars": {
+        "renko": false,
+        "harmonic": true,
+        "candle": true
+      },
+      "confluence": "2/3",
+      "reasons": [
+        "Harmoniczna: Deep Crab bullish (ukonczona)",
+        "Swieca: Morning Star (potwierdzenie)",
+        "Daily: zgodny kierunek Renko"
+      ],
+      "daily_context": "LONG",
+      "atr_4h": 0.00627,
+      "candle_stale": false,
+      "gap_weekend": null,
+      "outcome": null,
+      "outcome_checked_at": null,
+      "outcome_result": null
+    },
+    {
+      "id": "2026-10-30T07:00:00Z_USDJPY_4H",
+      "timestamp": "2026-10-30T10:44:20Z",
+      "symbol": "usdjpy",
+      "timeframe": "4H",
+      "candle_close_time": "2026-10-30T07:00:00Z",
+      "decision": "SHORT",
+      "confidence": 66,
+      "entry": 158.95,
+      "stop": 159.36221,
+      "target": 158.33168,
+      "rr": 1.5,
+      "filars": {
+        "renko": false,
+        "harmonic": true,
+        "candle": true
+      },
+      "confluence": "2/3",
+      "reasons": [
+        "Harmoniczna: Butterfly bearish (ukonczona)",
+        "Swieca: Bearish Engulfing (potwierdzenie)",
+        "Daily: zgodny kierunek Renko"
+      ],
+      "daily_context": "SHORT",
+      "atr_4h": 0.41221,
+      "candle_stale": false,
+      "gap_weekend": null,
+      "outcome": null,
+      "outcome_checked_at": null,
+      "outcome_result": null
     }
   ],
-  "updated": "2026-10-30T10:16:41Z"
+  "updated": "2026-10-30T10:44:20Z"
 }

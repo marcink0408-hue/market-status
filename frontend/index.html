@@ -54,6 +54,18 @@
     .tag.bull { color:var(--long); } .tag.bear { color:var(--short); }
     .empty { color:var(--muted); font-size:0.85rem; }
     .ctx { margin-top:18px; padding-top:14px; border-top:1px solid var(--border); font-size:0.82rem; color:var(--muted); }
+    .stats-panel { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-top:16px; }
+    .stats-panel h2 { font-size:1.1rem; margin-bottom:12px; }
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin-bottom:12px; }
+    .stats-metric { background:rgba(0,0,0,.25); border-radius:10px; padding:12px; text-align:center; }
+    .stats-metric .lbl { font-size:0.7rem; color:var(--muted); text-transform:uppercase; }
+    .stats-metric .val { font-weight:700; margin-top:4px; font-size:1.2rem; }
+    .stats-metric .val.good { color:var(--long); }
+    .stats-metric .val.bad { color:var(--short); }
+    .stats-note { color:var(--muted); font-size:0.82rem; margin-top:8px; }
+    .stats-pattern-table { width:100%; border-collapse:collapse; margin-top:8px; font-size:0.85rem; }
+    .stats-pattern-table th, .stats-pattern-table td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); }
+    .stats-pattern-table th { color:var(--muted); font-weight:600; font-size:0.72rem; text-transform:uppercase; }
   </style>
 </head>
 <body>
@@ -62,6 +74,10 @@
     <div class="updated" id="updated">Ladowanie...</div>
   </header>
   <div class="grid" id="grid"></div>
+  <div class="stats-panel" id="stats-panel" style="display:none">
+    <h2>Statystyki backtestu</h2>
+    <div id="stats-body"><div class="stats-note">Ladowanie...</div></div>
+  </div>
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <div class="modal-header">
@@ -231,6 +247,7 @@ if (allMarkers.length) {
         } else {
           document.getElementById('updated').textContent = 'Brak decyzji w logu';
         }
+        renderStats();
       } catch(e) {
         document.getElementById('updated').textContent = 'Błąd ładowania: ' + e.message;
         console.error(e);
@@ -359,8 +376,93 @@ if (allMarkers.length) {
     document.getElementById('modal').addEventListener('click', e => {
       if (e.target.id === 'modal') closeModal();
     });
+    let BACKTEST = null;
 
-    Promise.all([loadChartData(), load()]).catch(err => console.error(err));
+    async function loadBacktest() {
+      try {
+        const r = await fetch('../output/backtest_results.json?t=' + Date.now(), {cache:'no-store'});
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        BACKTEST = await r.json();
+      } catch (e) {
+        console.warn('Brak backtest_results.json:', e);
+        BACKTEST = null;
+      }
+    }
+
+    function _statVal(v, kind) {
+      if (v == null || !Number.isFinite(Number(v))) return '—';
+      const n = Number(v);
+      if (kind === 'pct') return n.toFixed(1) + '%';
+      if (kind === 'pf') return n.toFixed(2);
+      if (kind === 'money') return n.toFixed(2);
+      if (kind === 'ratio') return n.toFixed(2);
+      return String(v);
+    }
+
+    function _statClass(v, kind) {
+      if (v == null || !Number.isFinite(Number(v))) return '';
+      const n = Number(v);
+      if (kind === 'pct') return n >= 50 ? 'good' : 'bad';
+      if (kind === 'pf') return n >= 1 ? 'good' : 'bad';
+      if (kind === 'money') return n >= 0 ? 'good' : 'bad';
+      return '';
+    }
+
+    function renderStats() {
+      const panel = document.getElementById('stats-panel');
+      const body = document.getElementById('stats-body');
+      if (!BACKTEST || !BACKTEST.overall) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+      const o = BACKTEST.overall;
+      const train = BACKTEST.train || {};
+      const test = BACKTEST.test || {};
+      const wf = BACKTEST.walk_forward || [];
+      const byPattern = BACKTEST.by_pattern || {};
+
+      const tooFew = (o.trades || 0) < 10;
+      const noteHtml = tooFew
+        ? '<div class="stats-note">⚠️ Za mało transakcji (' + (o.trades || 0) + '), żeby wyciągać wnioski. Backtest liczy się dopiero od ~30 transakcji. To zgodne z instrukcją: „Wyniki pojawią się dopiero po przeprowadzeniu testów historycznych.”</div>'
+        : '';
+
+      let html = '<div class="stats-grid">' +
+        '<div class="stats-metric"><div class="lbl">Win Rate</div><div class="val ' + _statClass(o.win_rate, 'pct') + '">' + _statVal(o.win_rate, 'pct') + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">Profit Factor</div><div class="val ' + _statClass(o.profit_factor, 'pf') + '">' + _statVal(o.profit_factor, 'pf') + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">Max Drawdown</div><div class="val ' + _statClass(o.max_drawdown, 'money') + '">' + _statVal(o.max_drawdown, 'money') + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">Transakcje</div><div class="val">' + (o.trades || 0) + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">Avg R:R</div><div class="val">' + _statVal(o.avg_rr, 'ratio') + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">Expectancy</div><div class="val ' + _statClass(o.expectancy, 'money') + '">' + _statVal(o.expectancy, 'money') + '</div></div>' +
+        '</div>' + noteHtml;
+
+      // Long / Short
+      html += '<div class="stats-grid">' +
+        '<div class="stats-metric"><div class="lbl">LONG</div><div class="val">' + (o.long_trades || 0) + ' · ' + _statVal(o.long_win_rate, 'pct') + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">SHORT</div><div class="val">' + (o.short_trades || 0) + ' · ' + _statVal(o.short_win_rate, 'pct') + '</div></div>' +
+        '</div>';
+
+      // Train / Test
+      html += '<div class="stats-grid">' +
+        '<div class="stats-metric"><div class="lbl">Train (70%)</div><div class="val">' + (train.trades || 0) + ' · WR ' + _statVal(train.win_rate, 'pct') + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">Test (30%)</div><div class="val">' + (test.trades || 0) + ' · WR ' + _statVal(test.win_rate, 'pct') + '</div></div>' +
+        '<div class="stats-metric"><div class="lbl">Walk-forward (foldy)</div><div class="val">' + wf.length + '</div></div>' +
+        '</div>';
+
+      // Per pattern
+      const pats = Object.keys(byPattern);
+      if (pats.length) {
+        html += '<table class="stats-pattern-table"><thead><tr><th>Formacja</th><th>Transakcje</th><th>Win Rate</th><th>Profit Factor</th><th>Expectancy</th></tr></thead><tbody>';
+        pats.forEach(p => {
+          const s = byPattern[p];
+          html += '<tr><td>' + p + '</td><td>' + (s.trades || 0) + '</td><td class="' + _statClass(s.win_rate, 'pct') + '">' + _statVal(s.win_rate, 'pct') + '</td><td class="' + _statClass(s.profit_factor, 'pf') + '">' + _statVal(s.profit_factor, 'pf') + '</td><td class="' + _statClass(s.expectancy, 'money') + '">' + _statVal(s.expectancy, 'money') + '</td></tr>';
+        });
+        html += '</tbody></table>';
+      }
+
+      body.innerHTML = html;
+    }
+        Promise.all([loadChartData(), loadBacktest()]).then(() => load()).catch(err => console.error(err));
   </script>
 </body>
 </html>

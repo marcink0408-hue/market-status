@@ -1,4 +1,7 @@
-
 __pycache__/
 *.pyc
 *.pyo
+
+# Pliki generowane dynamicznie – nie trzymamy ich w repo
+output/status.json
+output/status_previous.json

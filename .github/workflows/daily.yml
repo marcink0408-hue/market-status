@@ -33,6 +33,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add output/status.json output/status_previous.json || true
+          git add output/decisions_log.json || true
           git diff --staged --quiet || git commit -m "Daily update"
           git push

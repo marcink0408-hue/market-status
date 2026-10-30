@@ -146,7 +146,12 @@ def build_signal_entry(result: dict, harmonic: dict, run_time: str | None = None
 
 
 def append_signal_history(results: list) -> None:
-    """Dopisuje nowe sygnaly (completed harmonics) do output/signals_history.json."""
+    """Dopisuje nowe sygnaly (completed harmonics) do output/signals_history.json.
+
+    Deduplikacja: jesli sygnal o tym samym (symbol, pattern, detected_at) juz istnieje,
+    NIE tworzymy nowego signal_id - pomijamy. To naprawia duplikaty z kolejnych uruchomien
+    run_daily.py (Etap C -> Etap E: backtest liczyl te same transakcje wielokrotnie).
+    """
     OUTPUT.mkdir(exist_ok=True)
     data = _load_signals()
     run_time = _utc_now_iso()
@@ -154,16 +159,22 @@ def append_signal_history(results: list) -> None:
     for r in results:
         harmonics = _extract_completed_harmonics(r)
         for h in harmonics:
-            entry = build_signal_entry(r, h, run_time=run_time)
-            if entry is None:
+            # deduplikacja po (symbol, pattern, detected_at) - PRZED utworzeniem signal_id
+            symbol_lc = (r.get("symbol") or "").lower()
+            pattern = h.get("name")
+            detected_iso = _norm_iso(h.get("time_D"))
+            if not detected_iso:
                 continue
-            # deduplikacja: ten sam signal_id (symbol+pattern+numer) i detected_at
-            exists = any(
-                s.get("signal_id") == entry["signal_id"]
-                and s.get("detected_at") == entry["detected_at"]
+            already = any(
+                (s.get("symbol") or "").lower() == symbol_lc
+                and s.get("pattern") == pattern
+                and s.get("detected_at") == detected_iso
                 for s in data["signals"]
             )
-            if exists:
+            if already:
+                continue
+            entry = build_signal_entry(r, h, run_time=run_time)
+            if entry is None:
                 continue
             data["signals"].append(entry)
             added += 1

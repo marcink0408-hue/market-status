@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-30T20:17:37Z",
+  "config": {
+    "max_bars_to_close": 50,
+    "train_ratio": 0.7,
+    "walk_forward_folds": 3,
+    "sl_priority_over_tp": true
+  },
+  "overall": {
+    "trades": 1,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown": 206.6668,
+    "avg_rr": 1.0,
+    "expectancy": -206.66679,
+    "long_trades": 0,
+    "long_win_rate": 0.0,
+    "short_trades": 1,
+    "short_win_rate": 0.0
+  },
+  "train": {
+    "trades": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown": 0.0,
+    "avg_rr": 0.0,
+    "expectancy": 0.0,
+    "long_trades": 0,
+    "long_win_rate": 0.0,
+    "short_trades": 0,
+    "short_win_rate": 0.0
+  },
+  "test": {
+    "trades": 1,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown": 206.6668,
+    "avg_rr": 1.0,
+    "expectancy": -206.66679,
+    "long_trades": 0,
+    "long_win_rate": 0.0,
+    "short_trades": 1,
+    "short_win_rate": 0.0
+  },
+  "walk_forward": [
+    {
+      "fold": 1,
+      "train": {
+        "trades": 1,
+        "win_rate": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown": 206.6668,
+        "avg_rr": 1.0,
+        "expectancy": -206.66679,
+        "long_trades": 0,
+        "long_win_rate": 0.0,
+        "short_trades": 1,
+        "short_win_rate": 0.0
+      },
+      "test": {
+        "trades": 0,
+        "win_rate": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown": 0.0,
+        "avg_rr": 0.0,
+        "expectancy": 0.0,
+        "long_trades": 0,
+        "long_win_rate": 0.0,
+        "short_trades": 0,
+        "short_win_rate": 0.0
+      }
+    },
+    {
+      "fold": 2,
+      "train": {
+        "trades": 1,
+        "win_rate": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown": 206.6668,
+        "avg_rr": 1.0,
+        "expectancy": -206.66679,
+        "long_trades": 0,
+        "long_win_rate": 0.0,
+        "short_trades": 1,
+        "short_win_rate": 0.0
+      },
+      "test": {
+        "trades": 0,
+        "win_rate": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown": 0.0,
+        "avg_rr": 0.0,
+        "expectancy": 0.0,
+        "long_trades": 0,
+        "long_win_rate": 0.0,
+        "short_trades": 0,
+        "short_win_rate": 0.0
+      }
+    },
+    {
+      "fold": 3,
+      "train": {
+        "trades": 0,
+        "win_rate": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown": 0.0,
+        "avg_rr": 0.0,
+        "expectancy": 0.0,
+        "long_trades": 0,
+        "long_win_rate": 0.0,
+        "short_trades": 0,
+        "short_win_rate": 0.0
+      },
+      "test": {
+        "trades": 1,
+        "win_rate": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown": 206.6668,
+        "avg_rr": 1.0,
+        "expectancy": -206.66679,
+        "long_trades": 0,
+        "long_win_rate": 0.0,
+        "short_trades": 1,
+        "short_win_rate": 0.0
+      }
+    }
+  ],
+  "by_pattern": {
+    "Butterfly": {
+      "trades": 1,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "max_drawdown": 206.6668,
+      "avg_rr": 1.0,
+      "expectancy": -206.66679,
+      "long_trades": 0,
+      "long_win_rate": 0.0,
+      "short_trades": 1,
+      "short_win_rate": 0.0
+    }
+  },
+  "trades": [
+    {
+      "signal_id": "US500_4H_BUTTERFLY_001",
+      "symbol": "us500",
+      "pattern": "Butterfly",
+      "direction": "bearish",
+      "confidence": 66,
+      "entry": 7600.06982,
+      "stop": 7806.73661,
+      "target": 7290.06965,
+      "detected_at": "2026-08-13T12:00:00Z",
+      "confirmed_at": "2026-08-13T20:00:00Z",
+      "status": "STOP_HIT",
+      "activated_at": 1786708800,
+      "closed_at": 1786708800,
+      "outcome_pnl": -206.66679000000022,
+      "outcome_r": -1.0
+    }
+  ]
+}

@@ -3,59 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Market Status – CFD Dashboard</title>
+  <title>Market Status · 4H</title>
   <style>
-    :root { --bg:#0f1419; --card:#1a2332; --border:#2a3544; --text:#e7ecf3; --muted:#8b9bb4; --long:#22c55e; --short:#ef4444; --watch:#eab308; --none:#64748b; }
+    :root { --bg:#0b0f14; --card:#141a22; --border:#243041; --text:#e8eef6; --muted:#8b9bb0; --long:#22c55e; --short:#ef4444; --none:#64748b; }
     * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:24px; }
-    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:12px; }
-    h1 { font-size:1.6rem; font-weight:600; }
-    .updated { color:var(--muted); font-size:0.85rem; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; cursor:pointer; transition:transform .15s,border-color .15s; }
-    .card:hover { transform:translateY(-2px); border-color:#3b4a5e; }
-    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .symbol { font-size:1.15rem; font-weight:600; }
-    .name { color:var(--muted); font-size:0.8rem; }
-    .badge { font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:999px; text-transform:uppercase; }
-    .badge.LONG { background:rgba(34,197,94,.15); color:var(--long); }
-    .badge.SHORT { background:rgba(239,68,68,.15); color:var(--short); }
-    .badge.WATCH { background:rgba(234,179,8,.15); color:var(--watch); }
-    .badge.NIC { background:rgba(100,116,139,.2); color:var(--none); }
-    .conf { font-size:0.8rem; color:var(--muted); margin-top:4px; }
-    .action { margin-top:12px; font-size:0.9rem; line-height:1.4; }
-    .summary-preview { margin-top:10px; font-size:0.8rem; color:var(--muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:100; align-items:center; justify-content:center; padding:20px; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:20px; }
+    header { margin-bottom:22px; }
+    h1 { font-size:1.45rem; font-weight:600; }
+    .updated { color:var(--muted); font-size:0.82rem; margin-top:4px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; cursor:pointer; transition:border-color .15s,transform .15s; }
+    .card:hover { border-color:#3d4f66; transform:translateY(-1px); }
+    .card.has-signal { border-color:rgba(34,197,94,.35); }
+    .card.has-signal.short { border-color:rgba(239,68,68,.35); }
+    .top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+    .sym { font-size:1.2rem; font-weight:700; }
+    .name { color:var(--muted); font-size:0.78rem; margin-top:2px; }
+    .badge { font-size:0.72rem; font-weight:800; padding:5px 11px; border-radius:999px; letter-spacing:.04em; }
+    .badge.LONG { background:rgba(34,197,94,.18); color:var(--long); }
+    .badge.SHORT { background:rgba(239,68,68,.18); color:var(--short); }
+    .badge.BRAK, .badge.NIC { background:rgba(100,116,139,.2); color:var(--none); }
+    .price-row { margin-bottom:8px; font-size:0.9rem; }
+    .price-row span { color:var(--muted); }
+    .entry-box { background:rgba(0,0,0,.28); border-radius:10px; padding:10px 12px; margin-bottom:10px; font-size:0.88rem; }
+    .entry-box .lbl { color:var(--muted); font-size:0.72rem; text-transform:uppercase; }
+    .entry-box .val { font-weight:700; font-size:1.05rem; margin-top:2px; }
+    .reasons { font-size:0.8rem; color:var(--muted); line-height:1.45; }
+    .reasons li { margin-left:14px; margin-top:3px; }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:100; align-items:center; justify-content:center; padding:16px; }
     .modal-overlay.open { display:flex; }
-    .modal { background:var(--card); border:1px solid var(--border); border-radius:16px; max-width:720px; width:100%; max-height:90vh; overflow-y:auto; padding:28px; }
-    .modal-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; }
-    .modal-header h2 { font-size:1.4rem; }
-    .close-btn { background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
-    .tf-block { background:rgba(0,0,0,.25); border-radius:10px; padding:16px; margin-bottom:14px; }
-    .tf-title { font-weight:600; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
-    .section { margin-top:10px; }
-    .section-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+    .modal { background:var(--card); border:1px solid var(--border); border-radius:16px; max-width:640px; width:100%; max-height:92vh; overflow-y:auto; padding:24px; }
+    .modal-header { display:flex; justify-content:space-between; margin-bottom:18px; }
+    .modal-header h2 { font-size:1.3rem; }
+    .close-btn { background:none; border:none; color:var(--muted); font-size:1.6rem; cursor:pointer; }
+    .decision-hero { text-align:center; padding:16px; border-radius:12px; margin-bottom:16px; background:rgba(0,0,0,.3); }
+    .decision-hero .big { font-size:1.8rem; font-weight:800; letter-spacing:.06em; }
+    .decision-hero.LONG .big { color:var(--long); }
+    .decision-hero.SHORT .big { color:var(--short); }
+    .decision-hero.BRAK .big { color:var(--none); }
+    .metrics { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
+    .metric { background:rgba(0,0,0,.25); border-radius:10px; padding:10px; text-align:center; }
+    .metric .lbl { font-size:0.7rem; color:var(--muted); text-transform:uppercase; }
+    .metric .val { font-weight:700; margin-top:4px; font-size:0.95rem; }
+    .section { margin-top:14px; }
+    .section-title { font-size:0.72rem; color:var(--muted); text-transform:uppercase; margin-bottom:6px; }
     .tag { display:inline-block; background:rgba(255,255,255,.06); border-radius:6px; padding:3px 8px; font-size:0.8rem; margin:2px 4px 2px 0; }
-    .tag.bull { color:var(--long); }
-    .tag.bear { color:var(--short); }
+    .tag.bull { color:var(--long); } .tag.bear { color:var(--short); }
     .empty { color:var(--muted); font-size:0.85rem; }
+    .ctx { margin-top:18px; padding-top:14px; border-top:1px solid var(--border); font-size:0.82rem; color:var(--muted); }
   </style>
 </head>
 <body>
   <header>
-    <div>
-      <h1>Market Status</h1>
-      <div class="updated" id="updated">Ladowanie...</div>
-    </div>
+    <h1>Market Status · decyzje 4H</h1>
+    <div class="updated" id="updated">Ladowanie...</div>
   </header>
   <div class="grid" id="grid"></div>
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <div class="modal-header">
-        <div>
-          <h2 id="m-title">—</h2>
-          <div id="m-badge" style="margin-top:8px"></div>
-        </div>
+        <h2 id="m-title">—</h2>
         <button class="close-btn" onclick="closeModal()">×</button>
       </div>
       <div id="m-body"></div>
@@ -69,60 +76,104 @@
         DATA = await res.json();
         render();
       } catch(e) {
-        document.getElementById('updated').textContent = 'Blad ladowania – uruchom python run_daily.py';
+        document.getElementById('updated').textContent = 'Blad ladowania status.json';
       }
     }
-    function biasClass(b) { return ['LONG','SHORT','WATCH','NIC'].includes(b) ? b : 'NIC'; }
+    function decClass(d) { return (d==='LONG'||d==='SHORT') ? d : 'BRAK'; }
+    function fmt(n) {
+      if (n==null) return '—';
+      if (Math.abs(n)>=100) return Number(n).toFixed(2);
+      if (Math.abs(n)>=1) return Number(n).toFixed(4);
+      return Number(n).toFixed(5);
+    }
+    function modulesHtml(item) {
+      const m = item.modules || {};
+      const icon = ok => ok ? '✅' : '⚪';
+      return '<div class="reasons" style="margin-bottom:8px">Renko '+icon(m.renko)+' · Harm '+icon(m.harmonic)+' · Swieca '+icon(m.candle)+(item.pillars?' · '+item.pillars+'/3':'')+'</div>';
+    }
+    function freshnessHtml(item) {
+      if (!item.last_bar_time && !item.updated) return '';
+      let t = item.last_bar_time || item.updated;
+      let label = 'Swieca 4H: ' + t;
+      try {
+        const ageH = (Date.now() - new Date(t).getTime()) / 3600000;
+        if (ageH > 8) label = '⚠️ STARE DANE · ' + label;
+        else if (ageH > 5) label = '⏳ ' + label;
+      } catch(e) {}
+      return '<div class="reasons" style="font-size:0.72rem;margin-bottom:6px">'+label+'</div>';
+    }
     function render() {
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
       let latest = '';
-      DATA.forEach((item, idx) => {
+      const sorted = [...DATA].sort((a,b) => {
+        const rank = d => (d==='LONG'||d==='SHORT') ? 0 : 1;
+        return rank(a.decision) - rank(b.decision) || (b.confidence||0) - (a.confidence||0);
+      });
+      sorted.forEach(item => {
+        const realIdx = DATA.indexOf(item);
         if (item.updated) latest = item.updated;
-        const bias = item.overall_bias || 'NIC';
+        const d = item.decision || item.overall_bias || 'BRAK';
         const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = () => openModal(idx);
-        card.innerHTML = `
-          <div class="card-header">
-            <div><div class="symbol">${item.symbol.toUpperCase()}</div><div class="name">${item.name||''}</div></div>
-            <span class="badge ${biasClass(bias)}">${bias}</span>
-          </div>
-          <div class="conf">Pewnosc: ${item.overall_confidence||0}%</div>
-          <div class="action">${item.overall_action||''}</div>
-          <div class="summary-preview">${item.overall_summary||''}</div>`;
+        card.className = 'card' + (d==='LONG'?' has-signal':d==='SHORT'?' has-signal short':'');
+        card.onclick = () => openModal(realIdx);
+        let entryHtml = '';
+        if (d==='LONG' || d==='SHORT') {
+          entryHtml = '<div class="entry-box"><div class="lbl">Wejscie</div><div class="val">'+fmt(item.entry)+
+            '</div><div style="margin-top:6px;font-size:0.8rem;color:var(--muted)">Stop: '+fmt(item.stop)+
+            (item.target?' · Cel: '+fmt(item.target):'')+(item.rr?' · R:R 1:'+item.rr:'')+
+            ' · pewnosc '+(item.confidence||0)+'%</div></div>';
+        }
+        const reasons = (item.reasons||[]).slice(0,3);
+        const reasonsHtml = reasons.length
+          ? '<ul class="reasons">'+reasons.map(r=>'<li>'+r+'</li>').join('')+'</ul>'
+          : '<div class="reasons">'+(item.summary||'')+'</div>';
+        card.innerHTML = '<div class="top"><div><div class="sym">'+(item.symbol||'').toUpperCase()+
+          '</div><div class="name">'+(item.name||'')+'</div></div><span class="badge '+decClass(d)+'">'+d+
+          '</span></div><div class="price-row"><span>Cena</span> <strong>'+fmt(item.price)+'</strong></div>'+
+          freshnessHtml(item)+modulesHtml(item)+entryHtml+reasonsHtml;
         grid.appendChild(card);
       });
-      if (latest) document.getElementById('updated').textContent = 'Aktualizacja: ' + new Date(latest).toLocaleString('pl-PL');
+      if (latest) document.getElementById('updated').textContent = 'Aktualizacja: '+new Date(latest).toLocaleString('pl-PL')+' · TF: 4H';
     }
     function openModal(idx) {
       const item = DATA[idx];
-      document.getElementById('m-title').textContent = `${item.symbol.toUpperCase()} – ${item.name}`;
-      const bias = item.overall_bias || 'NIC';
-      document.getElementById('m-badge').innerHTML = `<span class="badge ${biasClass(bias)}">${bias}</span> <span class="conf">pewnosc ${item.overall_confidence||0}%</span>`;
-      let html = '';
-      const tfs = item.timeframes || {};
-      for (const [tf, d] of Object.entries(tfs)) {
-        if (d.error) { html += `<div class="tf-block"><div class="tf-title">${tf}</div><div class="empty">Blad: ${d.error}</div></div>`; continue; }
-        html += `<div class="tf-block"><div class="tf-title">${tf} <span class="badge ${biasClass(d.bias)}">${d.bias}</span></div>
-          <div class="action" style="margin-bottom:10px">${d.summary||d.action||''}</div>`;
-        const r = d.renko || {};
-        html += `<div class="section"><div class="section-label">Renko</div>`;
-        if (r.direction) {
-          html += `<span class="tag ${r.direction==='up'?'bull':'bear'}">${r.direction==='up'?'wzrostowy':'spadkowy'} x${r.consecutive||0}</span>`;
-          if (r.local_low) html += `<span class="tag bull">lokalny dolek</span>`;
-          if (r.local_high) html += `<span class="tag bear">lokalny szczyt</span>`;
-          if (r.last_reversal) html += `<span class="tag">odwrocenie</span>`;
-        } else html += `<span class="empty">brak</span>`;
-        html += `</div><div class="section"><div class="section-label">Formacje harmoniczne</div>`;
-        if (d.harmonics && d.harmonics.length) d.harmonics.forEach(h => { html += `<span class="tag ${h.direction==='bullish'?'bull':'bear'}">${h.name} ${h.direction} (${h.status})</span>`; });
-        else html += `<span class="empty">brak</span>`;
-        html += `</div><div class="section"><div class="section-label">Swiece</div>`;
-        if (d.candles && d.candles.length) d.candles.forEach(c => { const cls = c.direction==='bullish'?'bull':(c.direction==='bearish'?'bear':''); html += `<span class="tag ${cls}">${c.name}</span>`; });
-        else html += `<span class="empty">brak</span>`;
-        html += `</div></div>`;
-      }
-      document.getElementById('m-body').innerHTML = html || '<div class="empty">Brak danych</div>';
+      const d = item.decision || 'BRAK';
+      document.getElementById('m-title').textContent = (item.symbol||'').toUpperCase()+' – '+(item.name||'');
+      let html = '<div class="decision-hero '+decClass(d)+'"><div class="big">'+d+'</div>'+
+        '<div style="margin-top:6px;color:var(--muted);font-size:0.9rem">'+(d==='BRAK'?'Brak setupu 4H':'Setup 4H')+'</div></div>'+
+        '<div class="metrics">'+
+        '<div class="metric"><div class="lbl">Cena</div><div class="val">'+fmt(item.price)+'</div></div>'+
+        '<div class="metric"><div class="lbl">Wejscie</div><div class="val">'+fmt(item.entry)+'</div></div>'+
+        '<div class="metric"><div class="lbl">Stop</div><div class="val">'+fmt(item.stop)+'</div></div></div>'+
+        '<div class="metrics">'+
+        '<div class="metric"><div class="lbl">Cel</div><div class="val">'+fmt(item.target)+'</div></div>'+
+        '<div class="metric"><div class="lbl">R:R</div><div class="val">'+(item.rr!=null?'1:'+item.rr:'—')+'</div></div>'+
+        '<div class="metric"><div class="lbl">Pewnosc</div><div class="val">'+(item.confidence||0)+'%</div></div></div>';
+      html += '<div class="section"><div class="section-title">Dlaczego</div>';
+      if (item.reasons && item.reasons.length) html += '<ul class="reasons">'+item.reasons.map(r=>'<li>'+r+'</li>').join('')+'</ul>';
+      else html += '<div class="empty">Brak</div>';
+      html += '</div>';
+      const tf4 = (item.timeframes||{})['4H']||{};
+      html += '<div class="section"><div class="section-title">Harmoniczne 4H</div>';
+      if (tf4.harmonics && tf4.harmonics.length) tf4.harmonics.forEach(h => {
+        html += '<span class="tag '+(h.direction==='bullish'?'bull':'bear')+'">'+h.name+' '+h.direction+' ('+h.status+')</span>';
+      }); else html += '<span class="empty">brak</span>';
+      html += '</div><div class="section"><div class="section-title">Swiece 4H</div>';
+      const imp = ['Bullish Engulfing','Bearish Engulfing','Hammer','Shooting Star','Morning Star','Evening Star'];
+      const cands = (tf4.candles||[]).filter(c => imp.includes(c.name));
+      if (cands.length) cands.forEach(c => {
+        html += '<span class="tag '+(c.direction==='bullish'?'bull':c.direction==='bearish'?'bear':'')+'">'+c.name+'</span>';
+      }); else html += '<span class="empty">brak silnych</span>';
+      html += '</div><div class="ctx"><div class="section-title">Kontekst</div>';
+      ['1H','Daily'].forEach(tf => {
+        const t = (item.timeframes||{})[tf];
+        if (!t || t.error) return;
+        const r = t.renko||{};
+        html += '<div>'+tf+': Renko '+(r.direction==='up'?'↑':r.direction==='down'?'↓':'?')+' ×'+(r.consecutive||0)+'</div>';
+      });
+      html += '</div>';
+      document.getElementById('m-body').innerHTML = html;
       document.getElementById('modal').classList.add('open');
     }
     function closeModal() { document.getElementById('modal').classList.remove('open'); }

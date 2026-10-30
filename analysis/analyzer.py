@@ -7,70 +7,28 @@ from data.fetcher import fetch_all
 from analysis.renko import build_renko, renko_status
 from analysis.harmonics import detect_harmonics
 from analysis.candles import detect_candlestick_patterns
+from analysis.decision import make_decision
 from config import SYMBOLS
 import json
 from datetime import datetime, timezone
 
 
-def score_bias(renko: dict, harmonics: list, candles: list):
-    score = 0
-    if renko.get("direction") == "up":
-        score += 15 + min(renko.get("consecutive", 0) * 3, 20)
-        if renko.get("local_low"):
-            score += 15
-    elif renko.get("direction") == "down":
-        score -= 15 + min(renko.get("consecutive", 0) * 3, 20)
-        if renko.get("local_high"):
-            score -= 15
-    if renko.get("last_reversal"):
-        score = int(score * 0.6)
-
-    for h in harmonics:
-        weight = 25 if h["status"] == "completed" else 18
-        if h["direction"] == "bullish":
-            score += weight
-        else:
-            score -= weight
-
-    for c in candles:
-        w = 12 if c["strength"] == "strong" else 7
-        if c["direction"] == "bullish":
-            score += w
-        elif c["direction"] == "bearish":
-            score -= w
-
-    conf = min(abs(score), 95)
-    if score >= 25:
-        return "LONG", conf, "Szykuj longa – warunki sprzyjaja"
-    elif score <= -25:
-        return "SHORT", conf, "Szykuj shorta – warunki sprzyjaja"
-    elif abs(score) >= 12:
-        return "WATCH", conf, "Obserwuj – cos sie formuje"
-    else:
-        return "NIC", conf, "Na razie odpusc – brak setupu"
-
-
-def make_summary(symbol: str, tf: str, renko: dict, harmonics: list, candles: list, bias: str, action: str) -> str:
-    parts = []
-    name = SYMBOLS[symbol]["name"]
-    if renko.get("direction") == "up":
-        parts.append(f"Renko ({tf}): trend wzrostowy ({renko.get('consecutive',0)} cegielek w gore)")
-    elif renko.get("direction") == "down":
-        parts.append(f"Renko ({tf}): trend spadkowy ({renko.get('consecutive',0)} cegielek w dol)")
-    if renko.get("local_low"):
-        parts.append("lokalny dolek na Renko")
-    if renko.get("local_high"):
-        parts.append("lokalny szczyt na Renko")
-    if renko.get("last_reversal"):
-        parts.append("swieze odwrocenie kierunku Renko")
-    for h in harmonics[:2]:
-        status = "formuje sie" if h["status"] == "forming" else "ukonczona"
-        parts.append(f"{h['name']} {h['direction']} ({status})")
-    for c in candles[:2]:
-        parts.append(f"{c['name']} ({c['direction']})")
-    if not parts:
-        return f"{name} ({tf}): brak wyraznych sygnalow."
-    return f"{name} ({tf}): " + ", ".join(parts) + f". -> {action}."
+def analyze_tf(df, tf: str) -> dict:
+    try:
+        rdf = build_renko(df)
+        rstat = renko_status(rdf)
+        harms = detect_harmonics(df)
+        cands = detect_candlestick_patterns(df)
+        return {
+            "renko": rstat,
+            "harmonics": harms,
+            "candles": cands,
+            "bars": len(df),
+            "last_close": float(df["close"].iloc[-1]),
+            "last_time": str(df.index[-1]),
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 
 def analyze_symbol(symbol_key: str) -> dict:
@@ -78,54 +36,71 @@ def analyze_symbol(symbol_key: str) -> dict:
     if not data:
         return {"symbol": symbol_key, "error": "no data"}
 
+    name = SYMBOLS[symbol_key]["name"]
     result = {
         "symbol": symbol_key,
-        "name": SYMBOLS[symbol_key]["name"],
-        "updated": datetime.now(timezone.utc).isoformat(),
+        "name": name,
+        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "timeframes": {},
-        "overall_bias": "NIC",
-        "overall_confidence": 0,
-        "overall_action": "Brak danych",
-        "overall_summary": "",
+        "decision": "BRAK",
+        "confidence": 0,
+        "entry": None,
+        "stop": None,
+        "price": None,
+        "reasons": [],
+        "summary": "",
     }
 
-    biases = []
-    summaries = []
-
     for tf, df in data.items():
-        try:
-            rdf = build_renko(df)
-            rstat = renko_status(rdf)
-            harms = detect_harmonics(df)
-            cands = detect_candlestick_patterns(df)
-            bias, conf, action = score_bias(rstat, harms, cands)
-            summary = make_summary(symbol_key, tf, rstat, harms, cands, bias, action)
-            result["timeframes"][tf] = {
-                "renko": rstat, "harmonics": harms, "candles": cands,
-                "bias": bias, "confidence": conf, "action": action,
-                "summary": summary, "bars": len(df),
-            }
-            biases.append((bias, conf, tf))
-            summaries.append(summary)
-        except Exception as e:
-            result["timeframes"][tf] = {"error": str(e)}
+        result["timeframes"][tf] = analyze_tf(df, tf)
 
-    priority = {"Daily": 3, "4H": 2, "1H": 1}
-    best = None
-    best_score = -1
-    for b, c, tf in biases:
-        sc = c * priority.get(tf, 1)
-        if b in ("LONG", "SHORT") and sc > best_score:
-            best_score = sc
-            best = (b, c, tf)
-        elif best is None:
-            best = (b, c, tf)
+    tf4 = result["timeframes"].get("4H")
+    if tf4 and "error" not in tf4:
+        daily_r = (result["timeframes"].get("Daily") or {}).get("renko") or {}
+        dec = make_decision(
+            data.get("4H"),
+            tf4.get("renko") or {},
+            tf4.get("harmonics") or [],
+            tf4.get("candles") or [],
+            daily_renko=daily_r,
+        )
+        result["decision"] = dec["decision"]
+        result["confidence"] = dec["confidence"]
+        result["entry"] = dec["entry"]
+        result["stop"] = dec["stop"]
+        result["target"] = dec.get("target")
+        result["rr"] = dec.get("rr")
+        result["price"] = dec["price"]
+        result["pillars"] = dec.get("pillars", 0)
+        result["modules"] = dec.get("modules") or {}
+        result["contradiction"] = dec.get("contradiction", False)
+        result["daily_align"] = dec.get("daily_align", 0)
+        result["last_bar_time"] = dec.get("last_bar_time")
+        result["atr"] = dec.get("atr")
+        result["reasons"] = dec["reasons"]
+        result["harmonic"] = dec.get("harmonic")
+        result["candle"] = dec.get("candle")
+        result["renko_signal"] = dec.get("renko_signal")
 
-    if best:
-        result["overall_bias"] = best[0]
-        result["overall_confidence"] = best[1]
-        result["overall_action"] = result["timeframes"].get(best[2], {}).get("action", "")
-        result["overall_summary"] = " | ".join(summaries[:2])
+        if dec["decision"] in ("LONG", "SHORT"):
+            rr_s = f", R:R 1:{dec.get('rr')}" if dec.get("rr") else ""
+            result["summary"] = (
+                f"{name} 4H -> {dec['decision']} @ {dec['entry']} "
+                f"(stop {dec['stop']}, cel {dec.get('target')}, pewnosc {dec['confidence']}%{rr_s})"
+            )
+        else:
+            result["summary"] = f"{name} 4H -> brak setupu wejscia"
+    else:
+        result["summary"] = f"{name}: brak danych 4H"
+        result["reasons"] = ["Brak danych 4H"]
+
+    result["overall_bias"] = result["decision"] if result["decision"] != "BRAK" else "NIC"
+    result["overall_confidence"] = result["confidence"]
+    result["overall_action"] = (
+        f"Wejscie {result['decision']} @ {result['entry']}" if result["decision"] in ("LONG", "SHORT")
+        else "Brak wejscia – czekaj"
+    )
+    result["overall_summary"] = result["summary"]
     return result
 
 
@@ -145,4 +120,5 @@ if __name__ == "__main__":
         json.dump(all_res, f, ensure_ascii=False, indent=2)
     print(f"\nSaved to {out_path}")
     for r in all_res:
-        print(f"{r['symbol']:8} -> {r.get('overall_bias','?'):6} ({r.get('overall_confidence',0)}%)  {r.get('overall_action','')}")
+        d = r.get("decision", "?")
+        print(f"{r['symbol']:8} -> {d:5} conf={r.get('confidence',0)} entry={r.get('entry')}")

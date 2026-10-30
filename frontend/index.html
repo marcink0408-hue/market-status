@@ -19,7 +19,7 @@
     .top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
     .sym { font-size:1.2rem; font-weight:700; }
     .name { color:var(--muted); font-size:0.78rem; margin-top:2px; }
-    .badge { font-size:0.72rem; font-weight:800; padding:5px 11px; border-radius:999px; letter-spacing:.04em; }
+    .badge { font-size:0.72rem; font-weight:800; padding:5px 11px; border-radius:999px; letter-spacing:.04em; display:inline-block; }
     .badge.LONG { background:rgba(34,197,94,.18); color:var(--long); }
     .badge.SHORT { background:rgba(239,68,68,.18); color:var(--short); }
     .badge.BRAK, .badge.NIC { background:rgba(100,116,139,.2); color:var(--none); }
@@ -70,146 +70,169 @@
   </div>
   <script>
     let DATA = [];
-    async function load() {
-  try {
-    // Czytamy z decisions_log.json (jest w repo, aktualizuje się codziennie)
-    const res = await fetch('../output/decisions_log.json?t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    const decisions = json.decisions || json;
-    
-    // Wybierz najnowszą decyzję per symbol (po candle_close_time)
-    const latest = new Map();
-    decisions.forEach(d => {
-      const sym = d.symbol;
-      const cur = latest.get(sym);
-      if (!cur || (d.candle_close_time || d.timestamp) > (cur.candle_close_time || cur.timestamp)) {
-        latest.set(sym, d);
-      }
-    });
-    
-    // Konwersja do formatu, który rozumie render() — zachowujemy kompatybilność z kartami
-    DATA = Array.from(latest.values()).map(d => ({
-      symbol: d.symbol,
-      name: d.symbol,  // decisions_log.json nie ma pola "name" — użyjemy symbolu
-      updated: d.timestamp,
-      overall_bias: d.decision === 'LONG' ? 'LONG' : d.decision === 'SHORT' ? 'SHORT' : 'NIC',
-      overall_confidence: d.confidence || 0,
-      overall_action: d.decision === 'LONG' ? `Wejście: ${d.entry} | Stop: ${d.stop} | Cel: ${d.target}` 
-                       : d.decision === 'SHORT' ? `Wejście: ${d.entry} | Stop: ${d.stop} | Cel: ${d.target}`
-                       : 'Brak setupu',
-      overall_summary: (d.reasons || []).join(' · '),
-      // Dodatkowe pola pod przyszły modal z wykresem:
-      _raw: d,  // pełny rekord (entry/stop/target/atr/filars/etc.)
-    }));
-    
-    render();
-    document.getElementById('updated').textContent = 'Dane z: ' + 
-      new Date(Math.max(...DATA.map(x => new Date(x.updated).getTime()))).toLocaleString('pl-PL');
-  } catch(e) {
-    document.getElementById('updated').textContent = 'Błąd ładowania: ' + e.message;
-    console.error(e);
-  }
-}
-    function decClass(d) { return (d==='LONG'||d==='SHORT') ? d : 'BRAK'; }
+
+    function biasClass(b) {
+      if (b === 'LONG' || b === 'SHORT') return b;
+      return 'NIC';
+    }
+
     function fmt(n) {
-      if (n==null) return '—';
-      if (Math.abs(n)>=100) return Number(n).toFixed(2);
-      if (Math.abs(n)>=1) return Number(n).toFixed(4);
-      return Number(n).toFixed(5);
+      if (n == null || n === '') return '—';
+      const x = Number(n);
+      if (isNaN(x)) return '—';
+      if (Math.abs(x) >= 100) return x.toFixed(2);
+      if (Math.abs(x) >= 1) return x.toFixed(4);
+      return x.toFixed(5);
     }
-    function modulesHtml(item) {
-      const m = item.modules || {};
-      const icon = ok => ok ? '✅' : '⚪';
-      return '<div class="reasons" style="margin-bottom:8px">Renko '+icon(m.renko)+' · Harm '+icon(m.harmonic)+' · Swieca '+icon(m.candle)+(item.pillars?' · '+item.pillars+'/3':'')+'</div>';
-    }
-    function freshnessHtml(item) {
-      if (!item.last_bar_time && !item.updated) return '';
-      let t = item.last_bar_time || item.updated;
-      let label = 'Swieca 4H: ' + t;
+
+    async function load() {
       try {
-        const ageH = (Date.now() - new Date(t).getTime()) / 3600000;
-        if (ageH > 8) label = '⚠️ STARE DANE · ' + label;
-        else if (ageH > 5) label = '⏳ ' + label;
-      } catch(e) {}
-      return '<div class="reasons" style="font-size:0.72rem;margin-bottom:6px">'+label+'</div>';
+        const res = await fetch('../output/decisions_log.json?t=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+        const decisions = json.decisions || json;
+
+        const latest = new Map();
+        decisions.forEach(d => {
+          const sym = d.symbol;
+          const cur = latest.get(sym);
+          const dT = d.candle_close_time || d.timestamp || '';
+          const cT = cur ? (cur.candle_close_time || cur.timestamp || '') : '';
+          if (!cur || dT > cT) latest.set(sym, d);
+        });
+
+        DATA = Array.from(latest.values()).map(d => ({
+          symbol: d.symbol,
+          name: d.symbol,
+          updated: d.timestamp,
+          _raw: d
+        }));
+
+        render();
+        if (DATA.length) {
+          const newest = Math.max(...DATA.map(x => new Date(x.updated).getTime()));
+          document.getElementById('updated').textContent = 'Dane z: ' + new Date(newest).toLocaleString('pl-PL');
+        } else {
+          document.getElementById('updated').textContent = 'Brak decyzji w logu';
+        }
+      } catch(e) {
+        document.getElementById('updated').textContent = 'Błąd ładowania: ' + e.message;
+        console.error(e);
+      }
     }
+
     function render() {
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
-      let latest = '';
-      const sorted = [...DATA].sort((a,b) => {
-        const rank = d => (d==='LONG'||d==='SHORT') ? 0 : 1;
-        return rank(a.decision) - rank(b.decision) || (b.confidence||0) - (a.confidence||0);
-      });
-      sorted.forEach(item => {
-        const realIdx = DATA.indexOf(item);
-        if (item.updated) latest = item.updated;
-        const d = item.decision || item.overall_bias || 'BRAK';
+      DATA.forEach((item, idx) => {
+        const raw = item._raw || {};
+        const bias = raw.decision || 'NIC';
+        const conf = raw.confidence != null ? raw.confidence : 0;
+        const entry = raw.entry;
+        const stop = raw.stop;
+        const target = raw.target;
+        const candle = raw.candle_close_time || raw.timestamp || '';
+        const f = raw.filars || {};
+        const stale = raw.candle_stale ? '⏳' : '';
+
         const card = document.createElement('div');
-        card.className = 'card' + (d==='LONG'?' has-signal':d==='SHORT'?' has-signal short':'');
-        card.onclick = () => openModal(realIdx);
-        let entryHtml = '';
-        if (d==='LONG' || d==='SHORT') {
-          entryHtml = '<div class="entry-box"><div class="lbl">Wejscie</div><div class="val">'+fmt(item.entry)+
-            '</div><div style="margin-top:6px;font-size:0.8rem;color:var(--muted)">Stop: '+fmt(item.stop)+
-            (item.target?' · Cel: '+fmt(item.target):'')+(item.rr?' · R:R 1:'+item.rr:'')+
-            ' · pewnosc '+(item.confidence||0)+'%</div></div>';
-        }
-        const reasons = (item.reasons||[]).slice(0,3);
-        const reasonsHtml = reasons.length
-          ? '<ul class="reasons">'+reasons.map(r=>'<li>'+r+'</li>').join('')+'</ul>'
-          : '<div class="reasons">'+(item.summary||'')+'</div>';
-        card.innerHTML = '<div class="top"><div><div class="sym">'+(item.symbol||'').toUpperCase()+
-          '</div><div class="name">'+(item.name||'')+'</div></div><span class="badge '+decClass(d)+'">'+d+
-          '</span></div><div class="price-row"><span>Cena</span> <strong>'+fmt(item.price)+'</strong></div>'+
-          freshnessHtml(item)+modulesHtml(item)+entryHtml+reasonsHtml;
+        card.className = 'card' + ((bias === 'LONG' || bias === 'SHORT') ? (' has-signal' + (bias === 'SHORT' ? ' short' : '')) : '');
+        card.onclick = () => openModal(idx);
+
+        const candleShort = candle ? new Date(candle).toLocaleString('pl-PL', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+        const hasSignal = (bias === 'LONG' || bias === 'SHORT');
+
+        card.innerHTML = `
+          <div class="top">
+            <div>
+              <div class="sym">${item.symbol.toUpperCase()}</div>
+              <div class="name">${item.name || ''}</div>
+            </div>
+            <span class="badge ${biasClass(bias)}">${bias}</span>
+          </div>
+          <div class="price-row"><span>Pewność:</span> <b>${conf}%</b> ${stale}</div>
+          <div class="price-row"><span>Świeca 4H:</span> ${candleShort}</div>
+          <div class="price-row"><span>Filar:</span> Renko ${f.renko?'✅':'⚪'} · Harm ${f.harmonic?'✅':'⚪'} · Świeca ${f.candle?'✅':'⚪'}</div>
+          <div class="entry-box">
+            <div class="lbl">Wejście</div>
+            <div class="val">${hasSignal ? fmt(entry) : '—'}</div>
+            <div class="price-row" style="margin-top:6px;margin-bottom:0">
+              <span>Stop:</span> ${hasSignal ? fmt(stop) : '—'} · <span>Cel:</span> ${hasSignal ? fmt(target) : '—'}
+            </div>
+          </div>
+        `;
         grid.appendChild(card);
       });
-      if (latest) document.getElementById('updated').textContent = 'Aktualizacja: '+new Date(latest).toLocaleString('pl-PL')+' · TF: 4H';
     }
+
     function openModal(idx) {
       const item = DATA[idx];
-      const d = item.decision || 'BRAK';
-      document.getElementById('m-title').textContent = (item.symbol||'').toUpperCase()+' – '+(item.name||'');
-      let html = '<div class="decision-hero '+decClass(d)+'"><div class="big">'+d+'</div>'+
-        '<div style="margin-top:6px;color:var(--muted);font-size:0.9rem">'+(d==='BRAK'?'Brak setupu 4H':'Setup 4H')+'</div></div>'+
-        '<div class="metrics">'+
-        '<div class="metric"><div class="lbl">Cena</div><div class="val">'+fmt(item.price)+'</div></div>'+
-        '<div class="metric"><div class="lbl">Wejscie</div><div class="val">'+fmt(item.entry)+'</div></div>'+
-        '<div class="metric"><div class="lbl">Stop</div><div class="val">'+fmt(item.stop)+'</div></div></div>'+
-        '<div class="metrics">'+
-        '<div class="metric"><div class="lbl">Cel</div><div class="val">'+fmt(item.target)+'</div></div>'+
-        '<div class="metric"><div class="lbl">R:R</div><div class="val">'+(item.rr!=null?'1:'+item.rr:'—')+'</div></div>'+
-        '<div class="metric"><div class="lbl">Pewnosc</div><div class="val">'+(item.confidence||0)+'%</div></div></div>';
-      html += '<div class="section"><div class="section-title">Dlaczego</div>';
-      if (item.reasons && item.reasons.length) html += '<ul class="reasons">'+item.reasons.map(r=>'<li>'+r+'</li>').join('')+'</ul>';
-      else html += '<div class="empty">Brak</div>';
-      html += '</div>';
-      const tf4 = (item.timeframes||{})['4H']||{};
-      html += '<div class="section"><div class="section-title">Harmoniczne 4H</div>';
-      if (tf4.harmonics && tf4.harmonics.length) tf4.harmonics.forEach(h => {
-        html += '<span class="tag '+(h.direction==='bullish'?'bull':'bear')+'">'+h.name+' '+h.direction+' ('+h.status+')</span>';
-      }); else html += '<span class="empty">brak</span>';
-      html += '</div><div class="section"><div class="section-title">Swiece 4H</div>';
-      const imp = ['Bullish Engulfing','Bearish Engulfing','Hammer','Shooting Star','Morning Star','Evening Star'];
-      const cands = (tf4.candles||[]).filter(c => imp.includes(c.name));
-      if (cands.length) cands.forEach(c => {
-        html += '<span class="tag '+(c.direction==='bullish'?'bull':c.direction==='bearish'?'bear':'')+'">'+c.name+'</span>';
-      }); else html += '<span class="empty">brak silnych</span>';
-      html += '</div><div class="ctx"><div class="section-title">Kontekst</div>';
-      ['1H','Daily'].forEach(tf => {
-        const t = (item.timeframes||{})[tf];
-        if (!t || t.error) return;
-        const r = t.renko||{};
-        html += '<div>'+tf+': Renko '+(r.direction==='up'?'↑':r.direction==='down'?'↓':'?')+' ×'+(r.consecutive||0)+'</div>';
-      });
-      html += '</div>';
+      const raw = item._raw || {};
+      const bias = raw.decision || 'NIC';
+      const conf = raw.confidence != null ? raw.confidence : 0;
+      const entry = raw.entry;
+      const stop = raw.stop;
+      const target = raw.target;
+      const rr = raw.rr != null ? ('1:' + raw.rr) : '—';
+      const candle = raw.candle_close_time || raw.timestamp || '';
+      const daily = raw.daily_context || '—';
+      const reasons = raw.reasons || [];
+      const f = raw.filars || {};
+      const confluence = raw.confluence || '—';
+      const atr = raw.atr_4h != null ? fmt(raw.atr_4h) : '—';
+      const stale = raw.candle_stale ? ' (⏳ dane mogą być nieaktualne)' : '';
+
+      document.getElementById('m-title').textContent = item.symbol.toUpperCase();
+
+      let html = `
+        <div class="decision-hero ${biasClass(bias)}">
+          <div class="big">${bias}</div>
+          <div style="color:#8b9bb0;margin-top:4px">pewność ${conf}% · confluence ${confluence}</div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric"><div class="lbl">Wejście</div><div class="val">${fmt(entry)}</div></div>
+          <div class="metric"><div class="lbl">Stop</div><div class="val">${fmt(stop)}</div></div>
+          <div class="metric"><div class="lbl">Cel</div><div class="val">${fmt(target)}</div></div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric"><div class="lbl">R:R</div><div class="val">${rr}</div></div>
+          <div class="metric"><div class="lbl">ATR(14)</div><div class="val">${atr}</div></div>
+          <div class="metric"><div class="lbl">Kontekst Daily</div><div class="val">${daily}</div></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Filar confluence</div>
+          <span class="tag ${f.renko?'bull':''}">Renko ${f.renko?'✅':'⚪'}</span>
+          <span class="tag ${f.harmonic?'bull':''}">Harmoniczna ${f.harmonic?'✅':'⚪'}</span>
+          <span class="tag ${f.candle?'bull':''}">Świeca ${f.candle?'✅':'⚪'}</span>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dlaczego</div>
+          ${reasons.length
+            ? '<ul class="reasons">' + reasons.map(r => '<li>' + r + '</li>').join('') + '</ul>'
+            : '<div class="empty">Brak wyraźnych powodów</div>'}
+        </div>
+
+        <div class="ctx">
+          Świeca 4H zamknięta: ${candle ? new Date(candle).toLocaleString('pl-PL') : '—'}${stale}
+        </div>
+      `;
+
       document.getElementById('m-body').innerHTML = html;
       document.getElementById('modal').classList.add('open');
     }
-    function closeModal() { document.getElementById('modal').classList.remove('open'); }
-    document.getElementById('modal').addEventListener('click', e => { if (e.target.id==='modal') closeModal(); });
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+    }
+
+    document.getElementById('modal').addEventListener('click', e => {
+      if (e.target.id === 'modal') closeModal();
+    });
+
     load();
   </script>
 </body>

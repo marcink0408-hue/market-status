@@ -1,468 +1,235 @@
 ﻿<!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Market Status · 4H</title>
-  <style>
-    :root { --bg:#0b0f14; --card:#141a22; --border:#243041; --text:#e8eef6; --muted:#8b9bb0; --long:#22c55e; --short:#ef4444; --none:#64748b; }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:20px; }
-    header { margin-bottom:22px; }
-    h1 { font-size:1.45rem; font-weight:600; }
-    .updated { color:var(--muted); font-size:0.82rem; margin-top:4px; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; cursor:pointer; transition:border-color .15s,transform .15s; }
-    .card:hover { border-color:#3d4f66; transform:translateY(-1px); }
-    .card.has-signal { border-color:rgba(34,197,94,.35); }
-    .card.has-signal.short { border-color:rgba(239,68,68,.35); }
-    .top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
-    .sym { font-size:1.2rem; font-weight:700; }
-    .name { color:var(--muted); font-size:0.78rem; margin-top:2px; }
-    .badge { font-size:0.72rem; font-weight:800; padding:5px 11px; border-radius:999px; letter-spacing:.04em; display:inline-block; }
-    .badge.LONG { background:rgba(34,197,94,.18); color:var(--long); }
-    .badge.SHORT { background:rgba(239,68,68,.18); color:var(--short); }
-    .badge.BRAK, .badge.NIC { background:rgba(100,116,139,.2); color:var(--none); }
-    .price-row { margin-bottom:8px; font-size:0.9rem; }
-    .price-row span { color:var(--muted); }
-    .entry-box { background:rgba(0,0,0,.28); border-radius:10px; padding:10px 12px; margin-bottom:10px; font-size:0.88rem; }
-    .entry-box .lbl { color:var(--muted); font-size:0.72rem; text-transform:uppercase; }
-    .entry-box .val { font-weight:700; font-size:1.05rem; margin-top:2px; }
-    .reasons { font-size:0.8rem; color:var(--muted); line-height:1.45; }
-    .reasons li { margin-left:14px; margin-top:3px; }
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:100; align-items:center; justify-content:center; padding:16px; }
-    .modal-overlay.open { display:flex; }
-    .modal { background:var(--card); border:1px solid var(--border); border-radius:16px; max-width:1100px; width:100%; max-height:94vh; overflow-y:auto; padding:24px; }
-    #price-chart { width:100%; height:440px; min-height:320px; background:#0b0f14; border:1px solid var(--border); border-radius:10px; }
-    .chart-note { color:var(--muted); font-size:.76rem; margin-top:6px; }
-    @media(max-width:650px) { body{padding:12px} .modal{padding:14px} #price-chart{height:340px} .metrics{grid-template-columns:1fr 1fr} }
-    .modal-header { display:flex; justify-content:space-between; margin-bottom:18px; }
-    .modal-header h2 { font-size:1.3rem; }
-    .close-btn { background:none; border:none; color:var(--muted); font-size:1.6rem; cursor:pointer; }
-    .decision-hero { text-align:center; padding:16px; border-radius:12px; margin-bottom:16px; background:rgba(0,0,0,.3); }
-    .decision-hero .big { font-size:1.8rem; font-weight:800; letter-spacing:.06em; }
-    .decision-hero.LONG .big { color:var(--long); }
-    .decision-hero.SHORT .big { color:var(--short); }
-    .decision-hero.BRAK .big { color:var(--none); }
-    .metrics { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
-    .metric { background:rgba(0,0,0,.25); border-radius:10px; padding:10px; text-align:center; }
-    .metric .lbl { font-size:0.7rem; color:var(--muted); text-transform:uppercase; }
-    .metric .val { font-weight:700; margin-top:4px; font-size:0.95rem; }
-    .section { margin-top:14px; }
-    .section-title { font-size:0.72rem; color:var(--muted); text-transform:uppercase; margin-bottom:6px; }
-    .tag { display:inline-block; background:rgba(255,255,255,.06); border-radius:6px; padding:3px 8px; font-size:0.8rem; margin:2px 4px 2px 0; }
-    .tag.bull { color:var(--long); } .tag.bear { color:var(--short); }
-    .empty { color:var(--muted); font-size:0.85rem; }
-    .ctx { margin-top:18px; padding-top:14px; border-top:1px solid var(--border); font-size:0.82rem; color:var(--muted); }
-    .stats-panel { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-top:16px; }
-    .stats-panel h2 { font-size:1.1rem; margin-bottom:12px; }
-    .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin-bottom:12px; }
-    .stats-metric { background:rgba(0,0,0,.25); border-radius:10px; padding:12px; text-align:center; }
-    .stats-metric .lbl { font-size:0.7rem; color:var(--muted); text-transform:uppercase; }
-    .stats-metric .val { font-weight:700; margin-top:4px; font-size:1.2rem; }
-    .stats-metric .val.good { color:var(--long); }
-    .stats-metric .val.bad { color:var(--short); }
-    .stats-note { color:var(--muted); font-size:0.82rem; margin-top:8px; }
-    .stats-pattern-table { width:100%; border-collapse:collapse; margin-top:8px; font-size:0.85rem; }
-    .stats-pattern-table th, .stats-pattern-table td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); }
-    .stats-pattern-table th { color:var(--muted); font-weight:600; font-size:0.72rem; text-transform:uppercase; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Market Status · Analiza 4H</title>
+<script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+:root{--bg:#0a0f18;--panel:#111a28;--panel2:#162235;--border:#26364d;--text:#edf3fb;--muted:#9aaac0;--green:#35d07f;--red:#ff6376;--amber:#f7c66b;--blue:#70b7ff;--shadow:0 16px 45px #0005}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#16243a 0,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 Inter,Segoe UI,system-ui,sans-serif}button,select{font:inherit}button{cursor:pointer}
+.wrap{max-width:1440px;margin:auto;padding:26px 22px 60px}header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:25px;flex-wrap:wrap}.brand{display:flex;gap:13px;align-items:center}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#2e8bff,#38d88d);display:grid;place-items:center;color:#07111b;font-weight:900;font-size:22px;box-shadow:0 8px 24px #248bff30}h1{font-size:clamp(1.35rem,2.6vw,2rem);line-height:1.15;margin:0;letter-spacing:-.035em}.subtitle{color:var(--muted);font-size:.88rem;margin-top:5px}.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.status-pill,.btn{border:1px solid var(--border);border-radius:999px;padding:8px 13px;background:#111a28;color:var(--text);font-size:.83rem}.btn:hover{border-color:var(--blue)}.btn.primary{background:#17385a;border-color:#2b6596}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin:26px 0 13px}.section-head h2{font-size:1.08rem;margin:0}.section-head p{color:var(--muted);font-size:.82rem;margin:3px 0 0}.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}.tile{position:relative;text-align:left;width:100%;min-height:148px;padding:19px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,#162338,#101723);color:var(--text);transition:transform .16s,border-color .16s,box-shadow .16s;overflow:hidden}.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.tile.long{border-color:#2b8b60}.tile.short{border-color:#a84353}.tile.none{border-color:#34445a}.tile:before{content:"";position:absolute;width:120px;height:120px;right:-45px;top:-45px;border-radius:50%;background:var(--glow,#64748b);opacity:.11;filter:blur(4px)}.tile.long{--glow:var(--green)}.tile.short{--glow:var(--red)}.tile.none{--glow:#8192aa}.tile-top{display:flex;align-items:start;justify-content:space-between;gap:10px;position:relative}.symbol{font-weight:850;font-size:1.3rem;letter-spacing:.025em}.instrument-name{font-size:.77rem;color:var(--muted);margin-top:2px}.direction{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 10px;font-size:.73rem;font-weight:850;letter-spacing:.04em;white-space:nowrap}.direction.long{background:#163f30;color:var(--green)}.direction.short{background:#4b202a;color:var(--red)}.direction.none{background:#29364a;color:#b2bfd1}.tile-bottom{position:relative;display:flex;justify-content:space-between;align-items:end;margin-top:25px;gap:10px}.score-label{font-size:.74rem;color:var(--muted)}.score{font-weight:800;font-size:1.2rem}.tile-arrow{font-size:1.3rem;color:var(--muted)}.empty-state,.loading,.error{padding:25px;border:1px dashed var(--border);border-radius:16px;color:var(--muted);text-align:center;background:#111a2866}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:18px;margin-top:14px}.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:var(--panel2);border:1px solid #293b53;border-radius:13px;padding:14px}.stat-label{color:var(--muted);font-size:.75rem}.stat-value{font-size:1.35rem;font-weight:800;margin-top:4px;overflow-wrap:anywhere}.stat-value.bad{color:var(--red)}.stat-value.good{color:var(--green)}.small-note{font-size:.78rem;color:var(--muted);margin-top:12px}.table-wrap{overflow:auto;margin-top:14px}table{width:100%;border-collapse:collapse;min-width:520px}th,td{text-align:left;border-bottom:1px solid var(--border);padding:10px 9px;font-size:.83rem}th{color:var(--muted);font-weight:650}
+.overlay{position:fixed;inset:0;z-index:20;background:#03060bd9;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px}.overlay.open{display:flex}.modal{width:min(1180px,100%);max-height:94vh;overflow:auto;background:#0d1522;border:1px solid #31445e;border-radius:20px;box-shadow:0 30px 100px #000a;padding:22px}.modal-head{display:flex;align-items:start;justify-content:space-between;gap:14px;position:sticky;top:-22px;background:#0d1522ed;backdrop-filter:blur(12px);padding:7px 0 14px;z-index:3;border-bottom:1px solid var(--border)}.modal-head h2{margin:0;font-size:1.4rem}.modal-sub{font-size:.82rem;color:var(--muted);margin-top:4px}.close{border:1px solid var(--border);background:#182337;color:var(--text);border-radius:10px;width:40px;height:40px;font-size:1.5rem}.hero{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;background:linear-gradient(100deg,#17263a,#111b2a);border:1px solid var(--border);border-radius:15px;padding:16px;margin:17px 0}.hero .decision{font-size:1.5rem;font-weight:900}.hero .decision.long{color:var(--green)}.hero .decision.short{color:var(--red)}.hero .decision.none{color:#b2bfd1}.hero small{color:var(--muted)}.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0}.metric{border:1px solid var(--border);background:#121e2e;border-radius:12px;padding:12px}.metric .label{font-size:.72rem;color:var(--muted)}.metric .value{font-size:1.05rem;font-weight:800;margin-top:5px;overflow-wrap:anywhere}.modal-section{margin-top:22px}.modal-section h3{font-size:1rem;margin:0 0 10px}.section-help{color:var(--muted);font-size:.81rem;margin:-4px 0 12px}.chart{height:420px;min-height:300px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#080e17}.chart-empty{height:100%;display:grid;place-items:center;color:var(--muted);padding:20px;text-align:center}.tag-row{display:flex;gap:7px;flex-wrap:wrap}.tag{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:#172337;padding:7px 10px;border-radius:9px;font-size:.8rem}.tag.bull{border-color:#286c4c;color:#7ce5aa}.tag.bear{border-color:#813b4a;color:#ff9aa8}.item-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}.pattern-card{display:flex;gap:12px;align-items:start;background:#111d2d;border:1px solid var(--border);border-radius:13px;padding:12px}.pattern-icon{flex:0 0 64px;width:64px;height:64px;background:#0b1320;border:1px solid #273850;border-radius:11px;display:grid;place-items:center}.pattern-icon svg{width:58px;height:54px}.pattern-name{font-weight:800;font-size:.9rem}.pattern-kind{font-size:.72rem;color:var(--blue);margin-top:2px}.pattern-desc{font-size:.8rem;color:var(--muted);margin-top:5px}.muted{color:var(--muted)}.notice{padding:12px 14px;border:1px solid #6e5831;background:#2b2418;color:#f6dba2;border-radius:11px;font-size:.82rem;margin-top:12px}.error-text{color:#ff9aa8}.footer{margin-top:32px;text-align:center;color:#71839a;font-size:.76rem}
+@media(max-width:800px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:18px 13px 40px}.modal{padding:14px}.modal-head{top:-14px}.chart{height:350px}}
+@media(max-width:430px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tile{padding:13px;min-height:135px}.symbol{font-size:1.05rem}.direction{font-size:.66rem;padding:5px 7px}.tile-bottom{margin-top:18px}.stats-grid{grid-template-columns:1fr 1fr}.stat{padding:11px}.stat-value{font-size:1.08rem}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Market Status · decyzje 4H</h1>
-    <div class="updated" id="updated">Ladowanie...</div>
-  </header>
-  <div class="grid" id="grid"></div>
-  <div class="stats-panel" id="stats-panel" style="display:none">
-    <h2>Statystyki backtestu</h2>
-    <div id="stats-body"><div class="stats-note">Ladowanie...</div></div>
-  </div>
-  <div class="modal-overlay" id="modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="m-title">—</h2>
-        <button class="close-btn" onclick="closeModal()">×</button>
-      </div>
-      <div id="m-body"></div>
-    </div>
-  </div>
-  <script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
-  <script>
-    let DATA = [];
-    let CHART_DATA = null;
-    let activeChart = null;
-    let chartResizeObserver = null;
+<div class="wrap">
+<header>
+ <div class="brand"><div class="logo">M</div><div><h1>Market Status <span style="color:#70b7ff">·</span> Analiza 4H</h1><div class="subtitle">Sygnały, formacje i statystyki rynku w jednym miejscu</div></div></div>
+ <div class="header-right"><span class="status-pill" id="connection">● Ładowanie danych…</span><button class="btn primary" id="refreshBtn">↻ Odśwież</button></div>
+</header>
+<div class="section-head"><div><h2>Instrumenty</h2><p>Kliknij kafelek, aby zobaczyć wykres i szczegóły sygnału.</p></div><div class="muted" id="updated">Oczekiwanie na dane…</div></div>
+<div class="tiles" id="tiles"><div class="loading">Pobieranie danych analizy…</div></div>
+<div class="section-head"><div><h2>Statystyki backtestu</h2><p>Wyniki historyczne — nie prognoza przyszłych zysków.</p></div></div>
+<section class="panel">
+ <div class="stats-grid" id="stats"><div class="stat"><div class="stat-label">Skuteczność</div><div class="stat-value">—</div></div><div class="stat"><div class="stat-label">Współczynnik zysku</div><div class="stat-value">—</div></div><div class="stat"><div class="stat-label">Maks. obsunięcie</div><div class="stat-value">—</div></div><div class="stat"><div class="stat-label">Liczba transakcji</div><div class="stat-value">—</div></div></div>
+ <div class="small-note" id="stats-note">Statystyki pojawią się, gdy plik backtestu będzie dostępny.</div>
+ <div class="table-wrap" id="pattern-stats"></div>
+</section>
+<div class="footer">Dane i sygnały mają charakter informacyjny. Ocena sygnału /100 nie jest prawdopodobieństwem zysku.</div>
+</div>
 
-    async function loadChartData() {
-      try {
-        const r = await fetch('../output/ohlc.json?t=' + Date.now(), {cache:'no-store'});
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        CHART_DATA = await r.json();
-      } catch (e) { console.warn('Brak danych wykresu:', e); CHART_DATA = null; }
-    }
-
-    function renderPriceChart(symbol, item) {
-      const host = document.getElementById('price-chart');
-      if (!host) return;
-      if (activeChart) { activeChart.remove(); activeChart = null; }
-      if (chartResizeObserver) { chartResizeObserver.disconnect(); chartResizeObserver = null; }
-      host.innerHTML = '';
-      const payload = CHART_DATA && CHART_DATA.symbols && CHART_DATA.symbols[symbol];
-      if (!payload || !payload.candles || !payload.candles.length || !window.LightweightCharts) {
-        host.innerHTML = '<div style="padding:18px;color:#8b9bb0">Brak danych wykresu. Sprawdź output/ohlc.json.</div>';
-        return;
-      }
-      activeChart = LightweightCharts.createChart(host, {
-        width:host.clientWidth,height:host.clientHeight,
-        layout:{background:{type:'solid',color:'#0b0f14'},textColor:'#cbd5e1'},
-        grid:{vertLines:{color:'#1e293b'},horzLines:{color:'#1e293b'}},
-        rightPriceScale:{borderColor:'#334155'},
-        timeScale:{borderColor:'#334155',timeVisible:true,secondsVisible:false},
-        crosshair:{mode:LightweightCharts.CrosshairMode.Normal}
-      });
-      const series = activeChart.addCandlestickSeries({
-        upColor:'#22c55e',downColor:'#ef4444',borderUpColor:'#22c55e',
-        borderDownColor:'#ef4444',wickUpColor:'#22c55e',wickDownColor:'#ef4444'
-      });
-      series.setData(payload.candles);
-
-const allMarkers = [...(payload.markers || [])];
-
-(payload.harmonics || []).forEach((pattern, index) => {
-    const points = pattern.points || [];
-    if (points.length < 4) return;
-
-    const color = pattern.direction === 'bullish'
-        ? '#22c55e'
-        : '#ef4444';
-
-    const line = activeChart.addLineSeries({
-        color: color,
-        lineWidth: 2,
-        lineStyle: pattern.status === 'completed'
-            ? LightweightCharts.LineStyle.Solid
-            : LightweightCharts.LineStyle.Dashed,
-        priceLineVisible: false,
-        lastValueVisible: false,
-        crosshairMarkerVisible: false
-    });
-
-    line.setData(
-        points.map(p => ({
-            time: p.time,
-            value: p.value
-        }))
-    );
-
-    points.forEach(point => {
-        allMarkers.push({
-            time: point.time,
-            position: pattern.direction === 'bullish'
-                ? 'belowBar'
-                : 'aboveBar',
-            color: color,
-            shape: 'circle',
-            text: pattern.name + ' ' + point.label
-        });
-    });
-});
-
-if (allMarkers.length) {
-    allMarkers.sort((a, b) => a.time - b.time);
-    series.setMarkers(allMarkers);
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+ <div class="modal">
+  <div class="modal-head"><div><h2 id="modal-title">Szczegóły instrumentu</h2><div class="modal-sub" id="modal-sub">Interwał 4H</div></div><button class="close" id="closeModal" aria-label="Zamknij">×</button></div>
+  <div id="modal-content"></div>
+ </div>
+</div>
+<script>
+'use strict';
+const PATHS={
+ decisions:'../output/decisions_log.json',
+ status:'../output/status.json',
+ chart:'../output/ohlc.json',
+ classic:'../output/classic_patterns.json',
+ signals:'../output/signals_history.json',
+ backtest:'../output/backtest_results.json'
+};
+let DATA=[], STATUS=[], CHART=null, CLASSIC=null, SIGNALS=null, BACKTEST=null, chartInstance=null, resizeObserver=null;
+const $=id=>document.getElementById(id);
+const fmt=(v, digits=2)=>{if(v===null||v===undefined||v===''||!Number.isFinite(Number(v)))return '—';return Number(v).toLocaleString('pl-PL',{minimumFractionDigits:digits,maximumFractionDigits:digits});};
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const directionClass=d=>d==='LONG'?'long':d==='SHORT'?'short':'none';
+const directionLabel=d=>d==='LONG'?'↑ LONG':d==='SHORT'?'↓ SHORT':'— BRAK';
+const decisionOf=o=>['LONG','SHORT'].includes(String(o?.decision||'').toUpperCase())?String(o.decision).toUpperCase():'BRAK';
+const numOrDash=(v)=>v==null||!Number.isFinite(Number(v))?'—':fmt(v);
+function readArray(json){if(Array.isArray(json))return json;if(Array.isArray(json?.decisions))return json.decisions;if(Array.isArray(json?.signals))return json.signals;if(Array.isArray(json?.results))return json.results;return [];}
+function latestBySymbol(items){const map=new Map();for(const item of items||[]){const key=String(item.symbol||item.instrument||'').toLowerCase();if(!key)continue;const t=String(item.candle_close_time||item.timestamp||item.updated||'');const prev=map.get(key);if(!prev||t>=String(prev.candle_close_time||prev.timestamp||prev.updated||''))map.set(key,item);}return [...map.values()];}
+async function fetchJson(path, required=false){try{const r=await fetch(path+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}catch(e){if(required)throw e;console.warn('Opcjonalny plik niedostępny:',path,e.message);return null;}}
+async function loadAll(){
+ $('connection').textContent='● Ładowanie danych…';
+ try{
+  const [decisions,status,chart,classic,signals,backtest]=await Promise.all([
+   fetchJson(PATHS.decisions,true),fetchJson(PATHS.status),fetchJson(PATHS.chart),fetchJson(PATHS.classic),fetchJson(PATHS.signals),fetchJson(PATHS.backtest)
+  ]);
+  STATUS=Array.isArray(status)?status:readArray(status);CHART=chart;CLASSIC=classic;SIGNALS=signals;BACKTEST=backtest;
+  DATA=latestBySymbol(STATUS.length?STATUS:readArray(decisions));
+  if(!DATA.length)throw new Error('Plik dziennika nie zawiera decyzji dla instrumentów.');
+  renderTiles();renderStats();$('connection').textContent='● Dane załadowane';$('connection').style.color='var(--green)';
+  const times=DATA.map(x=>new Date(x.updated||x.timestamp||x.candle_close_time||0).getTime()).filter(Number.isFinite);
+  const newest=times.length?Math.max(...times):0;
+  $('updated').textContent=newest?'Aktualizacja: '+new Date(newest).toLocaleString('pl-PL'):'Dane analizy 4H';
+ }catch(e){$('connection').textContent='● Błąd danych';$('connection').style.color='var(--red)';$('tiles').innerHTML='<div class="error">Nie udało się wczytać decyzji: '+esc(e.message)+'<br><span class="muted">Sprawdź output/decisions_log.json i GitHub Pages.</span></div>';}
 }
-      [['entry','ENTRY','#3b82f6'],['stop','STOP LOSS','#ef4444'],['target','TAKE PROFIT','#22c55e']].forEach(([key,title,color]) => {
-        const v = item[key] != null ? item[key] : (payload.levels || {})[key];
-        if (v != null && Number.isFinite(Number(v))) series.createPriceLine({
-          price:Number(v),color,lineWidth:2,lineStyle:LightweightCharts.LineStyle.Dashed,
-          axisLabelVisible:true,title
-        });
-      });
-      activeChart.timeScale().fitContent();
-      chartResizeObserver = new ResizeObserver(entries => {
-        if (activeChart && entries.length) activeChart.applyOptions({width:entries[0].contentRect.width});
-      });
-      chartResizeObserver.observe(host);
-    }
-
-    function biasClass(b) {
-      if (b === 'LONG' || b === 'SHORT') return b;
-      return 'NIC';
-    }
-
-    function decClass(d) {
-      return (d === 'LONG' || d === 'SHORT') ? d : 'BRAK';
-    }
-
-    function fmt(n) {
-      if (n == null || n === '') return '—';
-      const x = Number(n);
-      if (isNaN(x)) return '—';
-      if (Math.abs(x) >= 100) return x.toFixed(2);
-      if (Math.abs(x) >= 1) return x.toFixed(4);
-      return x.toFixed(5);
-    }
-
-    function modulesHtml(raw) {
-      const f = raw.filars || {};
-      const icon = ok => ok ? '✅' : '⚪';
-      const pillars = raw.confluence ? raw.confluence : '—';
-      return '<div class="price-row" style="margin-bottom:8px">Renko ' + icon(f.renko) + ' · Harm ' + icon(f.harmonic) + ' · Swieca ' + icon(f.candle) + ' · ' + pillars + '</div>';
-    }
-
-    function freshnessHtml(raw) {
-      const t = raw.candle_close_time || raw.timestamp;
-      if (!t) return '';
-      let label = 'Swieca 4H: ' + new Date(t).toLocaleString('pl-PL');
-      try {
-        const ageH = (Date.now() - new Date(t).getTime()) / 3600000;
-        if (ageH > 8) label = '⚠️ STARE DANE · ' + label;
-        else if (ageH > 5) label = '⏳ ' + label;
-      } catch(e) {}
-      return '<div class="price-row" style="font-size:0.72rem;margin-bottom:6px">' + label + '</div>';
-    }
-
-    async function load() {
-      try {
-        const res = await fetch('../output/decisions_log.json?t=' + Date.now());
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const json = await res.json();
-        const decisions = json.decisions || json;
-
-        const latest = new Map();
-        decisions.forEach(d => {
-          const sym = d.symbol;
-          const cur = latest.get(sym);
-          const dT = d.candle_close_time || d.timestamp || '';
-          const cT = cur ? (cur.candle_close_time || cur.timestamp || '') : '';
-          if (!cur || dT > cT) latest.set(sym, d);
-        });
-
-        DATA = Array.from(latest.values());
-        render();
-        if (DATA.length) {
-          const newest = Math.max(...DATA.map(x => new Date(x.timestamp).getTime()));
-          document.getElementById('updated').textContent = 'Dane z: ' + new Date(newest).toLocaleString('pl-PL') + ' · TF: 4H';
-        } else {
-          document.getElementById('updated').textContent = 'Brak decyzji w logu';
-        }
-        renderStats();
-      } catch(e) {
-        document.getElementById('updated').textContent = 'Błąd ładowania: ' + e.message;
-        console.error(e);
-      }
-    }
-
-    function render() {
-      const grid = document.getElementById('grid');
-      grid.innerHTML = '';
-      let latest = '';
-      const sorted = [...DATA].sort((a, b) => {
-        const rank = d => (d.decision === 'LONG' || d.decision === 'SHORT') ? 0 : 1;
-        return rank(a) - rank(b) || (b.confidence || 0) - (a.confidence || 0);
-      });
-      sorted.forEach(item => {
-        const realIdx = DATA.indexOf(item);
-        if (item.timestamp) latest = item.timestamp;
-        const d = item.decision || 'BRAK';
-        const card = document.createElement('div');
-        card.className = 'card' + (d === 'LONG' ? ' has-signal' : d === 'SHORT' ? ' has-signal short' : '');
-        card.onclick = () => openModal(realIdx);
-
-        let entryHtml = '';
-        if (d === 'LONG' || d === 'SHORT') {
-          entryHtml = '<div class="entry-box"><div class="lbl">Wejscie</div><div class="val">' + fmt(item.entry) +
-            '</div><div style="margin-top:6px;font-size:0.8rem;color:var(--muted)">Stop: ' + fmt(item.stop) +
-            (item.target ? ' · Cel: ' + fmt(item.target) : '') + (item.rr ? ' · R:R 1:' + item.rr : '') +
-            ' · pewnosc ' + (item.confidence || 0) + '%</div></div>';
-        }
-
-        const reasons = (item.reasons || []).slice(0, 3);
-        const reasonsHtml = reasons.length
-          ? '<ul class="reasons">' + reasons.map(r => '<li>' + r + '</li>').join('') + '</ul>'
-          : '<div class="reasons">' + (item.summary || '') + '</div>';
-
-        card.innerHTML = '<div class="top"><div><div class="sym">' + (item.symbol || '').toUpperCase() +
-          '</div><div class="name">' + (item.symbol || '') + '</div></div><span class="badge ' + decClass(d) + '">' + d +
-          '</span></div>' +
-          freshnessHtml(item) +
-          modulesHtml(item) +
-          entryHtml +
-          reasonsHtml;
-        grid.appendChild(card);
-      });
-      if (latest) document.getElementById('updated').textContent = 'Dane z: ' + new Date(latest).toLocaleString('pl-PL') + ' · TF: 4H';
-    }
-
-    function openModal(idx) {
-      const item = DATA[idx];
-      const d = item.decision || 'BRAK';
-      document.getElementById('m-title').textContent = (item.symbol || '').toUpperCase();
-
-      let html = '<div class="decision-hero ' + decClass(d) + '"><div class="big">' + d + '</div>' +
-        '<div style="margin-top:6px;color:var(--muted);font-size:0.9rem">' +
-        (d === 'BRAK' ? 'Brak setupu 4H' : 'Setup 4H · confluence ' + (item.confluence || '—')) + '</div></div>' +
-        '<div class="metrics">' +
-        '<div class="metric"><div class="lbl">Wejscie</div><div class="val">' + fmt(item.entry) + '</div></div>' +
-        '<div class="metric"><div class="lbl">Stop</div><div class="val">' + fmt(item.stop) + '</div></div>' +
-        '<div class="metric"><div class="lbl">Cel</div><div class="val">' + fmt(item.target) + '</div></div></div>' +
-        '<div class="metrics">' +
-        '<div class="metric"><div class="lbl">R:R</div><div class="val">' + (item.rr != null ? '1:' + item.rr : '—') + '</div></div>' +
-        '<div class="metric"><div class="lbl">ATR(14)</div><div class="val">' + fmt(item.atr_4h) + '</div></div>' +
-        '<div class="metric"><div class="lbl">Ocena sygnału</div><div class="val">' + (item.confidence || 0) + '/100</div></div></div>' +
-        '<div class="section"><div class="section-title">Wykres świecowy 4H · OHLC</div><div id="price-chart"></div><div class="chart-note">Dane Yahoo Finance · Entry / Stop Loss / Take Profit · wykryte formacje</div></div>';
-
-      html += '<div class="section"><div class="section-title">Dlaczego</div>';
-      if (item.reasons && item.reasons.length) {
-        html += '<ul class="reasons">' + item.reasons.map(r => '<li>' + r + '</li>').join('') + '</ul>';
-      } else {
-        html += '<div class="empty">Brak</div>';
-      }
-      html += '</div>';
-
-      html += '<div class="section"><div class="section-title">Filary confluence</div>' +
-        '<span class="tag ' + (item.filars && item.filars.renko ? 'bull' : '') + '">Renko ' + (item.filars && item.filars.renko ? '✅' : '⚪') + '</span>' +
-        '<span class="tag ' + (item.filars && item.filars.harmonic ? 'bull' : '') + '">Harmoniczna ' + (item.filars && item.filars.harmonic ? '✅' : '⚪') + '</span>' +
-        '<span class="tag ' + (item.filars && item.filars.candle ? 'bull' : '') + '">Swieca ' + (item.filars && item.filars.candle ? '✅' : '⚪') + '</span>' +
-        '</div>';
-
-      html += '<div class="section"><div class="section-title">Kontekst Daily</div>' +
-        '<span class="tag">' + (item.daily_context || '—') + '</span></div>';
-
-      html += '<div class="section"><div class="section-title">Harmoniczne 4H</div>';
-      const tf4 = (item.timeframes || {})['4H'] || {};
-      if (tf4.harmonics && tf4.harmonics.length) {
-        tf4.harmonics.forEach(h => {
-          html += '<span class="tag ' + (h.direction === 'bullish' ? 'bull' : 'bear') + '">' + h.name + ' ' + h.direction + ' (' + h.status + ')</span>';
-        });
-      } else {
-        html += '<span class="empty">brak</span>';
-      }
-      html += '</div>';
-
-      html += '<div class="section"><div class="section-title">Swiece 4H</div>';
-      const imp = ['Bullish Engulfing', 'Bearish Engulfing', 'Hammer', 'Shooting Star', 'Morning Star', 'Evening Star'];
-      const cands = ((tf4.candles) || []).filter(c => imp.includes(c.name));
-      if (cands.length) {
-        cands.forEach(c => {
-          html += '<span class="tag ' + (c.direction === 'bullish' ? 'bull' : c.direction === 'bearish' ? 'bear' : '') + '">' + c.name + '</span>';
-        });
-      } else {
-        html += '<span class="empty">brak silnych</span>';
-      }
-      html += '</div>';
-
-      html += '<div class="ctx"><div class="section-title">Kontekst</div>';
-      ['1H', 'Daily'].forEach(tf => {
-        const t = (item.timeframes || {})[tf];
-        if (!t || t.error) return;
-        const r = t.renko || {};
-        html += '<div>' + tf + ': Renko ' + (r.direction === 'up' ? '↑' : r.direction === 'down' ? '↓' : '?') + ' ×' + (r.consecutive || 0) + '</div>';
-      });
-      const t4 = (item.candle_close_time || item.timestamp);
-      if (t4) html += '<div style="margin-top:6px">Świeca 4H zamknięta: ' + new Date(t4).toLocaleString('pl-PL') + (item.candle_stale ? ' ⏳' : '') + '</div>';
-      html += '</div>';
-
-      document.getElementById('m-body').innerHTML = html;
-      document.getElementById('modal').classList.add('open');
-      requestAnimationFrame(() => renderPriceChart(item.symbol, item));
-    }
-
-    function closeModal() {
-      document.getElementById('modal').classList.remove('open');
-    }
-
-    document.getElementById('modal').addEventListener('click', e => {
-      if (e.target.id === 'modal') closeModal();
-    });
-    let BACKTEST = null;
-
-    async function loadBacktest() {
-      try {
-        const r = await fetch('../output/backtest_results.json?t=' + Date.now(), {cache:'no-store'});
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        BACKTEST = await r.json();
-      } catch (e) {
-        console.warn('Brak backtest_results.json:', e);
-        BACKTEST = null;
-      }
-    }
-
-    function _statVal(v, kind) {
-      if (v == null || !Number.isFinite(Number(v))) return '—';
-      const n = Number(v);
-      if (kind === 'pct') return n.toFixed(1) + '%';
-      if (kind === 'pf') return n.toFixed(2);
-      if (kind === 'money') return n.toFixed(2);
-      if (kind === 'ratio') return n.toFixed(2);
-      return String(v);
-    }
-
-    function _statClass(v, kind) {
-      if (v == null || !Number.isFinite(Number(v))) return '';
-      const n = Number(v);
-      if (kind === 'pct') return n >= 50 ? 'good' : 'bad';
-      if (kind === 'pf') return n >= 1 ? 'good' : 'bad';
-      if (kind === 'money') return n >= 0 ? 'good' : 'bad';
-      return '';
-    }
-
-    function renderStats() {
-      const panel = document.getElementById('stats-panel');
-      const body = document.getElementById('stats-body');
-      if (!BACKTEST || !BACKTEST.overall) {
-        panel.style.display = 'none';
-        return;
-      }
-      panel.style.display = 'block';
-      const o = BACKTEST.overall;
-      const train = BACKTEST.train || {};
-      const test = BACKTEST.test || {};
-      const wf = BACKTEST.walk_forward || [];
-      const byPattern = BACKTEST.by_pattern || {};
-
-      const tooFew = (o.trades || 0) < 10;
-      const noteHtml = tooFew
-        ? '<div class="stats-note">⚠️ Za mało transakcji (' + (o.trades || 0) + '), żeby wyciągać wnioski. Backtest liczy się dopiero od ~30 transakcji. To zgodne z instrukcją: „Wyniki pojawią się dopiero po przeprowadzeniu testów historycznych.”</div>'
-        : '';
-
-      let html = '<div class="stats-grid">' +
-        '<div class="stats-metric"><div class="lbl">Win Rate</div><div class="val ' + _statClass(o.win_rate, 'pct') + '">' + _statVal(o.win_rate, 'pct') + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">Profit Factor</div><div class="val ' + _statClass(o.profit_factor, 'pf') + '">' + _statVal(o.profit_factor, 'pf') + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">Max Drawdown</div><div class="val ' + _statClass(o.max_drawdown, 'money') + '">' + _statVal(o.max_drawdown, 'money') + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">Transakcje</div><div class="val">' + (o.trades || 0) + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">Avg R:R</div><div class="val">' + _statVal(o.avg_rr, 'ratio') + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">Expectancy</div><div class="val ' + _statClass(o.expectancy, 'money') + '">' + _statVal(o.expectancy, 'money') + '</div></div>' +
-        '</div>' + noteHtml;
-
-      // Long / Short
-      html += '<div class="stats-grid">' +
-        '<div class="stats-metric"><div class="lbl">LONG</div><div class="val">' + (o.long_trades || 0) + ' · ' + _statVal(o.long_win_rate, 'pct') + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">SHORT</div><div class="val">' + (o.short_trades || 0) + ' · ' + _statVal(o.short_win_rate, 'pct') + '</div></div>' +
-        '</div>';
-
-      // Train / Test
-      html += '<div class="stats-grid">' +
-        '<div class="stats-metric"><div class="lbl">Train (70%)</div><div class="val">' + (train.trades || 0) + ' · WR ' + _statVal(train.win_rate, 'pct') + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">Test (30%)</div><div class="val">' + (test.trades || 0) + ' · WR ' + _statVal(test.win_rate, 'pct') + '</div></div>' +
-        '<div class="stats-metric"><div class="lbl">Walk-forward (foldy)</div><div class="val">' + wf.length + '</div></div>' +
-        '</div>';
-
-      // Per pattern
-      const pats = Object.keys(byPattern);
-      if (pats.length) {
-        html += '<table class="stats-pattern-table"><thead><tr><th>Formacja</th><th>Transakcje</th><th>Win Rate</th><th>Profit Factor</th><th>Expectancy</th></tr></thead><tbody>';
-        pats.forEach(p => {
-          const s = byPattern[p];
-          html += '<tr><td>' + p + '</td><td>' + (s.trades || 0) + '</td><td class="' + _statClass(s.win_rate, 'pct') + '">' + _statVal(s.win_rate, 'pct') + '</td><td class="' + _statClass(s.profit_factor, 'pf') + '">' + _statVal(s.profit_factor, 'pf') + '</td><td class="' + _statClass(s.expectancy, 'money') + '">' + _statVal(s.expectancy, 'money') + '</td></tr>';
-        });
-        html += '</tbody></table>';
-      }
-
-      body.innerHTML = html;
-    }
-        Promise.all([loadChartData(), loadBacktest()]).then(() => load()).catch(err => console.error(err));
-  </script>
+function renderTiles(){
+ const sorted=[...DATA].sort((a,b)=>{const rank=x=>decisionOf(x)==='BRAK'?1:0;return rank(a)-rank(b)||(Number(b.confidence)||0)-(Number(a.confidence)||0);});
+ $('tiles').innerHTML=sorted.map((item,i)=>{const d=decisionOf(item),cls=directionClass(d),sym=String(item.symbol||'').toUpperCase();return `<button class="tile ${cls}" data-index="${i}" aria-label="Szczegóły ${esc(sym)}"><div class="tile-top"><div><div class="symbol">${esc(sym)}</div><div class="instrument-name">${esc(item.name||item.symbol||'Instrument')}</div></div><span class="direction ${cls}">${directionLabel(d)}</span></div><div class="tile-bottom"><div><div class="score-label">Ocena sygnału</div><div class="score">${d==='BRAK'?'—':`${esc(item.confidence??0)}/100`}</div></div><div class="tile-arrow">↗</div></div></button>`;}).join('');
+ $('tiles').querySelectorAll('.tile').forEach((b,i)=>b.addEventListener('click',()=>openDetails(sorted[i])));
+}
+const HARMONIC={
+ gartley:['🦋','Gartley','Klasyczna formacja harmoniczna XABCD. Może wskazywać potencjalną strefę zwrotu; wymaga potwierdzenia ceny.'],
+ bat:['🦇','Bat','Formacja harmoniczna oparta na proporcjach Fibonacciego, z potencjalną strefą odwrócenia w punkcie D.'],
+ butterfly:['🦋','Butterfly · Motyl','Formacja harmoniczna z punktem D poza punktem X; może sygnalizować odwrócenie po silnym ruchu.'],
+ crab:['🦀','Crab · Krab','Formacja harmoniczna z wydłużonym ruchem do punktu D; sama w sobie nie gwarantuje zwrotu.'],
+ deepcrab:['🦀','Deep Crab · Głęboki krab','Odmiana formacji Crab z głębszym cofnięciem w punkcie B.']
+};
+const CANDLE={
+ 'bullish engulfing':['🟩','Bullish Engulfing · Objęcie hossy','Świeca wzrostowa obejmuje korpus poprzedniej świecy spadkowej. Po spadkach może sugerować zwrot w górę.'],
+ 'bearish engulfing':['🟥','Bearish Engulfing · Objęcie bessy','Świeca spadkowa obejmuje korpus poprzedniej świecy wzrostowej. Po wzrostach może sugerować zwrot w dół.'],
+ 'hammer':['🔨','Hammer · Młot','Mały korpus i długi dolny cień. Po spadkach może wskazywać odrzucenie niższych cen.'],
+ 'inverted hammer':['🔨','Inverted Hammer · Odwrócony młot','Mały korpus i długi górny cień po spadkach; wymaga potwierdzenia wzrostowego.'],
+ 'shooting star':['🌠','Shooting Star · Gwiazda spadająca','Długi górny cień po wzrostach może wskazywać odrzucenie wyższych cen.'],
+ 'hanging man':['🪝','Hanging Man · Wisielec','Kształt podobny do młota, ale pojawia się po wzrostach i może ostrzegać przed osłabieniem.'],
+ 'morning star':['🌅','Morning Star · Gwiazda Poranna','Trzyświecowa formacja potencjalnego odwrócenia trendu spadkowego.'],
+ 'evening star':['🌙','Evening Star · Gwiazda Wieczorna','Trzyświecowa formacja potencjalnego odwrócenia trendu wzrostowego.'],
+ 'doji':['➕','Doji','Otwarcie i zamknięcie są zbliżone. Oznacza niezdecydowanie, a nie samodzielny sygnał kierunkowy.'],
+ 'piercing line':['🌤️','Piercing Line · Przenikanie','Świeca wzrostowa wchodzi głęboko w korpus poprzedniej spadkowej; możliwy zwrot po spadkach.'],
+ 'dark cloud cover':['🌧️','Dark Cloud Cover · Zasłona ciemnej chmury','Świeca spadkowa wchodzi w korpus poprzedniej wzrostowej; możliwe osłabienie trendu wzrostowego.'],
+ 'tweezer top':['📍','Tweezer Top · Pęseta szczytowa','Dwa zbliżone szczyty mogą wskazywać opór i możliwe odwrócenie.'],
+ 'tweezer bottom':['📍','Tweezer Bottom · Pęseta dołkowa','Dwa zbliżone dołki mogą wskazywać wsparcie i możliwe odbicie.'],
+ 'three white soldiers':['🪖','Three White Soldiers · Trzej biali żołnierze','Trzy kolejne mocne świece wzrostowe mogą wskazywać wzrostową zmianę momentum.'],
+ 'three black crows':['🐦‍⬛','Three Black Crows · Trzy czarne kruki','Trzy kolejne mocne świece spadkowe mogą wskazywać spadkową zmianę momentum.'],
+ 'morning doji star':['🌅','Morning Doji Star · Poranna gwiazda Doji','Wariant gwiazdy porannej z Doji, sugerujący niezdecydowanie przed możliwym zwrotem w górę.'],
+ 'evening doji star':['🌙','Evening Doji Star · Wieczorna gwiazda Doji','Wariant gwiazdy wieczornej z Doji, sugerujący niezdecydowanie przed możliwym zwrotem w dół.'],
+ 'bullish harami':['🤰','Bullish Harami · Wzrostowe harami','Mały korpus mieści się w poprzednim dużym korpusie spadkowym; możliwe wyhamowanie spadków.'],
+ 'bearish harami':['🤰','Bearish Harami · Spadkowe harami','Mały korpus mieści się w poprzednim dużym korpusie wzrostowym; możliwe wyhamowanie wzrostów.'],
+ 'bullish kicker':['🚀','Bullish Kicker · Wzrostowy kicker','Silna zmiana kierunku z luką lub wyraźnym przeskokiem ceny; zależy od rynku i interwału.'],
+ 'bearish kicker':['📉','Bearish Kicker · Spadkowy kicker','Silna zmiana kierunku w dół z luką lub wyraźnym przeskokiem ceny.'],
+ 'marubozu':['🟩','Marubozu','Świeca z bardzo małymi cieniami wskazuje dominację jednej strony w danym okresie.'],
+ 'spinning top':['🌀','Spinning Top · Bączek','Mały korpus i cienie po obu stronach; rynek wykazuje niezdecydowanie.'],
+ 'dragonfly doji':['🪁','Dragonfly Doji · Ważka','Doji z długim dolnym cieniem; może wskazywać odrzucenie niższych cen.'],
+ 'gravestone doji':['🪦','Gravestone Doji · Nagrobek','Doji z długim górnym cieniem; może wskazywać odrzucenie wyższych cen.'],
+ 'abandoned baby':['👶','Abandoned Baby · Porzucone dziecko','Rzadka trzyświecowa formacja z lukami; możliwy zwrot, jeśli struktura jest prawidłowa.']
+};
+const CLASSIC_NAMES={
+ double_top:['⛰️','Podwójny szczyt','Dwa podobne szczyty rozdzielone cofnięciem; po wybiciu wsparcia może potwierdzać odwrócenie w dół.'],
+ double_bottom:['🏞️','Podwójne dno','Dwa podobne dołki rozdzielone odbiciem; wybicie oporu może potwierdzać zwrot w górę.'],
+ triple_top:['⛰️','Potrójny szczyt','Trzy testy podobnej strefy oporu; sygnał wymaga potwierdzenia wybiciem wsparcia.'],
+ triple_bottom:['🏞️','Potrójne dno','Trzy testy podobnej strefy wsparcia; potwierdzeniem jest zwykle wybicie lokalnego oporu.'],
+ head_and_shoulders:['🗻','Głowa z ramionami','Trzy szczyty, z których środkowy jest najwyższy. Przebicie linii szyi może potwierdzać odwrócenie w dół.'],
+ inverse_head_and_shoulders:['🌄','Odwrócona głowa z ramionami','Trzy dołki, z których środkowy jest najniższy. Wybicie linii szyi może potwierdzać odwrócenie w górę.'],
+ triangle:['🔺','Trójkąt','Konsolidacja między zbliżającymi się liniami. Kierunek wybicia nie powinien być zakładany z góry.'],
+ ascending_triangle:['📐','Trójkąt rosnący','Względnie poziomy opór i rosnące dołki; możliwe wybicie w górę, ale wymaga potwierdzenia.'],
+ descending_triangle:['📐','Trójkąt malejący','Względnie poziome wsparcie i coraz niższe szczyty; możliwe wybicie w dół.'],
+ wedge:['🔻','Klin','Zbieżne linie trendu. Znaczenie zależy od nachylenia, kontekstu i kierunku wybicia.'],
+ rising_wedge:['📈','Klin rosnący','Cena porusza się w górę między zbieżnymi liniami; może zapowiadać osłabienie, szczególnie po spadkach.'],
+ falling_wedge:['📉','Klin malejący','Cena porusza się w dół między zbieżnymi liniami; może poprzedzać odbicie po potwierdzonym wybiciu.'],
+ flag:['🚩','Flaga','Krótka konsolidacja po mocnym ruchu; często analizowana jako możliwa kontynuacja trendu.'],
+ pennant:['🎏','Proporzec','Mała zbieżna konsolidacja po impulsie; wybicie może kontynuować ruch, ale nie jest gwarantowane.'],
+ cup_and_handle:['☕','Kubek z uchem','Zaokrąglona baza i mniejsza korekta; klasycznie obserwuje się wybicie nad opór.'],
+ channel:['↗️','Kanał','Cena oscyluje między dwiema w przybliżeniu równoległymi liniami trendu.'],
+ channel_asc:['📈','Kanał rosnący','Równoległe linie nachylone w górę; struktura może wspierać trend wzrostowy.'],
+ rectangle:['▰','Prostokąt','Cena konsoliduje między poziomym wsparciem i oporem; kierunek zależy od wybicia.'],
+ broadening:['🔱','Formacja rozszerzająca','Zakres wahań rozszerza się; zwykle rośnie zmienność i niepewność.'],
+ broadening_wedge_asc:['🔱','Rozszerzający się klin rosnący','Rosnące i rozszerzające się wahania; wymaga szczególnej ostrożności przy interpretacji.']
+};
+function normalizeName(s){return String(s||'').toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();}
+function lookup(map,name){const n=normalizeName(name);for(const [k,v] of Object.entries(map)){if(normalizeName(k)===n||normalizeName(v[1])===n)return v;}if(n.includes('butterfly'))return HARMONIC.butterfly;if(n.includes('gartley'))return HARMONIC.gartley;if(n.includes('deep crab'))return HARMONIC.deepcrab;if(n.includes('crab'))return HARMONIC.crab;if(n.includes('bat'))return HARMONIC.bat;if(n.includes('engulfing'))return CANDLE[n.includes('bear')?'bearish engulfing':'bullish engulfing'];if(n.includes('evening star'))return CANDLE['evening star'];if(n.includes('morning star'))return CANDLE['morning star'];if(n.includes('hammer'))return CANDLE['hammer'];if(n.includes('doji'))return CANDLE['doji'];return null;}
+function candleSvg(name,direction='bullish'){
+ const n=normalizeName(name), color=direction==='bearish'?'#ff6376':'#35d07f';
+ let bodies=[];
+ if(n.includes('evening star')||n.includes('morning star')) bodies=[[12,14,10,24,color],[34,23,6,6,'#94a3b8'],[55,25,10,24,n.includes('evening')?'#ff6376':'#35d07f']];
+ else if(n.includes('engulfing')) bodies=[[19,24,12,24,n.includes('bearish')?'#35d07f':'#ff6376'],[39,15,18,39,color]];
+ else if(n.includes('hammer')||n.includes('hanging man')||n.includes('shooting star')) bodies=[[31,22,15,17,color]];
+ else if(n.includes('doji')) bodies=[[29,30,18,2,'#f7c66b']];
+ else bodies=[[13,22,12,27,'#35d07f'],[34,15,12,30,'#ff6376'],[55,24,12,20,color]];
+ return `<svg viewBox="0 0 80 65" aria-hidden="true"><g stroke="${color}" stroke-width="2" stroke-linecap="round">`+bodies.map(([x,y,w,h,c])=>`<line x1="${x+w/2}" y1="${Math.max(4,y-12)}" x2="${x+w/2}" y2="${Math.min(61,y+h+12)}" stroke="${c}"/><rect x="${x}" y="${y}" width="${w}" height="${Math.max(2,h)}" rx="1" fill="${c}" stroke="${c}"/>`).join('')+`</g></svg>`;
+}
+function harmonicSvg(){return `<svg viewBox="0 0 80 65" aria-hidden="true"><polyline points="5,13 23,50 39,27 55,43 73,12" fill="none" stroke="#70b7ff" stroke-width="2.5" stroke-linejoin="round"/><g fill="#f7c66b" stroke="#0b1320" stroke-width="1.5"><circle cx="5" cy="13" r="4"/><circle cx="23" cy="50" r="4"/><circle cx="39" cy="27" r="4"/><circle cx="55" cy="43" r="4"/><circle cx="73" cy="12" r="4"/></g><g fill="#edf3fb" font-size="7" font-weight="700"><text x="2" y="7">X</text><text x="19" y="62">A</text><text x="36" y="19">B</text><text x="52" y="57">C</text><text x="71" y="7">D</text></g></svg>`;}
+function classicSvg(name){const n=normalizeName(name);let pts='5,48 20,15 34,44 49,15 64,48 75,30';if(n.includes('double top'))pts='5,48 20,14 35,45 53,15 75,48';else if(n.includes('double bottom'))pts='5,15 20,48 35,20 53,48 75,15';else if(n.includes('head'))pts='4,47 18,25 28,39 41,8 54,39 64,25 76,47';else if(n.includes('triangle'))pts='5,12 20,22 35,30 50,40 75,50';else if(n.includes('wedge'))pts='5,8 20,19 35,26 50,34 75,44';else if(n.includes('cup'))pts='5,14 16,36 27,48 42,50 56,40 65,28 71,35 76,17';return `<svg viewBox="0 0 80 65" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#70b7ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="55" x2="77" y2="55" stroke="#31445e" stroke-width="1"/></svg>`;}
+function patternCard(icon,title,kind,desc,svg=''){return `<div class="pattern-card"><div class="pattern-icon">${svg||`<span style="font-size:1.8rem">${icon}</span>`}</div><div><div class="pattern-name">${esc(icon)} ${esc(title)}</div><div class="pattern-kind">${esc(kind)}</div><div class="pattern-desc">${esc(desc)}</div></div></div>`;}
+function extractHarmonics(item){const tf=(item.timeframes||{})['4H']||{};return tf.harmonics||item.harmonics||[];}
+function extractCandles(item){const tf=(item.timeframes||{})['4H']||{};return tf.candles||item.candles||[];}
+function findClassicFor(symbol){const src=CLASSIC?.symbols?.[symbol]??CLASSIC?.[symbol];if(Array.isArray(src))return src;if(Array.isArray(CLASSIC))return CLASSIC.filter(x=>String(x.symbol||'').toLowerCase()===String(symbol).toLowerCase());return readArray(CLASSIC).filter(x=>String(x.symbol||'').toLowerCase()===String(symbol).toLowerCase());}
+function openDetails(item){
+ $('modal-title').textContent=String(item.symbol||'Instrument').toUpperCase();
+ $('modal-sub').textContent=(item.name||item.symbol||'')+' · Interwał 4H · szczegóły analizy';
+ const d=decisionOf(item),cls=directionClass(d),tf=(item.timeframes||{})['4H']||{},harm=extractHarmonics(item),candles=extractCandles(item);
+ const fil=item.filars||item.modules||{};
+ const rr=item.rr==null?'—':'1:'+fmt(item.rr,2);
+ let html=`<div class="hero"><div><div class="decision ${cls}">${directionLabel(d)}</div><small>${d==='BRAK'?'Brak potwierdzonego setupu.':`Sygnał ${d==='LONG'?'wzrostowy':'spadkowy'} · ocena punktowa ${esc(item.confidence??0)}/100`}</small></div><div class="tag-row"><span class="tag">Renko ${fil.renko?'✓':'—'}</span><span class="tag">Harmoniczne ${fil.harmonic?'✓':'—'}</span><span class="tag">Świece ${fil.candle?'✓':'—'}</span></div></div>`;
+ html+=`<div class="metrics"><div class="metric"><div class="label">Wejście</div><div class="value">${numOrDash(item.entry)}</div></div><div class="metric"><div class="label">Stop Loss</div><div class="value" style="color:var(--red)">${numOrDash(item.stop)}</div></div><div class="metric"><div class="label">Zasięg / Take Profit</div><div class="value" style="color:var(--green)">${numOrDash(item.target)}</div></div><div class="metric"><div class="label">Stosunek zysku do ryzyka</div><div class="value">${rr}</div></div><div class="metric"><div class="label">Ocena sygnału</div><div class="value">${esc(item.confidence??0)}/100</div></div></div>`;
+ html+=`<div class="modal-section"><h3>📈 Wykres świecowy 4H</h3><p class="section-help">Świece OHLC, linie Entry / Stop Loss / Target oraz dostępne oznaczenia formacji.</p><div class="chart" id="detail-chart"><div class="chart-empty">Ładowanie wykresu…</div></div><div class="small-note">Źródło notowań: dane OHLC zapisane przez projekt. Ocena /100 nie jest prawdopodobieństwem zysku.</div></div>`;
+ html+=`<div class="modal-section"><h3>🦋 Formacje harmoniczne</h3><p class="section-help">Punkty X–A–B–C–D opisują geometrię formacji. Formacja rozwijająca się nie ma jeszcze potwierdzonego punktu D.</p>`;
+ if(harm.length)html+=`<div class="item-list">${harm.map(h=>{const v=lookup(HARMONIC,h.name)||[h.direction==='bullish'?'🟢':'🔴',h.name||'Formacja harmoniczna','Formacja harmoniczna wykryta przez analizator. Interpretuj ją razem z kierunkiem, statusem i potwierdzeniem ceny.'];return patternCard(v[0],v[1],`${h.status==='completed'?'Zakończona':'W trakcie formowania'} · ${h.direction==='bullish'?'wzrostowa':'spadkowa'}`,v[2],harmonicSvg());}).join('')}</div>`;
+ else html+='<div class="empty-state">Brak wykrytych formacji harmonicznych dla tego instrumentu.</div>';html+='</div>';
+ html+=`<div class="modal-section"><h3>🕯️ Formacje świecowe</h3><p class="section-help">Opisy wyjaśniają typową interpretację formacji; znaczenie zależy od kontekstu i potwierdzenia.</p>`;
+ if(candles.length)html+=`<div class="item-list">${candles.slice(0,24).map(c=>{const v=lookup(CANDLE,c.name)||['🕯️',c.name||'Formacja świecowa','Wykryta formacja świecowa. Interpretuj ją w kontekście trendu i poziomów ceny.'];return patternCard(v[0],v[1],c.direction==='bullish'?'Potencjalnie wzrostowa':c.direction==='bearish'?'Potencjalnie spadkowa':'Neutralna',v[2],candleSvg(c.name,c.direction));}).join('')}</div>`;
+ else html+='<div class="empty-state">Brak formacji świecowych w danych dla tego interwału.</div>';html+='</div>';
+ const classics=findClassicFor(item.symbol);
+ html+=`<div class="modal-section"><h3>📐 Formacje klasyczne</h3><p class="section-help">Detekcja formacji klasycznych jest osobnym modułem i nie zmienia automatycznie decyzji LONG/SHORT.</p>`;
+ if(classics.length)html+=`<div class="item-list">${classics.slice(-30).reverse().map(c=>{const v=CLASSIC_NAMES[normalizeName(c.name).replace(/ /g,'_')]||Object.entries(CLASSIC_NAMES).find(([k])=>normalizeName(k)===normalizeName(c.name))?.[1]||[ '📊',c.name||'Formacja cenowa','Wykryta przez moduł formacji klasycznych; przed użyciem sygnału sprawdź geometrię i warunek potwierdzenia.'];return patternCard(v[0],v[1],c.direction==='bullish'?'Potencjalnie wzrostowa':c.direction==='bearish'?'Potencjalnie spadkowa':'Wykryta formacja',v[2],classicSvg(c.name));}).join('')}</div>`;
+ else html+='<div class="empty-state">Brak klasycznych formacji dla instrumentu lub plik classic_patterns.json nie jest dostępny.</div>';html+='</div>';
+ html+=`<div class="modal-section"><h3>🧭 Uzasadnienie sygnału</h3>`;
+ const reasons=item.reasons||[];if(reasons.length)html+=`<ul style="padding-left:20px;color:var(--muted)">${reasons.map(r=>`<li style="margin:5px 0">${esc(r)}</li>`).join('')}</ul>`;else html+='<p class="muted">Brak dodatkowego opisu.</p>';
+ html+=`<div class="tag-row" style="margin-top:12px"><span class="tag">Kontekst D1: ${esc(item.daily_context||'brak danych')}</span><span class="tag">ATR(14): ${numOrDash(item.atr_4h)}</span><span class="tag">Cena: ${numOrDash(item.price)}</span></div></div>`;
+ const signalRows=readArray(SIGNALS).filter(s=>String(s.symbol||'').toLowerCase()===String(item.symbol||'').toLowerCase());
+ html+=`<div class="modal-section"><h3>🗂️ Historia sygnałów</h3>`;
+ if(signalRows.length)html+=`<div class="table-wrap"><table><thead><tr><th>Formacja</th><th>Status</th><th>Wykryto</th><th>Potwierdzono</th></tr></thead><tbody>${signalRows.slice(-20).reverse().map(s=>`<tr><td>${esc(s.pattern||s.name||'—')}</td><td>${esc(s.status||'—')}</td><td>${esc(s.detected_at||'—')}</td><td>${esc(s.confirmed_at||'—')}</td></tr>`).join('')}</tbody></table></div>`;else html+='<p class="muted">Brak historii sygnałów lub plik signals_history.json nie jest dostępny.</p>';html+='</div>';
+ $('modal-content').innerHTML=html;$('overlay').classList.add('open');document.body.style.overflow='hidden';
+ requestAnimationFrame(()=>renderChart(item));
+}
+function renderChart(item){
+ const host=$('detail-chart');if(!host)return;
+ if(chartInstance){chartInstance.remove();chartInstance=null;}if(resizeObserver){resizeObserver.disconnect();resizeObserver=null;}
+ host.innerHTML='';
+ const sym=String(item.symbol||'').toLowerCase();
+ let payload=CHART?.symbols?.[sym]||CHART?.symbols?.[item.symbol]||CHART?.[sym]||null;
+ if(!payload&&CHART?.candles)payload=CHART;
+ if(!payload||!Array.isArray(payload.candles)||!payload.candles.length||!window.LightweightCharts){host.innerHTML='<div class="chart-empty">Brak dostępnych świec w output/ohlc.json.</div>';return;}
+ chartInstance=LightweightCharts.createChart(host,{width:host.clientWidth,height:host.clientHeight,layout:{background:{type:'solid',color:'#080e17'},textColor:'#b8c7da',fontFamily:'Segoe UI, sans-serif'},grid:{vertLines:{color:'#172438'},horzLines:{color:'#172438'}},rightPriceScale:{borderColor:'#2a3b53'},timeScale:{borderColor:'#2a3b53',timeVisible:true,secondsVisible:false},crosshair:{mode:LightweightCharts.CrosshairMode.Normal}});
+ const series=chartInstance.addCandlestickSeries({upColor:'#35d07f',downColor:'#ff6376',borderUpColor:'#35d07f',borderDownColor:'#ff6376',wickUpColor:'#35d07f',wickDownColor:'#ff6376'});
+ series.setData(payload.candles);
+ if(payload.markers?.length)series.setMarkers(payload.markers);
+ for(const [key,title,color] of [['entry','WEJŚCIE','#70b7ff'],['stop','STOP LOSS','#ff6376'],['target','TAKE PROFIT','#35d07f']]){
+  const v=item[key]??payload.levels?.[key];if(v!=null&&Number.isFinite(Number(v)))series.createPriceLine({price:Number(v),color,lineWidth:2,lineStyle:LightweightCharts.LineStyle.Dashed,axisLabelVisible:true,title});
+ }
+ // Obsługa formacji harmonicznych, jeśli ohlc.json zawiera punkty.
+ for(const p of payload.harmonics||payload.harmonic_lines||[]){
+  const pts=p.points||[];if(pts.length<2)continue;
+  const line=chartInstance.addLineSeries({color:p.direction==='bullish'?'#35d07f':'#ff6376',lineWidth:2,lineStyle:p.status==='completed'?LightweightCharts.LineStyle.Solid:LightweightCharts.LineStyle.Dashed,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+  line.setData(pts.filter(x=>x.time!=null&&x.value!=null).map(x=>({time:x.time,value:x.value})).sort((a,b)=>a.time-b.time));
+  for(const point of pts){if(point.time==null)continue;series.setMarkers([...(payload.markers||[]),{time:point.time,position:p.direction==='bullish'?'belowBar':'aboveBar',color:p.direction==='bullish'?'#35d07f':'#ff6376',shape:'circle',text:`${p.name||'Harmoniczna'} ${point.label||''}`}].sort((a,b)=>a.time-b.time));}
+ }
+ chartInstance.timeScale().fitContent();
+ resizeObserver=new ResizeObserver(entries=>{if(chartInstance&&entries[0])chartInstance.applyOptions({width:entries[0].contentRect.width});});resizeObserver.observe(host);
+}
+function renderStats(){
+ const o=BACKTEST?.summary||BACKTEST?.stats||BACKTEST||{};
+ const trades=o.trades_count??o.total_trades??o.trades??o.n_trades;
+ const win=o.win_rate??o.winRate??o.win_rate_pct;
+ const pf=o.profit_factor??o.profitFactor;
+ const dd=o.max_drawdown??o.maxDrawdown;
+ const avg=o.avg_rr??o.average_rr??o.avg_RR;
+ const exp=o.expectancy??o.expectancy_r;
+ const winText=win==null?'—':`${fmt(Number(win)>1?win:Number(win)*100,1)}%`;
+ const pfText=pf==null?'—':fmt(pf,2);
+ const ddText=dd==null?'—':fmt(dd,2);
+ const values=[['Skuteczność',winText,''],['Współczynnik zysku',pfText,pf!=null&&Number(pf)>=1?'good':pf!=null?'bad':''],['Maks. obsunięcie',ddText,dd!=null&&Number(dd)!==0?'bad':''],['Liczba transakcji',trades==null?'—':fmt(trades,0),''],['Śr. R:R',avg==null?'—':fmt(avg,2),''],['Oczekiwana wartość',exp==null?'—':fmt(exp,2),exp!=null&&Number(exp)>0?'good':exp!=null?'bad':''],['Trening / test',o.train_count!=null?`${o.train_count} / ${o.test_count??'—'}`:'—',''],['Test kroczący',o.walk_forward_folds??o.folds??'—','']];
+ $('stats').innerHTML=values.map(([label,val,cls])=>`<div class="stat"><div class="stat-label">${esc(label)}</div><div class="stat-value ${cls}">${esc(val)}</div></div>`).join('');
+ $('stats-note').textContent=BACKTEST?(Number(trades||0)<30?'Uwaga: bardzo mała liczba transakcji — wyników nie należy traktować jako wiarygodnej oceny strategii.':'Wyniki historyczne zależą od danych, kosztów transakcyjnych i założeń symulacji.'):'Brak output/backtest_results.json. Panel pokaże dane, gdy plik zostanie opublikowany.';
+ const byPattern=o.per_pattern||o.by_pattern||BACKTEST?.per_pattern||BACKTEST?.patterns;
+ let rows=[];if(Array.isArray(byPattern))rows=byPattern;else if(byPattern&&typeof byPattern==='object')rows=Object.entries(byPattern).map(([name,v])=>({pattern:name,...v}));
+ $('pattern-stats').innerHTML=rows.length?`<table><thead><tr><th>Formacja</th><th>Transakcje</th><th>Skuteczność</th><th>Profit Factor</th><th>Expectancy</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.pattern||r.name||'—')}</td><td>${esc(r.trades_count??r.trades??'—')}</td><td>${r.win_rate==null?'—':esc(fmt(Number(r.win_rate)>1?r.win_rate:Number(r.win_rate)*100,1)+'%')}</td><td>${esc(r.profit_factor==null?'—':fmt(r.profit_factor,2))}</td><td>${esc(r.expectancy==null?'—':fmt(r.expectancy,2))}</td></tr>`).join('')}</tbody></table>`:'';
+}
+function closeModal(){ $('overlay').classList.remove('open');document.body.style.overflow='';if(chartInstance){chartInstance.remove();chartInstance=null;}if(resizeObserver){resizeObserver.disconnect();resizeObserver=null;} }
+$('closeModal').addEventListener('click',closeModal);$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});$('refreshBtn').addEventListener('click',loadAll);
+loadAll();
+</script>
 </body>
 </html>

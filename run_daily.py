@@ -8,6 +8,7 @@ sys.path.insert(0, str(ROOT))
 from analysis.analyzer import analyze_all
 from analysis.alerts import check_and_alert
 from analysis.decision_log import append_decisions
+from analysis.signal_history import append_signal_history
 import json
 
 def _update_ohlc_history(chart_data, out_dir):
@@ -81,6 +82,9 @@ def main():
 
     print("\n=== Log decyzji ===")
     append_decisions(results)
+
+    print("\n=== Log sygnalow (Etap C) ===")
+    append_signal_history(results)
 
     print("\n=== Sprawdzanie alertow ===")
     check_and_alert()

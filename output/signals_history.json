@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "signals": [
+    {
+      "signal_id": "US500_4H_BUTTERFLY_001",
+      "symbol": "us500",
+      "timeframe": "4H",
+      "pattern": "Butterfly",
+      "direction": "bearish",
+      "status": "DETECTED",
+      "detected_at": "2026-08-13T12:00:00Z",
+      "confirmed_at": "2026-08-13T20:00:00Z",
+      "activated_at": null,
+      "invalidated_at": null,
+      "closed_at": null,
+      "entry": 7600.06982,
+      "stop": 7806.73661,
+      "target": 7290.06965,
+      "decision": "SHORT",
+      "confidence": 66,
+      "detected_run_at": "2026-10-30T19:17:02Z"
+    },
+    {
+      "signal_id": "SILVER_4H_BUTTERFLY_001",
+      "symbol": "silver",
+      "timeframe": "4H",
+      "pattern": "Butterfly",
+      "direction": "bullish",
+      "status": "DETECTED",
+      "detected_at": "2026-10-07T12:00:00Z",
+      "confirmed_at": "2026-10-07T20:00:00Z",
+      "activated_at": null,
+      "invalidated_at": null,
+      "closed_at": null,
+      "entry": null,
+      "stop": null,
+      "target": null,
+      "decision": "LONG",
+      "confidence": 23,
+      "detected_run_at": "2026-10-30T19:17:02Z"
+    }
+  ],
+  "updated": "2026-10-30T19:17:02Z"
+}

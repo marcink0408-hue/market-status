@@ -76,9 +76,27 @@ def detect_harmonics(df: pd.DataFrame, lookback_pivots: int = 40) -> List[dict]:
             if not _in_range(abc, pat.abc): continue
             if pat.bcd is not None and not _in_range(bcd, pat.bcd): continue
             if not _in_range(xad, pat.xad): continue
-            results.append({"name": pat.name, "direction": "bullish" if bullish else "bearish", "status": "completed",
-                "X": float(X), "A": float(A), "B": float(B), "C": float(C), "D": float(D),
-                "time_D": str(times[4]), "error": round(abs(xad - (pat.xad if isinstance(pat.xad, float) else sum(pat.xad)/2)), 4)})
+            results.append({
+    "name": pat.name,
+    "direction": "bullish" if bullish else "bearish",
+    "status": "completed",
+    "X": float(X),
+    "A": float(A),
+    "B": float(B),
+    "C": float(C),
+    "D": float(D),
+    "time_X": str(times[0]),
+    "time_A": str(times[1]),
+    "time_B": str(times[2]),
+    "time_C": str(times[3]),
+    "time_D": str(times[4]),
+    "error": round(
+        abs(xad - (
+            pat.xad if isinstance(pat.xad, float)
+            else sum(pat.xad) / 2
+        )), 4
+    )
+})
 
     if len(pivots) >= 4:
         pts = pivots.iloc[-4:]
@@ -98,9 +116,15 @@ def detect_harmonics(df: pd.DataFrame, lookback_pivots: int = 40) -> List[dict]:
                     target_ad = XA * (pat.xad if isinstance(pat.xad, float) else (pat.xad[0] + pat.xad[1]) / 2)
                     d_target = A - target_ad if bullish else A + target_ad
                     if abs(current - d_target) / abs(d_target) < 0.06:
-                        results.append({"name": pat.name, "direction": "bullish" if bullish else "bearish", "status": "forming",
-                            "X": float(X), "A": float(A), "B": float(B), "C": float(C),
-                            "D_projected": round(d_target, 5), "current": current, "time_C": str(times[3])})
+                        results.append({
+    "name": pat.name, "direction": "bullish" if bullish else "bearish", "status": "forming",
+    "X": float(X), "A": float(A), "B": float(B), "C": float(C),
+    "D_projected": round(d_target, 5), "current": current,
+    "time_X": str(times[0]),
+    "time_A": str(times[1]),
+    "time_B": str(times[2]),
+    "time_C": str(times[3])
+})
 
     results = sorted(results, key=lambda x: 0 if x["status"] == "forming" else 1)
     return results[:5]

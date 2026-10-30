@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
@@ -110,7 +110,52 @@
         borderDownColor:'#ef4444',wickUpColor:'#22c55e',wickDownColor:'#ef4444'
       });
       series.setData(payload.candles);
-      if (payload.markers && payload.markers.length) series.setMarkers(payload.markers);
+
+const allMarkers = [...(payload.markers || [])];
+
+(payload.harmonics || []).forEach((pattern, index) => {
+    const points = pattern.points || [];
+    if (points.length < 4) return;
+
+    const color = pattern.direction === 'bullish'
+        ? '#22c55e'
+        : '#ef4444';
+
+    const line = activeChart.addLineSeries({
+        color: color,
+        lineWidth: 2,
+        lineStyle: pattern.status === 'completed'
+            ? LightweightCharts.LineStyle.Solid
+            : LightweightCharts.LineStyle.Dashed,
+        priceLineVisible: false,
+        lastValueVisible: false,
+        crosshairMarkerVisible: false
+    });
+
+    line.setData(
+        points.map(p => ({
+            time: p.time,
+            value: p.value
+        }))
+    );
+
+    points.forEach(point => {
+        allMarkers.push({
+            time: point.time,
+            position: pattern.direction === 'bullish'
+                ? 'belowBar'
+                : 'aboveBar',
+            color: color,
+            shape: 'circle',
+            text: pattern.name + ' ' + point.label
+        });
+    });
+});
+
+if (allMarkers.length) {
+    allMarkers.sort((a, b) => a.time - b.time);
+    series.setMarkers(allMarkers);
+}
       [['entry','ENTRY','#3b82f6'],['stop','STOP LOSS','#ef4444'],['target','TAKE PROFIT','#22c55e']].forEach(([key,title,color]) => {
         const v = item[key] != null ? item[key] : (payload.levels || {})[key];
         if (v != null && Number.isFinite(Number(v))) series.createPriceLine({

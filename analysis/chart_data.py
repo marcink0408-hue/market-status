@@ -37,6 +37,42 @@ def build_chart_payload(df, candles, harmonics, levels):
         if t not in valid_times: continue
         bull=p.get("direction")=="bullish"
         markers.append({"time":t,"position":"belowBar" if bull else "aboveBar","color":"#60a5fa","shape":"circle","text":str(p.get("name","Harmoniczna"))+(" ✓" if p.get("status")=="completed" else " …")})
+
+    # --- NOWA SEKCJA: linie XABCD dla formacji harmonicznych ---
+    harmonic_lines = []
+    for p in harmonics or []:
+        roles = ["X", "A", "B", "C"]
+        if p.get("status") == "completed":
+            roles.append("D")
+        points = []
+        for role in roles:
+            try:
+                timestamp = _unix_seconds(p.get(f"time_{role}"))
+                price = _num(p.get(role))
+                if timestamp not in valid_times or price is None:
+                    continue
+                points.append({
+                    "time": timestamp,
+                    "value": price,
+                    "label": role
+                })
+            except Exception:
+                continue
+        if len(points) >= 4:
+            harmonic_lines.append({
+                "name": p.get("name", "Harmoniczna"),
+                "direction": p.get("direction"),
+                "status": p.get("status"),
+                "points": points
+            })
+
     markers.sort(key=lambda x:(x["time"],x["text"]))
-    return {"schema_version":1,"candles":rows,"markers":markers,
-            "levels":{k:_num((levels or {}).get(k)) for k in ("entry","stop","target")}}
+
+    # --- ZMIENIONY RETURN: dodajemy "harmonics" i podnosimy schema_version ---
+    return {
+        "schema_version": 2,
+        "candles": rows,
+        "markers": markers,
+        "harmonics": harmonic_lines,
+        "levels": {k: _num((levels or {}).get(k)) for k in ("entry","stop","target")}
+    }

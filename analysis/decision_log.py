@@ -1,4 +1,4 @@
-﻿# analysis/decision_log.py
+# analysis/decision_log.py
 from __future__ import annotations
 import json
 import os
@@ -25,17 +25,17 @@ def _norm_iso(ts):
     s = str(ts).strip()
     if not s:
         return None
-    if s.endswith("Z"):
-        return s[:19] + "Z" if "T" in s else s
-    if "+" in s[10:] or s.endswith("+00:00"):
+    try:
+        dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except (TypeError, ValueError, OverflowError):
         try:
-            dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
-            return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        except Exception:
-            pass
-    if "T" in s:
-        return s[:19] + "Z"
-    return s + "T00:00:00Z"
+            dt = datetime.strptime(s[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+        except ValueError:
+            return None
 
 
 def _load_log() -> dict:

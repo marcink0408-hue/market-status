@@ -1,35 +1,51 @@
 name: Daily Analysis
-
 on:
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:
-
+permissions:
+  contents: write
+concurrency:
+  group: market-status-daily
+  cancel-in-progress: false
 jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
+          cache: pip
       - name: Install dependencies
         run: pip install yfinance pandas numpy
-
       - name: Uruchom analize
         run: python run_daily.py
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-
-      - name: Upload decisions_log jako artefakt
+      - name: Commit i publikacja danych
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/status.json output/decisions_log.json output/ohlc.json
+          if git diff --cached --quiet; then
+            echo "Brak zmian do publikacji."
+          else
+            git commit -m "Update market analysis data"
+            git push
+          fi
+      - name: Upload dane diagnostyczne
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: decisions-log
-          path: output/decisions_log.json
+          name: market-status-output
+          path: |
+            output/status.json
+            output/decisions_log.json
+            output/ohlc.json
           retention-days: 30

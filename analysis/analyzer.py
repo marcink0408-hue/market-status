@@ -1,4 +1,4 @@
-﻿# analysis/analyzer.py
+# analysis/analyzer.py
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
@@ -81,12 +81,17 @@ def analyze_symbol(symbol_key: str) -> dict:
         result["harmonic"] = dec.get("harmonic")
         result["candle"] = dec.get("candle")
         result["renko_signal"] = dec.get("renko_signal")
+        from analysis.chart_data import build_chart_payload
+        result["_chart"] = build_chart_payload(
+            data.get("4H"), tf4.get("candles") or [], tf4.get("harmonics") or [],
+            {"entry": dec.get("entry"), "stop": dec.get("stop"), "target": dec.get("target")}
+        )
 
         if dec["decision"] in ("LONG", "SHORT"):
             rr_s = f", R:R 1:{dec.get('rr')}" if dec.get("rr") else ""
             result["summary"] = (
                 f"{name} 4H -> {dec['decision']} @ {dec['entry']} "
-                f"(stop {dec['stop']}, cel {dec.get('target')}, pewnosc {dec['confidence']}%{rr_s})"
+                f"(stop {dec['stop']}, cel {dec.get('target')}, ocena sygnalu {dec['confidence']}/100{rr_s})"
             )
         else:
             result["summary"] = f"{name} 4H -> brak setupu wejscia"

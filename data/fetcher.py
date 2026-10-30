@@ -1,4 +1,4 @@
-﻿# data/fetcher.py
+# data/fetcher.py
 import yfinance as yf
 import pandas as pd
 from pathlib import Path
@@ -39,15 +39,26 @@ def fetch_ohlc(symbol_key: str, timeframe: str = "Daily"):
             "Open": "open", "High": "high", "Low": "low",
             "Close": "close", "Volume": "volume",
         })
-        df = df[["open", "high", "low", "close"]].dropna()
-        df.index = pd.to_datetime(df.index)
+        df = df[["open", "high", "low", "close"]].dropna().copy()
+        df.index = pd.to_datetime(df.index, utc=True)
         df.index.name = "datetime"
+        df = df[~df.index.duplicated(keep="last")].sort_index()
+        for col in ("open", "high", "low", "close"):
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+        df = df.dropna(subset=["open", "high", "low", "close"])
+        valid = ((df["high"] >= df[["open", "close", "low"]].max(axis=1)) &
+                 (df["low"] <= df[["open", "close", "high"]].min(axis=1)))
+        df = df.loc[valid]
 
         if timeframe == "4H":
-            df = df.resample("4h").agg({
+            df = df.resample("4h", label="left", closed="left").agg({
                 "open": "first", "high": "max",
                 "low": "min", "close": "last",
             }).dropna()
+            if len(df):
+                now_utc = pd.Timestamp.now(tz="UTC")
+                if df.index[-1] + pd.Timedelta(hours=4) > now_utc:
+                    df = df.iloc[:-1]
 
         return df
     except Exception as e:

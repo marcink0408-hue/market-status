@@ -4,6 +4,9 @@ import os
 from pathlib import Path
 import urllib.request
 import urllib.parse
+from datetime import datetime, timezone
+
+from analysis.chart_png import render_chart_png
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
@@ -23,6 +26,11 @@ def load_json(path: Path):
     except Exception:
         return None
 
+def _atomic_write(path: Path, data: dict) -> None:
+    path.parent.mkdir(exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, path)
 
 def send_telegram(text: str) -> bool:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
@@ -43,6 +51,37 @@ def send_telegram(text: str) -> bool:
         print(f"[ALERT] Blad Telegram: {e}")
         return False
 
+def send_telegram_photo(text: str, png_path: Path) -> bool:
+    """Wysyla wiadomosc + PNG przez sendPhoto (multipart/form-data)."""
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("[ALERT] Brak TELEGRAM_BOT_TOKEN lub TELEGRAM_CHAT_ID – pomijam")
+        print("[ALERT] Tresc:\n", text)
+        print(f"[ALERT] PNG: {png_path}")
+        return False
+    try:
+        import uuid
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
+        boundary = f"----WebKitFormBoundary{uuid.uuid4().hex}"
+        with open(png_path, "rb") as f:
+            png_data = f.read()
+        parts = []
+        for k, v in [("chat_id", TELEGRAM_CHAT_ID), ("caption", text), ("parse_mode", "HTML")]:
+            parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"{k}\"\r\n\r\n{v}\r\n".encode())
+        parts.append(
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"{png_path.name}\"\r\n"
+            f"Content-Type: image/png\r\n\r\n".encode() + png_data + b"\r\n"
+        )
+        parts.append(f"--{boundary}--\r\n".encode())
+        body = b"".join(parts)
+        req = urllib.request.Request(
+            url, data=body, method="POST",
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.status == 200
+    except Exception as e:
+        print(f"[ALERT] Blad Telegram sendPhoto: {e}")
+        return False
 
 def latest_decisions_map(log_data):
     """Zwraca dict symbol -> najnowsza decyzja (po candle_close_time)."""
@@ -112,28 +151,70 @@ def build_message(item: dict) -> str:
     return "\n".join(lines)
 
 
+def _load_candles(symbol: str) -> list:
+    """Wczytuje swiece z output/ohlc.json dla danego symbolu."""
+    chart = load_json(OUTPUT_DIR / "ohlc.json") or {}
+    payload = ((chart.get("symbols") or {}).get(symbol) or {})
+    return payload.get("candles") or []
+
+
+def _signal_key(item: dict) -> str:
+    """Unikalny klucz sygnalu (symbol + candle_close_time + decision)."""
+    return f"{item.get('symbol')}|{item.get('candle_close_time') or item.get('timestamp')}|{item.get('decision')}"
+
+
 def check_and_alert():
+    """Wysyla alert TYLKO przy zmianie stanu sygnalu (instrukcja, sekcja 7).
+
+    Zmiana stanu = nowy sygnal (nowy candle_close_time + decision) albo nowy confidence.
+    Porownujemy z ostatnim wyslanym stanem w output/alerts_state.json.
+    """
     current = load_json(CURRENT_FILE)
     if not current:
         print("[ALERT] Brak status.json")
         return
-    log_data = load_json(DECISIONS_LOG)
-    if not log_data:
-        print("[ALERT] Brak decisions_log.json – nie ma z czym porownac, pomijam")
-        return
-    prev_map = latest_decisions_map(log_data)
+
+    state_path = OUTPUT_DIR / "alerts_state.json"
+    state = load_json(state_path) or {"sent_keys": []}
+    sent_keys = set(state.get("sent_keys", []))
+
     sent = 0
+    new_keys = []
     for item in current:
         sym = item.get("symbol")
         if not sym:
             continue
-        if significant_change(prev_map.get(sym), item):
-            msg = build_message(item)
+        if not significant_change(None, item):
+            # nie LONG/SHORT albo conf < MIN_CONFIDENCE -> pomijamy
+            continue
+        key = _signal_key(item)
+        if key in sent_keys:
+            continue  # juz wyslany ten sam sygnal
+
+        # generujemy PNG
+        try:
+            candles = _load_candles(sym)
+            png_path = render_chart_png(
+                sym, candles,
+                entry=item.get("entry"), stop=item.get("stop"), target=item.get("target"),
+                title=f"{sym.upper()} 4H · {item.get('decision')} · conf {item.get('confidence')}%"
+            )
+        except Exception as e:
+            print(f"[ALERT] Nie udalo sie wygenerowac PNG dla {sym}: {e}")
+            png_path = None
+
+        msg = build_message(item)
+        if png_path is not None:
+            ok = send_telegram_photo(msg, png_path)
+        else:
             ok = send_telegram(msg)
-            print(f"[ALERT] {sym}: {'wyslano' if ok else 'NIE wyslano'}")
+        print(f"[ALERT] {sym}: {'wyslano' if ok else 'NIE wyslano'}")
+        if ok:
+            new_keys.append(key)
             sent += 1
+
+    state["sent_keys"] = list(sent_keys | set(new_keys))[-500:]  # max 500 kluczy
+    state["updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    _atomic_write(state_path, state)
+
     print(f"[ALERT] Gotowe. Wyslano {sent} alertow.")
-
-
-if __name__ == "__main__":
-    check_and_alert()

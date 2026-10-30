@@ -9,6 +9,7 @@ from analysis.analyzer import analyze_all
 from analysis.alerts import check_and_alert
 from analysis.decision_log import append_decisions
 from analysis.signal_history import append_signal_history
+from analysis.classic_patterns import append_classic_patterns
 import json
 
 def _update_ohlc_history(chart_data, out_dir):
@@ -86,10 +87,12 @@ def main():
     print("\n=== Log sygnalow (Etap C) ===")
     append_signal_history(results)
 
+    print("\n=== Klasyczne formacje (Etap D) ===")
+    append_classic_patterns(results)
+
     print("\n=== Sprawdzanie alertow ===")
     check_and_alert()
     print("\nGotowe.")
-
 
 if __name__ == "__main__":
     main()

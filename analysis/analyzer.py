@@ -7,6 +7,7 @@ from data.fetcher import fetch_all
 from analysis.renko import build_renko, renko_status
 from analysis.harmonics import detect_harmonics
 from analysis.candles import detect_candlestick_patterns
+from analysis.classic_patterns import detect_classic_patterns
 from analysis.decision import make_decision
 from config import SYMBOLS
 import json
@@ -19,10 +20,12 @@ def analyze_tf(df, tf: str) -> dict:
         rstat = renko_status(rdf)
         harms = detect_harmonics(df)
         cands = detect_candlestick_patterns(df)
+        classic = detect_classic_patterns(df) if tf == "4H" else []
         return {
             "renko": rstat,
             "harmonics": harms,
             "candles": cands,
+            "classic_patterns": classic,
             "bars": len(df),
             "last_close": float(df["close"].iloc[-1]),
             "last_time": str(df.index[-1]),

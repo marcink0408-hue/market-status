@@ -1,0 +1,36 @@
+name: Commit decisions log
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install yfinance pandas numpy
+
+      - name: Uruchom analize (generuje log)
+        run: python run_daily.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: Commit log
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add output/decisions_log.json || true
+          git diff --staged --quiet || git commit -m "Update decisions log"
+          git push

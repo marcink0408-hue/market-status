@@ -5,9 +5,6 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -29,10 +26,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
-      - name: Commit results
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add output/decisions_log.json || true
-          git diff --staged --quiet || git commit -m "Daily update"
-          git push
+      - name: Upload decisions_log jako artefakt
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: decisions-log
+          path: output/decisions_log.json
+          retention-days: 30

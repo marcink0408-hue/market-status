@@ -76,6 +76,10 @@
       return 'NIC';
     }
 
+    function decClass(d) {
+      return (d === 'LONG' || d === 'SHORT') ? d : 'BRAK';
+    }
+
     function fmt(n) {
       if (n == null || n === '') return '—';
       const x = Number(n);
@@ -83,6 +87,25 @@
       if (Math.abs(x) >= 100) return x.toFixed(2);
       if (Math.abs(x) >= 1) return x.toFixed(4);
       return x.toFixed(5);
+    }
+
+    function modulesHtml(raw) {
+      const f = raw.filars || {};
+      const icon = ok => ok ? '✅' : '⚪';
+      const pillars = raw.confluence ? raw.confluence : '—';
+      return '<div class="price-row" style="margin-bottom:8px">Renko ' + icon(f.renko) + ' · Harm ' + icon(f.harmonic) + ' · Swieca ' + icon(f.candle) + ' · ' + pillars + '</div>';
+    }
+
+    function freshnessHtml(raw) {
+      const t = raw.candle_close_time || raw.timestamp;
+      if (!t) return '';
+      let label = 'Swieca 4H: ' + new Date(t).toLocaleString('pl-PL');
+      try {
+        const ageH = (Date.now() - new Date(t).getTime()) / 3600000;
+        if (ageH > 8) label = '⚠️ STARE DANE · ' + label;
+        else if (ageH > 5) label = '⏳ ' + label;
+      } catch(e) {}
+      return '<div class="price-row" style="font-size:0.72rem;margin-bottom:6px">' + label + '</div>';
     }
 
     async function load() {
@@ -101,17 +124,11 @@
           if (!cur || dT > cT) latest.set(sym, d);
         });
 
-        DATA = Array.from(latest.values()).map(d => ({
-          symbol: d.symbol,
-          name: d.symbol,
-          updated: d.timestamp,
-          _raw: d
-        }));
-
+        DATA = Array.from(latest.values());
         render();
         if (DATA.length) {
-          const newest = Math.max(...DATA.map(x => new Date(x.updated).getTime()));
-          document.getElementById('updated').textContent = 'Dane z: ' + new Date(newest).toLocaleString('pl-PL');
+          const newest = Math.max(...DATA.map(x => new Date(x.timestamp).getTime()));
+          document.getElementById('updated').textContent = 'Dane z: ' + new Date(newest).toLocaleString('pl-PL') + ' · TF: 4H';
         } else {
           document.getElementById('updated').textContent = 'Brak decyzji w logu';
         }
@@ -124,102 +141,111 @@
     function render() {
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
-      DATA.forEach((item, idx) => {
-        const raw = item._raw || {};
-        const bias = raw.decision || 'NIC';
-        const conf = raw.confidence != null ? raw.confidence : 0;
-        const entry = raw.entry;
-        const stop = raw.stop;
-        const target = raw.target;
-        const candle = raw.candle_close_time || raw.timestamp || '';
-        const f = raw.filars || {};
-        const stale = raw.candle_stale ? '⏳' : '';
-
+      let latest = '';
+      const sorted = [...DATA].sort((a, b) => {
+        const rank = d => (d.decision === 'LONG' || d.decision === 'SHORT') ? 0 : 1;
+        return rank(a) - rank(b) || (b.confidence || 0) - (a.confidence || 0);
+      });
+      sorted.forEach(item => {
+        const realIdx = DATA.indexOf(item);
+        if (item.timestamp) latest = item.timestamp;
+        const d = item.decision || 'BRAK';
         const card = document.createElement('div');
-        card.className = 'card' + ((bias === 'LONG' || bias === 'SHORT') ? (' has-signal' + (bias === 'SHORT' ? ' short' : '')) : '');
-        card.onclick = () => openModal(idx);
+        card.className = 'card' + (d === 'LONG' ? ' has-signal' : d === 'SHORT' ? ' has-signal short' : '');
+        card.onclick = () => openModal(realIdx);
 
-        const candleShort = candle ? new Date(candle).toLocaleString('pl-PL', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
-        const hasSignal = (bias === 'LONG' || bias === 'SHORT');
+        let entryHtml = '';
+        if (d === 'LONG' || d === 'SHORT') {
+          entryHtml = '<div class="entry-box"><div class="lbl">Wejscie</div><div class="val">' + fmt(item.entry) +
+            '</div><div style="margin-top:6px;font-size:0.8rem;color:var(--muted)">Stop: ' + fmt(item.stop) +
+            (item.target ? ' · Cel: ' + fmt(item.target) : '') + (item.rr ? ' · R:R 1:' + item.rr : '') +
+            ' · pewnosc ' + (item.confidence || 0) + '%</div></div>';
+        }
 
-        card.innerHTML = `
-          <div class="top">
-            <div>
-              <div class="sym">${item.symbol.toUpperCase()}</div>
-              <div class="name">${item.name || ''}</div>
-            </div>
-            <span class="badge ${biasClass(bias)}">${bias}</span>
-          </div>
-          <div class="price-row"><span>Pewność:</span> <b>${conf}%</b> ${stale}</div>
-          <div class="price-row"><span>Świeca 4H:</span> ${candleShort}</div>
-          <div class="price-row"><span>Filar:</span> Renko ${f.renko?'✅':'⚪'} · Harm ${f.harmonic?'✅':'⚪'} · Świeca ${f.candle?'✅':'⚪'}</div>
-          <div class="entry-box">
-            <div class="lbl">Wejście</div>
-            <div class="val">${hasSignal ? fmt(entry) : '—'}</div>
-            <div class="price-row" style="margin-top:6px;margin-bottom:0">
-              <span>Stop:</span> ${hasSignal ? fmt(stop) : '—'} · <span>Cel:</span> ${hasSignal ? fmt(target) : '—'}
-            </div>
-          </div>
-        `;
+        const reasons = (item.reasons || []).slice(0, 3);
+        const reasonsHtml = reasons.length
+          ? '<ul class="reasons">' + reasons.map(r => '<li>' + r + '</li>').join('') + '</ul>'
+          : '<div class="reasons">' + (item.summary || '') + '</div>';
+
+        card.innerHTML = '<div class="top"><div><div class="sym">' + (item.symbol || '').toUpperCase() +
+          '</div><div class="name">' + (item.symbol || '') + '</div></div><span class="badge ' + decClass(d) + '">' + d +
+          '</span></div>' +
+          freshnessHtml(item) +
+          modulesHtml(item) +
+          entryHtml +
+          reasonsHtml;
         grid.appendChild(card);
       });
+      if (latest) document.getElementById('updated').textContent = 'Dane z: ' + new Date(latest).toLocaleString('pl-PL') + ' · TF: 4H';
     }
 
     function openModal(idx) {
       const item = DATA[idx];
-      const raw = item._raw || {};
-      const bias = raw.decision || 'NIC';
-      const conf = raw.confidence != null ? raw.confidence : 0;
-      const entry = raw.entry;
-      const stop = raw.stop;
-      const target = raw.target;
-      const rr = raw.rr != null ? ('1:' + raw.rr) : '—';
-      const candle = raw.candle_close_time || raw.timestamp || '';
-      const daily = raw.daily_context || '—';
-      const reasons = raw.reasons || [];
-      const f = raw.filars || {};
-      const confluence = raw.confluence || '—';
-      const atr = raw.atr_4h != null ? fmt(raw.atr_4h) : '—';
-      const stale = raw.candle_stale ? ' (⏳ dane mogą być nieaktualne)' : '';
+      const d = item.decision || 'BRAK';
+      document.getElementById('m-title').textContent = (item.symbol || '').toUpperCase();
 
-      document.getElementById('m-title').textContent = item.symbol.toUpperCase();
+      let html = '<div class="decision-hero ' + decClass(d) + '"><div class="big">' + d + '</div>' +
+        '<div style="margin-top:6px;color:var(--muted);font-size:0.9rem">' +
+        (d === 'BRAK' ? 'Brak setupu 4H' : 'Setup 4H · confluence ' + (item.confluence || '—')) + '</div></div>' +
+        '<div class="metrics">' +
+        '<div class="metric"><div class="lbl">Wejscie</div><div class="val">' + fmt(item.entry) + '</div></div>' +
+        '<div class="metric"><div class="lbl">Stop</div><div class="val">' + fmt(item.stop) + '</div></div>' +
+        '<div class="metric"><div class="lbl">Cel</div><div class="val">' + fmt(item.target) + '</div></div></div>' +
+        '<div class="metrics">' +
+        '<div class="metric"><div class="lbl">R:R</div><div class="val">' + (item.rr != null ? '1:' + item.rr : '—') + '</div></div>' +
+        '<div class="metric"><div class="lbl">ATR(14)</div><div class="val">' + fmt(item.atr_4h) + '</div></div>' +
+        '<div class="metric"><div class="lbl">Pewnosc</div><div class="val">' + (item.confidence || 0) + '%</div></div></div>';
 
-      let html = `
-        <div class="decision-hero ${biasClass(bias)}">
-          <div class="big">${bias}</div>
-          <div style="color:#8b9bb0;margin-top:4px">pewność ${conf}% · confluence ${confluence}</div>
-        </div>
+      html += '<div class="section"><div class="section-title">Dlaczego</div>';
+      if (item.reasons && item.reasons.length) {
+        html += '<ul class="reasons">' + item.reasons.map(r => '<li>' + r + '</li>').join('') + '</ul>';
+      } else {
+        html += '<div class="empty">Brak</div>';
+      }
+      html += '</div>';
 
-        <div class="metrics">
-          <div class="metric"><div class="lbl">Wejście</div><div class="val">${fmt(entry)}</div></div>
-          <div class="metric"><div class="lbl">Stop</div><div class="val">${fmt(stop)}</div></div>
-          <div class="metric"><div class="lbl">Cel</div><div class="val">${fmt(target)}</div></div>
-        </div>
+      html += '<div class="section"><div class="section-title">Filary confluence</div>' +
+        '<span class="tag ' + (item.filars && item.filars.renko ? 'bull' : '') + '">Renko ' + (item.filars && item.filars.renko ? '✅' : '⚪') + '</span>' +
+        '<span class="tag ' + (item.filars && item.filars.harmonic ? 'bull' : '') + '">Harmoniczna ' + (item.filars && item.filars.harmonic ? '✅' : '⚪') + '</span>' +
+        '<span class="tag ' + (item.filars && item.filars.candle ? 'bull' : '') + '">Swieca ' + (item.filars && item.filars.candle ? '✅' : '⚪') + '</span>' +
+        '</div>';
 
-        <div class="metrics">
-          <div class="metric"><div class="lbl">R:R</div><div class="val">${rr}</div></div>
-          <div class="metric"><div class="lbl">ATR(14)</div><div class="val">${atr}</div></div>
-          <div class="metric"><div class="lbl">Kontekst Daily</div><div class="val">${daily}</div></div>
-        </div>
+      html += '<div class="section"><div class="section-title">Kontekst Daily</div>' +
+        '<span class="tag">' + (item.daily_context || '—') + '</span></div>';
 
-        <div class="section">
-          <div class="section-title">Filar confluence</div>
-          <span class="tag ${f.renko?'bull':''}">Renko ${f.renko?'✅':'⚪'}</span>
-          <span class="tag ${f.harmonic?'bull':''}">Harmoniczna ${f.harmonic?'✅':'⚪'}</span>
-          <span class="tag ${f.candle?'bull':''}">Świeca ${f.candle?'✅':'⚪'}</span>
-        </div>
+      html += '<div class="section"><div class="section-title">Harmoniczne 4H</div>';
+      const tf4 = (item.timeframes || {})['4H'] || {};
+      if (tf4.harmonics && tf4.harmonics.length) {
+        tf4.harmonics.forEach(h => {
+          html += '<span class="tag ' + (h.direction === 'bullish' ? 'bull' : 'bear') + '">' + h.name + ' ' + h.direction + ' (' + h.status + ')</span>';
+        });
+      } else {
+        html += '<span class="empty">brak</span>';
+      }
+      html += '</div>';
 
-        <div class="section">
-          <div class="section-title">Dlaczego</div>
-          ${reasons.length
-            ? '<ul class="reasons">' + reasons.map(r => '<li>' + r + '</li>').join('') + '</ul>'
-            : '<div class="empty">Brak wyraźnych powodów</div>'}
-        </div>
+      html += '<div class="section"><div class="section-title">Swiece 4H</div>';
+      const imp = ['Bullish Engulfing', 'Bearish Engulfing', 'Hammer', 'Shooting Star', 'Morning Star', 'Evening Star'];
+      const cands = ((tf4.candles) || []).filter(c => imp.includes(c.name));
+      if (cands.length) {
+        cands.forEach(c => {
+          html += '<span class="tag ' + (c.direction === 'bullish' ? 'bull' : c.direction === 'bearish' ? 'bear' : '') + '">' + c.name + '</span>';
+        });
+      } else {
+        html += '<span class="empty">brak silnych</span>';
+      }
+      html += '</div>';
 
-        <div class="ctx">
-          Świeca 4H zamknięta: ${candle ? new Date(candle).toLocaleString('pl-PL') : '—'}${stale}
-        </div>
-      `;
+      html += '<div class="ctx"><div class="section-title">Kontekst</div>';
+      ['1H', 'Daily'].forEach(tf => {
+        const t = (item.timeframes || {})[tf];
+        if (!t || t.error) return;
+        const r = t.renko || {};
+        html += '<div>' + tf + ': Renko ' + (r.direction === 'up' ? '↑' : r.direction === 'down' ? '↓' : '?') + ' ×' + (r.consecutive || 0) + '</div>';
+      });
+      const t4 = (item.candle_close_time || item.timestamp);
+      if (t4) html += '<div style="margin-top:6px">Świeca 4H zamknięta: ' + new Date(t4).toLocaleString('pl-PL') + (item.candle_stale ? ' ⏳' : '') + '</div>';
+      html += '</div>';
 
       document.getElementById('m-body').innerHTML = html;
       document.getElementById('modal').classList.add('open');

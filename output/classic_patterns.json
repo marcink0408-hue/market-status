@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "timeframe": "4H",
-  "updated": "2026-10-30T19:50:28Z",
+  "updated": "2026-10-30T20:44:09Z",
   "symbols": {
     "w20": [
       {
@@ -3204,6 +3204,27 @@
         "bar": 238,
         "time": "2026-10-30 12:00:00+00:00",
         "price": 7600.06982421875
+      },
+      {
+        "name": "double_top",
+        "direction": "bearish",
+        "bar": 239,
+        "time": "2026-10-30 16:00:00+00:00",
+        "price": 7580.9501953125
+      },
+      {
+        "name": "double_top_eve_adam",
+        "direction": "bearish",
+        "bar": 239,
+        "time": "2026-10-30 16:00:00+00:00",
+        "price": 7580.9501953125
+      },
+      {
+        "name": "triple_top",
+        "direction": "bearish",
+        "bar": 239,
+        "time": "2026-10-30 16:00:00+00:00",
+        "price": 7580.9501953125
       }
     ],
     "gold": [
@@ -6671,6 +6692,20 @@
         "bar": 616,
         "time": "2026-10-30 12:00:00+00:00",
         "price": 3907.5
+      },
+      {
+        "name": "double_top",
+        "direction": "bearish",
+        "bar": 617,
+        "time": "2026-10-30 16:00:00+00:00",
+        "price": 3892.800048828125
+      },
+      {
+        "name": "double_top_eve_adam",
+        "direction": "bearish",
+        "bar": 617,
+        "time": "2026-10-30 16:00:00+00:00",
+        "price": 3892.800048828125
       }
     ],
     "silver": [
@@ -28027,6 +28062,20 @@
         "bar": 740,
         "time": "2026-10-30 12:00:00+00:00",
         "price": 1.1165698766708374
+      },
+      {
+        "name": "double_top",
+        "direction": "bearish",
+        "bar": 741,
+        "time": "2026-10-30 16:00:00+00:00",
+        "price": 1.1170687675476074
+      },
+      {
+        "name": "double_top_eve_adam",
+        "direction": "bearish",
+        "bar": 741,
+        "time": "2026-10-30 16:00:00+00:00",
+        "price": 1.1170687675476074
       }
     ],
     "usdpln": [

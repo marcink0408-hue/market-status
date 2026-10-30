@@ -2,7 +2,7 @@
   {
     "symbol": "w20",
     "name": "WIG20",
-    "updated": "2026-10-30T19:48:43Z",
+    "updated": "2026-10-30T20:43:53Z",
     "timeframes": {
       "1H": {
         "renko": {
@@ -44,8 +44,8 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 345,
-          "last_close": 4184.7446463448605,
+          "bricks_total": 386,
+          "last_close": 4185.671735491065,
           "prev_leg_length": 8
         },
         "harmonics": [],
@@ -38425,18 +38425,88 @@
             "bar": 358,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 4174.2900390625
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "inside_day",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "narrow_range_4",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "narrow_range_7",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "one_two_three",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "one_two_three_top",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "three_lr",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "three_lr_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "two_did",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
+          },
+          {
+            "name": "two_did_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4180.8798828125
           }
         ],
-        "bars": 359,
-        "last_close": 4174.2900390625,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 360,
+        "last_close": 4180.8798828125,
+        "last_time": "2026-10-30 16:00:00+00:00"
       }
     },
     "decision": "BRAK",
     "confidence": 24,
     "entry": null,
     "stop": null,
-    "price": 4174.2900390625,
+    "price": 4180.8798828125,
     "reasons": [
       "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
       "Swieca: Bullish Engulfing (potwierdzenie)"
@@ -38452,8 +38522,8 @@
     },
     "contradiction": false,
     "daily_align": 0,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 26.54998,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 24.92923,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -38465,7 +38535,7 @@
   {
     "symbol": "us500",
     "name": "S&P 500",
-    "updated": "2026-10-30T19:48:55Z",
+    "updated": "2026-10-30T20:43:54Z",
     "timeframes": {
       "1H": {
         "renko": {
@@ -38474,15 +38544,15 @@
           "last_reversal": true,
           "local_high": false,
           "local_low": true,
-          "bricks_total": 180,
-          "last_close": 7559.861676897326,
-          "prev_leg_length": 12
+          "bricks_total": 173,
+          "last_close": 7565.485595703125,
+          "prev_leg_length": 10
         },
         "harmonics": [],
         "candles": [],
         "classic_patterns": [],
         "bars": 420,
-        "last_close": 7561.77978515625,
+        "last_close": 7580.9501953125,
         "last_time": "2026-10-30 19:30:00+00:00"
       },
       "4H": {
@@ -38492,9 +38562,9 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 186,
-          "last_close": 7609.298549107147,
-          "prev_leg_length": 4
+          "bricks_total": 171,
+          "last_close": 7594.95314243862,
+          "prev_leg_length": 3
         },
         "harmonics": [
           {
@@ -38535,13 +38605,6 @@
             "bar": 237,
             "time": "2026-10-29 16:00:00+00:00",
             "strength": "medium"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 229,
-            "time": "2026-10-23 16:00:00+00:00",
-            "strength": "strong"
           }
         ],
         "classic_patterns": [
@@ -64885,11 +64948,165 @@
             "bar": 238,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 7600.06982421875
+          },
+          {
+            "name": "big_m",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "black_candle",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "cat_ears",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "double_top",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "double_top_eve_adam",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "failure_swing",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "hammer",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "one_day_reversal",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "one_day_reversal_bottom",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "one_two_three",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "one_two_three_top",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "short_black_candle",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "spikes",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "three_lr_inverted_bearish",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "three_peaks",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "triple_top",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "two_dance",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "two_dance_bearish",
+            "direction": "bearish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "v_pivot",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "wide_ranging_day",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
+          },
+          {
+            "name": "wide_ranging_day_up",
+            "direction": "bullish",
+            "bar": 239,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 7580.9501953125
           }
         ],
-        "bars": 239,
-        "last_close": 7600.06982421875,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 240,
+        "last_close": 7580.9501953125,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -64898,8 +65115,8 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 357,
-          "last_close": 7591.9513288225335,
+          "bricks_total": 370,
+          "last_close": 7607.797746930792,
           "prev_leg_length": 2
         },
         "harmonics": [],
@@ -64907,36 +65124,36 @@
           {
             "name": "Morning Star",
             "direction": "bullish",
-            "bar": 493,
+            "bar": 492,
             "time": "2026-10-20 00:00:00+00:00",
             "strength": "strong"
           },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
-            "bar": 493,
+            "bar": 492,
             "time": "2026-10-20 00:00:00+00:00",
             "strength": "strong"
           }
         ],
         "classic_patterns": [],
-        "bars": 502,
-        "last_close": 7562.47998046875,
+        "bars": 501,
+        "last_close": 7580.06982421875,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
     "decision": "SHORT",
     "confidence": 66,
-    "entry": 7600.06982,
-    "stop": 7806.73661,
-    "price": 7600.06982421875,
+    "entry": 7580.9502,
+    "stop": 7807.39035,
+    "price": 7580.9501953125,
     "reasons": [
       "Harmoniczna: Butterfly bearish (ukonczona)",
       "Swieca: Evening Star (potwierdzenie)",
       "Daily: zgodny kierunek Renko"
     ],
-    "summary": "S&P 500 4H -> SHORT @ 7600.06982 (stop 7806.73661, cel 7290.06965, ocena sygnalu 66/100, R:R 1:1.5)",
-    "target": 7290.06965,
+    "summary": "S&P 500 4H -> SHORT @ 7580.9502 (stop 7807.39035, cel 7241.28996, ocena sygnalu 66/100, R:R 1:1.5)",
+    "target": 7241.28996,
     "rr": 1.5,
     "pillars": 2,
     "modules": {
@@ -64946,8 +65163,8 @@
     },
     "contradiction": false,
     "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 52.22573,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 54.84072,
     "harmonic": {
       "name": "Butterfly",
       "direction": "bearish",
@@ -64974,27 +65191,34 @@
     "renko_signal": "Harmoniczna: Butterfly bearish (ukonczona)",
     "overall_bias": "SHORT",
     "overall_confidence": 66,
-    "overall_action": "Wejscie SHORT @ 7600.06982",
-    "overall_summary": "S&P 500 4H -> SHORT @ 7600.06982 (stop 7806.73661, cel 7290.06965, ocena sygnalu 66/100, R:R 1:1.5)"
+    "overall_action": "Wejscie SHORT @ 7580.9502",
+    "overall_summary": "S&P 500 4H -> SHORT @ 7580.9502 (stop 7807.39035, cel 7241.28996, ocena sygnalu 66/100, R:R 1:1.5)"
   },
   {
     "symbol": "gold",
     "name": "Gold",
-    "updated": "2026-10-30T19:49:06Z",
+    "updated": "2026-10-30T20:43:56Z",
     "timeframes": {
       "1H": {
         "renko": {
           "direction": "down",
-          "consecutive": 12,
+          "consecutive": 11,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 609,
-          "last_close": 3888.436671665755,
+          "bricks_total": 601,
+          "last_close": 3896.4331665039062,
           "prev_leg_length": 2
         },
         "harmonics": [],
         "candles": [
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 1141,
+            "time": "2026-10-30 20:00:00+00:00",
+            "strength": "strong"
+          },
           {
             "name": "Doji",
             "direction": "neutral",
@@ -65004,20 +65228,20 @@
           }
         ],
         "classic_patterns": [],
-        "bars": 1141,
-        "last_close": 3885.699951171875,
-        "last_time": "2026-10-30 19:00:00+00:00"
+        "bars": 1142,
+        "last_close": 3886.699951171875,
+        "last_time": "2026-10-30 20:00:00+00:00"
       },
       "4H": {
         "renko": {
           "direction": "down",
-          "consecutive": 10,
+          "consecutive": 11,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 428,
-          "last_close": 3907.685564313617,
-          "prev_leg_length": 1
+          "bricks_total": 408,
+          "last_close": 3896.1783272879456,
+          "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [
@@ -132054,21 +132278,98 @@
             "bar": 616,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 3907.5
+          },
+          {
+            "name": "big_m",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "black_candle",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "double_top",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "double_top_eve_adam",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "identical_three_crows",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "inverted_cup_with_handle",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "narrow_range_4",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "three_lr_inverted_bearish",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "three_peaks",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "two_dance",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
+          },
+          {
+            "name": "two_dance_bearish",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3892.800048828125
           }
         ],
-        "bars": 617,
-        "last_close": 3907.5,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 618,
+        "last_close": 3892.800048828125,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
           "direction": "down",
-          "consecutive": 4,
+          "consecutive": 7,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 408,
-          "last_close": 3920.1211635044697,
+          "bricks_total": 403,
+          "last_close": 3887.574593680244,
           "prev_leg_length": 1
         },
         "harmonics": [],
@@ -132083,7 +132384,7 @@
         ],
         "classic_patterns": [],
         "bars": 504,
-        "last_close": 3885.60009765625,
+        "last_close": 3886.699951171875,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
@@ -132091,7 +132392,7 @@
     "confidence": 28,
     "entry": null,
     "stop": null,
-    "price": 3907.5,
+    "price": 3892.800048828125,
     "reasons": [
       "Brak setupu (SHORT 1/3, conf 28%, prog 99%):",
       "Swieca: Shooting Star (potwierdzenie)",
@@ -132108,8 +132409,8 @@
     },
     "contradiction": false,
     "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 33.55718,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 34.83576,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -132121,17 +132422,17 @@
   {
     "symbol": "silver",
     "name": "Silver",
-    "updated": "2026-10-30T19:49:12Z",
+    "updated": "2026-10-30T20:43:57Z",
     "timeframes": {
       "1H": {
         "renko": {
           "direction": "down",
-          "consecutive": 9,
+          "consecutive": 15,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 732,
-          "last_close": 49.08783721923828,
+          "bricks_total": 735,
+          "last_close": 49.19373444148484,
           "prev_leg_length": 1
         },
         "harmonics": [],
@@ -132159,9 +132460,9 @@
           }
         ],
         "classic_patterns": [],
-        "bars": 1140,
-        "last_close": 49.1349983215332,
-        "last_time": "2026-10-30 19:00:00+00:00"
+        "bars": 1141,
+        "last_close": 49.13999938964844,
+        "last_time": "2026-10-30 20:00:00+00:00"
       },
       "4H": {
         "renko": {
@@ -132170,8 +132471,8 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 423,
-          "last_close": 49.48859133039193,
+          "bricks_total": 421,
+          "last_close": 49.459125246320426,
           "prev_leg_length": 3
         },
         "harmonics": [
@@ -132192,7 +132493,15 @@
             "error": 0.1314
           }
         ],
-        "candles": [],
+        "candles": [
+          {
+            "name": "Hammer",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "strength": "medium"
+          }
+        ],
         "classic_patterns": [
           {
             "name": "high_wave",
@@ -194829,11 +195138,200 @@
             "bar": 616,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 49.31999969482422
+          },
+          {
+            "name": "closing_marubozu_white",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "closing_price_reversal",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "closing_price_reversal_bottom",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "failure_swing",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "hammer",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "harami_bullish",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "inverted_cup_with_handle",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "key_reversal",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "key_reversal_bottom",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "narrow_range_4",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "narrow_range_7",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "one_day_reversal",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "one_day_reversal_bottom",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "short_white_candle",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "spikes",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "takuri_line",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "three_lr",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "three_lr_bullish",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "two_dance",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "two_dance_bullish",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "two_did",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "two_did_bullish",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "v_pivot",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "v_top_extended",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "weekly_reversal",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "weekly_reversal_upside",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
+          },
+          {
+            "name": "white_candle",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 49.38999938964844
           }
         ],
-        "bars": 617,
-        "last_close": 49.31999969482422,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 618,
+        "last_close": 49.38999938964844,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -194865,45 +195363,46 @@
         ],
         "classic_patterns": [],
         "bars": 504,
-        "last_close": 49.130001068115234,
+        "last_close": 49.13999938964844,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
     "decision": "BRAK",
-    "confidence": 23,
+    "confidence": 46,
     "entry": null,
     "stop": null,
-    "price": 49.31999969482422,
+    "price": 49.38999938964844,
     "reasons": [
-      "Brak setupu (LONG 1/3, conf 23%, prog 99%):",
+      "Brak setupu (LONG 2/3, conf 46%, prog 55%):",
       "Harmoniczna: Butterfly bullish (ukonczona)",
+      "Swieca: Hammer (potwierdzenie)",
       "Daily: przeciwny kierunek Renko"
     ],
     "summary": "Silver 4H -> brak setupu wejscia",
     "target": null,
     "rr": null,
-    "pillars": 1,
+    "pillars": 2,
     "modules": {
       "renko": false,
       "harmonic": true,
-      "candle": false
+      "candle": true
     },
     "contradiction": false,
     "daily_align": -1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 0.90857,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 0.91036,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
     "overall_bias": "NIC",
-    "overall_confidence": 23,
+    "overall_confidence": 46,
     "overall_action": "Brak wejscia – czekaj",
     "overall_summary": "Silver 4H -> brak setupu wejscia"
   },
   {
     "symbol": "eurpln",
     "name": "EUR/PLN",
-    "updated": "2026-10-30T19:49:24Z",
+    "updated": "2026-10-30T20:43:59Z",
     "timeframes": {
       "1H": {
         "renko": {
@@ -194912,12 +195411,19 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 479,
-          "last_close": 4.4026954855237745,
+          "bricks_total": 472,
+          "last_close": 4.402516910008011,
           "prev_leg_length": 6
         },
         "harmonics": [],
         "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 1427,
+            "time": "2026-10-30 20:00:00+00:00",
+            "strength": "weak"
+          },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
@@ -194927,9 +195433,9 @@
           }
         ],
         "classic_patterns": [],
-        "bars": 1427,
-        "last_close": 4.404940128326416,
-        "last_time": "2026-10-30 19:00:00+00:00"
+        "bars": 1428,
+        "last_close": 4.404300212860107,
+        "last_time": "2026-10-30 20:00:00+00:00"
       },
       "4H": {
         "renko": {
@@ -194938,9 +195444,9 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 383,
-          "last_close": 4.400587677955627,
-          "prev_leg_length": 5
+          "bricks_total": 397,
+          "last_close": 4.40263664722442,
+          "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [
@@ -297390,11 +297896,81 @@
             "bar": 740,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 4.402500152587891
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "elevator_stop",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "flat_base",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "three_lr_inverted_bullish",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "three_white_soldiers",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "tweezer_bottoms",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "tweezer_tops",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "two_dance",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "two_dance_bullish",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
+          },
+          {
+            "name": "white_candle",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 4.404540061950684
           }
         ],
-        "bars": 741,
-        "last_close": 4.402500152587891,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 742,
+        "last_close": 4.404540061950684,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -297426,7 +298002,7 @@
         ],
         "classic_patterns": [],
         "bars": 502,
-        "last_close": 4.4049201011657715,
+        "last_close": 4.404300212860107,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
@@ -297434,7 +298010,7 @@
     "confidence": 32,
     "entry": null,
     "stop": null,
-    "price": 4.402500152587891,
+    "price": 4.404540061950684,
     "reasons": [
       "Brak setupu (LONG 1/3, conf 32%, prog 99%):",
       "Swieca: Bullish Engulfing (potwierdzenie)",
@@ -297451,8 +298027,8 @@
     },
     "contradiction": false,
     "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 0.00663,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 0.00645,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -297464,25 +298040,33 @@
   {
     "symbol": "eurusd",
     "name": "EUR/USD",
-    "updated": "2026-10-30T19:49:38Z",
+    "updated": "2026-10-30T20:44:00Z",
     "timeframes": {
       "1H": {
         "renko": {
           "direction": "up",
-          "consecutive": 1,
-          "last_reversal": true,
+          "consecutive": 2,
+          "last_reversal": false,
           "local_high": false,
-          "local_low": true,
-          "bricks_total": 506,
-          "last_close": 1.116748741694864,
-          "prev_leg_length": 5
+          "local_low": false,
+          "bricks_total": 521,
+          "last_close": 1.116946922881261,
+          "prev_leg_length": 1
         },
         "harmonics": [],
-        "candles": [],
+        "candles": [
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 1425,
+            "time": "2026-10-30 20:00:00+00:00",
+            "strength": "strong"
+          }
+        ],
         "classic_patterns": [],
-        "bars": 1425,
-        "last_close": 1.1170687675476074,
-        "last_time": "2026-10-30 19:00:00+00:00"
+        "bars": 1426,
+        "last_close": 1.1166945695877075,
+        "last_time": "2026-10-30 20:00:00+00:00"
       },
       "4H": {
         "renko": {
@@ -297491,8 +298075,8 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 323,
-          "last_close": 1.1170715647084404,
+          "bricks_total": 312,
+          "last_close": 1.11699250766209,
           "prev_leg_length": 5
         },
         "harmonics": [],
@@ -396408,11 +396992,144 @@
             "bar": 740,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 1.1165698766708374
+          },
+          {
+            "name": "cat_ears",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "double_top",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "double_top_eve_adam",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "elevator_stop",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "harami_bullish",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "high_wave",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "inside_day",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "one_two_three",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "one_two_three_bottom",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "short_white_candle",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "spikes",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "spinning_top_white",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "three_peaks",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "two_dance",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "two_dance_bullish",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "two_did",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "two_did_bullish",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
+          },
+          {
+            "name": "white_candle",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 1.1170687675476074
           }
         ],
-        "bars": 741,
-        "last_close": 1.1165698766708374,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 742,
+        "last_close": 1.1170687675476074,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -396437,7 +397154,7 @@
         ],
         "classic_patterns": [],
         "bars": 499,
-        "last_close": 1.1170687675476074,
+        "last_close": 1.1166945695877075,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
@@ -396445,7 +397162,7 @@
     "confidence": 32,
     "entry": null,
     "stop": null,
-    "price": 1.1165698766708374,
+    "price": 1.1170687675476074,
     "reasons": [
       "Brak setupu (SHORT 1/3, conf 32%, prog 99%):",
       "Swieca: Bearish Engulfing (potwierdzenie)",
@@ -396462,8 +397179,8 @@
     },
     "contradiction": false,
     "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 0.00271,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 0.00279,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -396475,18 +397192,18 @@
   {
     "symbol": "usdpln",
     "name": "USD/PLN",
-    "updated": "2026-10-30T19:49:48Z",
+    "updated": "2026-10-30T20:44:02Z",
     "timeframes": {
       "1H": {
         "renko": {
-          "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": true,
+          "direction": "up",
+          "consecutive": 7,
+          "last_reversal": false,
+          "local_high": false,
           "local_low": false,
-          "bricks_total": 442,
-          "last_close": 3.943629026412971,
-          "prev_leg_length": 7
+          "bricks_total": 467,
+          "last_close": 3.945713681834092,
+          "prev_leg_length": 8
         },
         "harmonics": [
           {
@@ -396498,7 +397215,7 @@
             "B": 3.938699960708618,
             "C": 3.9504001140594482,
             "D_projected": 3.91904,
-            "current": 3.944469928741455,
+            "current": 3.945050001144409,
             "time_X": "2026-10-30 08:00:00+00:00",
             "time_A": "2026-10-30 14:00:00+00:00",
             "time_B": "2026-10-30 16:00:00+00:00",
@@ -396513,7 +397230,7 @@
             "B": 3.938699960708618,
             "C": 3.9504001140594482,
             "D_projected": 3.89119,
-            "current": 3.944469928741455,
+            "current": 3.945050001144409,
             "time_X": "2026-10-30 08:00:00+00:00",
             "time_A": "2026-10-30 14:00:00+00:00",
             "time_B": "2026-10-30 16:00:00+00:00",
@@ -396522,51 +397239,51 @@
         ],
         "candles": [
           {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 1426,
+            "time": "2026-10-30 19:00:00+00:00",
+            "strength": "weak"
+          },
+          {
             "name": "Bearish Engulfing",
             "direction": "bearish",
             "bar": 1425,
             "time": "2026-10-30 18:00:00+00:00",
             "strength": "strong"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 1417,
-            "time": "2026-10-30 10:00:00+00:00",
-            "strength": "weak"
           }
         ],
         "classic_patterns": [],
-        "bars": 1427,
-        "last_close": 3.944469928741455,
-        "last_time": "2026-10-30 19:00:00+00:00"
+        "bars": 1428,
+        "last_close": 3.945050001144409,
+        "last_time": "2026-10-30 20:00:00+00:00"
       },
       "4H": {
         "renko": {
           "direction": "up",
-          "consecutive": 2,
+          "consecutive": 3,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
           "bricks_total": 295,
-          "last_close": 3.938364957060125,
+          "last_close": 3.942611566611696,
           "prev_leg_length": 5
         },
         "harmonics": [],
         "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "strength": "weak"
+          },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
             "bar": 739,
             "time": "2026-10-30 08:00:00+00:00",
             "strength": "strong"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 738,
-            "time": "2026-10-30 04:00:00+00:00",
-            "strength": "weak"
           }
         ],
         "classic_patterns": [
@@ -494149,11 +494866,137 @@
             "bar": 740,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 3.9435999393463135
+          },
+          {
+            "name": "black_candle",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "doji",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "doji_star_bearish",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "flat_base",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "high_wave",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "inside_day",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "long_legged_doji",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "northern_doji",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "one_two_three",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "one_two_three_top",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "rickshaw_man",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "short_black_candle",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "spikes",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "spinning_top_black",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "tweezer_tops",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "two_dance",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
+          },
+          {
+            "name": "two_dance_bearish",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 3.943700075149536
           }
         ],
-        "bars": 741,
-        "last_close": 3.9435999393463135,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 742,
+        "last_close": 3.943700075149536,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -494178,7 +495021,7 @@
         ],
         "classic_patterns": [],
         "bars": 498,
-        "last_close": 3.944469928741455,
+        "last_close": 3.945050001144409,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
@@ -494186,7 +495029,7 @@
     "confidence": 32,
     "entry": null,
     "stop": null,
-    "price": 3.9435999393463135,
+    "price": 3.943700075149536,
     "reasons": [
       "Brak setupu (LONG 1/3, conf 32%, prog 99%):",
       "Swieca: Bullish Engulfing (potwierdzenie)",
@@ -494203,8 +495046,8 @@
     },
     "contradiction": false,
     "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 0.01383,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 0.01404,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -494216,7 +495059,7 @@
   {
     "symbol": "usdjpy",
     "name": "USD/JPY",
-    "updated": "2026-10-30T19:49:58Z",
+    "updated": "2026-10-30T20:44:04Z",
     "timeframes": {
       "1H": {
         "renko": {
@@ -494225,8 +495068,8 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 627,
-          "last_close": 157.50645773751393,
+          "bricks_total": 639,
+          "last_close": 157.51642227172852,
           "prev_leg_length": 5
         },
         "harmonics": [],
@@ -494247,9 +495090,9 @@
           }
         ],
         "classic_patterns": [],
-        "bars": 1419,
-        "last_close": 157.5399932861328,
-        "last_time": "2026-10-30 19:00:00+00:00"
+        "bars": 1420,
+        "last_close": 157.62600708007812,
+        "last_time": "2026-10-30 20:00:00+00:00"
       },
       "4H": {
         "renko": {
@@ -494259,7 +495102,7 @@
           "local_high": false,
           "local_low": true,
           "bricks_total": 329,
-          "last_close": 157.34500122070304,
+          "last_close": 157.32300186157235,
           "prev_leg_length": 4
         },
         "harmonics": [],
@@ -590277,11 +591120,109 @@
             "bar": 740,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 157.47300720214844
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "elevator_stop",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "flat_base",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "high_wave",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "narrow_range_4",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "one_two_three",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "one_two_three_top",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "short_white_candle",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "spikes",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "spinning_top_white",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "tweezer_tops",
+            "direction": "bearish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "two_dance",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "two_dance_bullish",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
+          },
+          {
+            "name": "white_candle",
+            "direction": "bullish",
+            "bar": 741,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 157.51699829101562
           }
         ],
-        "bars": 741,
-        "last_close": 157.47300720214844,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 742,
+        "last_close": 157.51699829101562,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -590299,14 +591240,14 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 483,
-            "time": "2026-10-29 00:00:00+00:00",
+            "bar": 484,
+            "time": "2026-10-30 00:00:00+00:00",
             "strength": "weak"
           }
         ],
         "classic_patterns": [],
         "bars": 485,
-        "last_close": 157.53700256347656,
+        "last_close": 157.62600708007812,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
@@ -590314,7 +591255,7 @@
     "confidence": 33,
     "entry": null,
     "stop": null,
-    "price": 157.47300720214844,
+    "price": 157.51699829101562,
     "reasons": [
       "Brak setupu (LONG 1/3, conf 33%, prog 99%):",
       "UWAGA: sprzeczna swieca Bearish Engulfing",
@@ -590332,8 +591273,8 @@
     },
     "contradiction": true,
     "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 0.42914,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 0.43543,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -590345,18 +591286,18 @@
   {
     "symbol": "copper",
     "name": "Copper",
-    "updated": "2026-10-30T19:50:09Z",
+    "updated": "2026-10-30T20:44:05Z",
     "timeframes": {
       "1H": {
         "renko": {
-          "direction": "down",
-          "consecutive": 4,
-          "last_reversal": false,
+          "direction": "up",
+          "consecutive": 1,
+          "last_reversal": true,
           "local_high": false,
-          "local_low": false,
-          "bricks_total": 587,
-          "last_close": 6.4680894442967025,
-          "prev_leg_length": 1
+          "local_low": true,
+          "bricks_total": 588,
+          "last_close": 6.48314298902239,
+          "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [
@@ -590380,19 +591321,12 @@
             "bar": 1128,
             "time": "2026-10-30 11:00:00+00:00",
             "strength": "strong"
-          },
-          {
-            "name": "Hammer",
-            "direction": "bullish",
-            "bar": 1127,
-            "time": "2026-10-30 10:00:00+00:00",
-            "strength": "medium"
           }
         ],
         "classic_patterns": [],
-        "bars": 1137,
-        "last_close": 6.4664998054504395,
-        "last_time": "2026-10-30 19:00:00+00:00"
+        "bars": 1138,
+        "last_close": 6.482500076293945,
+        "last_time": "2026-10-30 20:00:00+00:00"
       },
       "4H": {
         "renko": {
@@ -590402,11 +591336,19 @@
           "local_high": false,
           "local_low": false,
           "bricks_total": 391,
-          "last_close": 6.490250349044798,
+          "last_close": 6.490250229835509,
           "prev_leg_length": 8
         },
         "harmonics": [],
-        "candles": [],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "strength": "weak"
+          }
+        ],
         "classic_patterns": [
           {
             "name": "black_candle",
@@ -660659,11 +661601,137 @@
             "bar": 616,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 6.488999843597412
+          },
+          {
+            "name": "closing_price_reversal",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "closing_price_reversal_bottom",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "doji",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "failure_swing",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "flat_base",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "hammer",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "narrow_range_4",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "one_day_reversal",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "one_day_reversal_bottom",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "one_two_three",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "one_two_three_top",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "short_white_candle",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "southern_doji",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "spikes",
+            "direction": "bearish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "two_dance",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "two_dance_bullish",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "v_pivot",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
+          },
+          {
+            "name": "white_candle",
+            "direction": "bullish",
+            "bar": 617,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6.488999843597412
           }
         ],
-        "bars": 617,
+        "bars": 618,
         "last_close": 6.488999843597412,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -660702,7 +661770,7 @@
         ],
         "classic_patterns": [],
         "bars": 504,
-        "last_close": 6.466000080108643,
+        "last_close": 6.482500076293945,
         "last_time": "2026-10-30 00:00:00+00:00"
       }
     },
@@ -660726,7 +661794,7 @@
     },
     "contradiction": false,
     "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
     "atr": 0.05264,
     "harmonic": null,
     "candle": null,
@@ -660739,7 +661807,7 @@
   {
     "symbol": "eu50",
     "name": "Euro Stoxx 50",
-    "updated": "2026-10-30T19:50:17Z",
+    "updated": "2026-10-30T20:44:07Z",
     "timeframes": {
       "1H": {
         "renko": {
@@ -660788,9 +661856,9 @@
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 322,
-          "last_close": 6135.428501674105,
-          "prev_leg_length": 3
+          "bricks_total": 366,
+          "last_close": 6140.800048828125,
+          "prev_leg_length": 9
         },
         "harmonics": [],
         "candles": [
@@ -701633,11 +702701,88 @@
             "bar": 358,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 6134.10009765625
+          },
+          {
+            "name": "black_candle",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "hammer",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "identical_three_crows",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "matching_low",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "opening_marubozu_black",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "short_black_candle",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "spikes",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "three_lr_inverted_bearish",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "two_dance",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
+          },
+          {
+            "name": "two_dance_bearish",
+            "direction": "bearish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 6130.72998046875
           }
         ],
-        "bars": 359,
-        "last_close": 6134.10009765625,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 360,
+        "last_close": 6130.72998046875,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -701684,7 +702829,7 @@
     "confidence": 14,
     "entry": null,
     "stop": null,
-    "price": 6134.10009765625,
+    "price": 6130.72998046875,
     "reasons": [
       "Brak setupu (LONG 1/3, conf 14%, prog 99%):",
       "Swieca: Bullish Engulfing (potwierdzenie)",
@@ -701701,8 +702846,8 @@
     },
     "contradiction": false,
     "daily_align": -1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 34.51859,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 31.28003,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -701714,7 +702859,7 @@
   {
     "symbol": "uk100",
     "name": "FTSE 100",
-    "updated": "2026-10-30T19:50:27Z",
+    "updated": "2026-10-30T20:44:08Z",
     "timeframes": {
       "1H": {
         "renko": {
@@ -701759,16 +702904,23 @@
       "4H": {
         "renko": {
           "direction": "up",
-          "consecutive": 2,
+          "consecutive": 3,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 349,
-          "last_close": 10722.84375,
-          "prev_leg_length": 3
+          "bricks_total": 391,
+          "last_close": 10729.763985770094,
+          "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "strength": "strong"
+          },
           {
             "name": "Doji",
             "direction": "neutral",
@@ -743784,11 +744936,158 @@
             "bar": 358,
             "time": "2026-10-30 12:00:00+00:00",
             "price": 10726.099609375
+          },
+          {
+            "name": "closing_marubozu_white",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "cloud_bank",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "elevator_stop",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "engulfing_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "hook_reversal",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "hook_reversal_bottom",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "inside_day",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "open_close_reversal",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "open_close_reversal_bottom",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "separating_lines_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "shark_32",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "tweezer_bottoms",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_close",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_close_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_dance",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_dance_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_did",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_did_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_tall",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "two_tall_bullish",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
+          },
+          {
+            "name": "white_candle",
+            "direction": "bullish",
+            "bar": 359,
+            "time": "2026-10-30 16:00:00+00:00",
+            "price": 10736.1396484375
           }
         ],
-        "bars": 359,
-        "last_close": 10726.099609375,
-        "last_time": "2026-10-30 12:00:00+00:00"
+        "bars": 360,
+        "last_close": 10736.1396484375,
+        "last_time": "2026-10-30 16:00:00+00:00"
       },
       "Daily": {
         "renko": {
@@ -743841,32 +745140,33 @@
       }
     },
     "decision": "BRAK",
-    "confidence": 8,
+    "confidence": 14,
     "entry": null,
     "stop": null,
-    "price": 10726.099609375,
+    "price": 10736.1396484375,
     "reasons": [
-      "Brak setupu (SHORT 0/3, conf 8%, prog 99%):",
-      "Daily: zgodny kierunek Renko"
+      "Brak setupu (LONG 1/3, conf 14%, prog 99%):",
+      "Swieca: Bullish Engulfing (potwierdzenie)",
+      "Daily: przeciwny kierunek Renko"
     ],
     "summary": "FTSE 100 4H -> brak setupu wejscia",
     "target": null,
     "rr": null,
-    "pillars": 0,
+    "pillars": 1,
     "modules": {
       "renko": false,
       "harmonic": false,
-      "candle": false
+      "candle": true
     },
     "contradiction": false,
-    "daily_align": 1,
-    "last_bar_time": "2026-10-30 12:00:00+00:00",
-    "atr": 48.2793,
+    "daily_align": -1,
+    "last_bar_time": "2026-10-30 16:00:00+00:00",
+    "atr": 43.92571,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
     "overall_bias": "NIC",
-    "overall_confidence": 8,
+    "overall_confidence": 14,
     "overall_action": "Brak wejscia – czekaj",
     "overall_summary": "FTSE 100 4H -> brak setupu wejscia"
   }

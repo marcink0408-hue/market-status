@@ -188,7 +188,156 @@
       "outcome": null,
       "outcome_checked_at": null,
       "outcome_result": null
+    },
+    {
+      "id": "2026-10-30T12:00:00Z_US500_4H",
+      "timestamp": "2026-10-30T16:18:55Z",
+      "symbol": "us500",
+      "timeframe": "4H",
+      "candle_close_time": "2026-10-30T12:00:00Z",
+      "decision": "SHORT",
+      "confidence": 66,
+      "entry": 7596.24023,
+      "stop": 7806.73661,
+      "target": 7280.49568,
+      "rr": 1.5,
+      "filars": {
+        "renko": false,
+        "harmonic": true,
+        "candle": true
+      },
+      "confluence": "2/3",
+      "reasons": [
+        "Harmoniczna: Butterfly bearish (ukonczona)",
+        "Swieca: Evening Star (potwierdzenie)",
+        "Daily: zgodny kierunek Renko"
+      ],
+      "daily_context": "SHORT",
+      "atr_4h": 52.22573,
+      "candle_stale": false,
+      "gap_weekend": null,
+      "outcome": null,
+      "outcome_checked_at": null,
+      "outcome_result": null,
+      "timeframes": {
+        "1H": {
+          "renko": {
+            "direction": "down",
+            "consecutive": 9,
+            "last_reversal": false,
+            "local_high": false,
+            "local_low": false,
+            "bricks_total": 194,
+            "last_close": 7600.579206194194,
+            "prev_leg_length": 4
+          },
+          "harmonics": [],
+          "candles": [
+            {
+              "name": "Hammer",
+              "direction": "bullish",
+              "bar": 407,
+              "time": "2026-10-29 14:30:00+00:00",
+              "strength": "medium"
+            }
+          ],
+          "bars": 416,
+          "last_close": 7595.3701171875,
+          "last_time": "2026-10-30 15:30:00+00:00"
+        },
+        "4H": {
+          "renko": {
+            "direction": "down",
+            "consecutive": 5,
+            "last_reversal": false,
+            "local_high": false,
+            "local_low": false,
+            "bricks_total": 184,
+            "last_close": 7609.298549107147,
+            "prev_leg_length": 4
+          },
+          "harmonics": [
+            {
+              "name": "Butterfly",
+              "direction": "bearish",
+              "status": "completed",
+              "X": 7793.68017578125,
+              "A": 7698.14990234375,
+              "B": 7773.759765625,
+              "C": 7717.25,
+              "D": 7816.7001953125,
+              "time_D": "2026-08-13 12:00:00+00:00",
+              "error": 0.203
+            }
+          ],
+          "candles": [
+            {
+              "name": "Evening Star",
+              "direction": "bearish",
+              "bar": 233,
+              "time": "2026-10-30 12:00:00+00:00",
+              "strength": "strong"
+            },
+            {
+              "name": "Doji",
+              "direction": "neutral",
+              "bar": 232,
+              "time": "2026-10-29 16:00:00+00:00",
+              "strength": "weak"
+            },
+            {
+              "name": "Hammer",
+              "direction": "bullish",
+              "bar": 232,
+              "time": "2026-10-29 16:00:00+00:00",
+              "strength": "medium"
+            },
+            {
+              "name": "Bearish Engulfing",
+              "direction": "bearish",
+              "bar": 224,
+              "time": "2026-10-23 16:00:00+00:00",
+              "strength": "strong"
+            }
+          ],
+          "bars": 234,
+          "last_close": 7596.240234375,
+          "last_time": "2026-10-30 12:00:00+00:00"
+        },
+        "Daily": {
+          "renko": {
+            "direction": "down",
+            "consecutive": 3,
+            "last_reversal": false,
+            "local_high": false,
+            "local_low": false,
+            "bricks_total": 376,
+            "last_close": 7613.1255231585,
+            "prev_leg_length": 2
+          },
+          "harmonics": [],
+          "candles": [
+            {
+              "name": "Morning Star",
+              "direction": "bullish",
+              "bar": 493,
+              "time": "2026-10-20 00:00:00+00:00",
+              "strength": "strong"
+            },
+            {
+              "name": "Bullish Engulfing",
+              "direction": "bullish",
+              "bar": 493,
+              "time": "2026-10-20 00:00:00+00:00",
+              "strength": "strong"
+            }
+          ],
+          "bars": 502,
+          "last_close": 7595.81982421875,
+          "last_time": "2026-10-30 00:00:00+00:00"
+        }
+      }
     }
   ],
-  "updated": "2026-10-30T10:44:20Z"
+  "updated": "2026-10-30T16:18:55Z"
 }

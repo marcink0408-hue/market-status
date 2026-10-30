@@ -71,14 +71,46 @@
   <script>
     let DATA = [];
     async function load() {
-      try {
-        const res = await fetch('../output/status.json?t=' + Date.now());
-        DATA = await res.json();
-        render();
-      } catch(e) {
-        document.getElementById('updated').textContent = 'Blad ladowania status.json';
+  try {
+    // Czytamy z decisions_log.json (jest w repo, aktualizuje się codziennie)
+    const res = await fetch('../output/decisions_log.json?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    const decisions = json.decisions || json;
+    
+    // Wybierz najnowszą decyzję per symbol (po candle_close_time)
+    const latest = new Map();
+    decisions.forEach(d => {
+      const sym = d.symbol;
+      const cur = latest.get(sym);
+      if (!cur || (d.candle_close_time || d.timestamp) > (cur.candle_close_time || cur.timestamp)) {
+        latest.set(sym, d);
       }
-    }
+    });
+    
+    // Konwersja do formatu, który rozumie render() — zachowujemy kompatybilność z kartami
+    DATA = Array.from(latest.values()).map(d => ({
+      symbol: d.symbol,
+      name: d.symbol,  // decisions_log.json nie ma pola "name" — użyjemy symbolu
+      updated: d.timestamp,
+      overall_bias: d.decision === 'LONG' ? 'LONG' : d.decision === 'SHORT' ? 'SHORT' : 'NIC',
+      overall_confidence: d.confidence || 0,
+      overall_action: d.decision === 'LONG' ? `Wejście: ${d.entry} | Stop: ${d.stop} | Cel: ${d.target}` 
+                       : d.decision === 'SHORT' ? `Wejście: ${d.entry} | Stop: ${d.stop} | Cel: ${d.target}`
+                       : 'Brak setupu',
+      overall_summary: (d.reasons || []).join(' · '),
+      // Dodatkowe pola pod przyszły modal z wykresem:
+      _raw: d,  // pełny rekord (entry/stop/target/atr/filars/etc.)
+    }));
+    
+    render();
+    document.getElementById('updated').textContent = 'Dane z: ' + 
+      new Date(Math.max(...DATA.map(x => new Date(x.updated).getTime()))).toLocaleString('pl-PL');
+  } catch(e) {
+    document.getElementById('updated').textContent = 'Błąd ładowania: ' + e.message;
+    console.error(e);
+  }
+}
     function decClass(d) { return (d==='LONG'||d==='SHORT') ? d : 'BRAK'; }
     function fmt(n) {
       if (n==null) return '—';

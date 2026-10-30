@@ -11,7 +11,7 @@ MIN_CONFIDENCE = 40
 
 OUTPUT_DIR = Path(__file__).resolve().parents[1] / "output"
 CURRENT_FILE = OUTPUT_DIR / "status.json"
-PREVIOUS_FILE = OUTPUT_DIR / "status_previous.json"
+DECISIONS_LOG = OUTPUT_DIR / "decisions_log.json"
 
 
 def load_json(path: Path):
@@ -44,36 +44,62 @@ def send_telegram(text: str) -> bool:
         return False
 
 
-def significant_change(old, new) -> bool:
-    bias = new.get("decision") or new.get("overall_bias", "NIC")
-    conf = new.get("confidence") or new.get("overall_confidence", 0)
+def latest_decisions_map(log_data):
+    """Zwraca dict symbol -> najnowsza decyzja (po candle_close_time)."""
+    if not log_data:
+        return {}
+    decisions = log_data.get("decisions", []) if isinstance(log_data, dict) else log_data
+    by_sym = {}
+    for d in decisions:
+        sym = d.get("symbol")
+        if not sym:
+            continue
+        cur = by_sym.get(sym)
+        dT = d.get("candle_close_time") or d.get("timestamp") or ""
+        cT = (cur.get("candle_close_time") or cur.get("timestamp") or "") if cur else ""
+        if not cur or dT > cT:
+            by_sym[sym] = d
+    return by_sym
+
+
+def significant_change(old_decision, new_decision) -> bool:
+    """Wysyła alert, gdy:
+       - nowa decyzja to LONG/SHORT z conf >= MIN_CONFIDENCE
+       - brak poprzedniej decyzji LUB zmiana kierunku LUB wzrost conf o >= 15 LUB zmiana entry
+    """
+    if not new_decision:
+        return False
+    bias = new_decision.get("decision")
+    conf = new_decision.get("confidence") or 0
     if bias not in ("LONG", "SHORT") or conf < MIN_CONFIDENCE:
         return False
-    if old is None:
+    if old_decision is None:
         return True
-    old_bias = old.get("decision") or old.get("overall_bias", "NIC")
-    old_conf = old.get("confidence") or old.get("overall_confidence", 0)
+    old_bias = old_decision.get("decision")
+    old_conf = old_decision.get("confidence") or 0
     if old_bias != bias:
         return True
     if conf >= old_conf + 15:
         return True
-    if old.get("entry") is not None and new.get("entry") is not None and old.get("entry") != new.get("entry"):
+    old_entry = old_decision.get("entry")
+    new_entry = new_decision.get("entry")
+    if old_entry is not None and new_entry is not None and old_entry != new_entry:
         return True
     return False
 
 
 def build_message(item: dict) -> str:
-    sym = item.get("symbol", "?").upper()
-    name = item.get("name", "")
-    bias = item.get("decision") or item.get("overall_bias", "?")
-    conf = item.get("confidence") or item.get("overall_confidence", 0)
+    sym = (item.get("symbol") or "?").upper()
+    name = item.get("symbol", "") or ""
+    bias = item.get("decision") or "?"
+    conf = item.get("confidence") or 0
     entry = item.get("entry")
     stop = item.get("stop")
     target = item.get("target")
     rr = item.get("rr")
     reasons = item.get("reasons") or []
     emoji = "🟢" if bias == "LONG" else "🔴"
-    lines = [f"{emoji} <b>{sym}</b> ({name})", f"Decyzja: <b>{bias}</b> | Pewnosc: {conf}%"]
+    lines = [f"{emoji} <b>{sym}</b>", f"Decyzja: <b>{bias}</b> | Pewnosc: {conf}%"]
     if entry is not None:
         lines.append(f"Wejscie: <b>{entry}</b>")
     if stop is not None:
@@ -91,20 +117,21 @@ def check_and_alert():
     if not current:
         print("[ALERT] Brak status.json")
         return
-    previous = load_json(PREVIOUS_FILE)
-    prev_map = {p["symbol"]: p for p in previous} if previous else {}
+    log_data = load_json(DECISIONS_LOG)
+    if not log_data:
+        print("[ALERT] Brak decisions_log.json – nie ma z czym porownac, pomijam")
+        return
+    prev_map = latest_decisions_map(log_data)
     sent = 0
     for item in current:
         sym = item.get("symbol")
+        if not sym:
+            continue
         if significant_change(prev_map.get(sym), item):
             msg = build_message(item)
             ok = send_telegram(msg)
             print(f"[ALERT] {sym}: {'wyslano' if ok else 'NIE wyslano'}")
             sent += 1
-    try:
-        PREVIOUS_FILE.write_text(CURRENT_FILE.read_text(encoding="utf-8"), encoding="utf-8")
-    except Exception as e:
-        print(f"[ALERT] Nie zapisano previous: {e}")
     print(f"[ALERT] Gotowe. Wyslano {sent} alertow.")
 
 

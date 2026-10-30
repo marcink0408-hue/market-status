@@ -27,19 +27,29 @@ def detect_candlestick_patterns(df: pd.DataFrame, lookback: int = 10) -> list:
         if (c[i] < o[i] and c[i-1] > o[i-1] and c[i] <= o[i-1] and o[i] >= c[i-1] and body > abs(c[i-1] - o[i-1]) * 0.9):
             patterns.append({"name": "Bearish Engulfing", "direction": "bearish", "bar": i, "time": str(df.index[i]), "strength": "strong"})
 
-        if lower >= body * 2 and upper <= body * 0.4 and c[i] > o[i] * 0.99:
+        # POPRAWKA: Hammer musi być świecą byczą (c > o), bez mnożnika 0.99
+        if lower >= body * 2 and upper <= body * 0.4 and c[i] > o[i]:
             patterns.append({"name": "Hammer", "direction": "bullish", "bar": i, "time": str(df.index[i]), "strength": "medium"})
 
-        if upper >= body * 2 and lower <= body * 0.4 and c[i] < o[i] * 1.01:
+        # POPRAWKA: Shooting Star musi być świecą niedźwiedzią (c < o), bez mnożnika 1.01
+        if upper >= body * 2 and lower <= body * 0.4 and c[i] < o[i]:
             patterns.append({"name": "Shooting Star", "direction": "bearish", "bar": i, "time": str(df.index[i]), "strength": "medium"})
 
         if body / range_ < 0.1:
             patterns.append({"name": "Doji", "direction": "neutral", "bar": i, "time": str(df.index[i]), "strength": "weak"})
 
         if i >= 2:
-            if (c[i-2] < o[i-2] and abs(c[i-1] - o[i-1]) / (h[i-1] - l[i-1] + 1e-9) < 0.3 and c[i] > o[i] and c[i] > (o[i-2] + c[i-2]) / 2):
+            body1 = abs(c[i-2] - o[i-2])
+            range1 = h[i-2] - l[i-2]
+            # POPRAWKA: Morning Star — pierwsza świeca musi być długa (body1 > 50% range1)
+            if (c[i-2] < o[i-2] and range1 > 0 and body1 > range1 * 0.5
+                and abs(c[i-1] - o[i-1]) / (h[i-1] - l[i-1] + 1e-9) < 0.3
+                and c[i] > o[i] and c[i] > (o[i-2] + c[i-2]) / 2):
                 patterns.append({"name": "Morning Star", "direction": "bullish", "bar": i, "time": str(df.index[i]), "strength": "strong"})
-            if (c[i-2] > o[i-2] and abs(c[i-1] - o[i-1]) / (h[i-1] - l[i-1] + 1e-9) < 0.3 and c[i] < o[i] and c[i] < (o[i-2] + c[i-2]) / 2):
+            # POPRAWKA: Evening Star — pierwsza świeca musi być długa (body1 > 50% range1)
+            if (c[i-2] > o[i-2] and range1 > 0 and body1 > range1 * 0.5
+                and abs(c[i-1] - o[i-1]) / (h[i-1] - l[i-1] + 1e-9) < 0.3
+                and c[i] < o[i] and c[i] < (o[i-2] + c[i-2]) / 2):
                 patterns.append({"name": "Evening Star", "direction": "bearish", "bar": i, "time": str(df.index[i]), "strength": "strong"})
 
     seen = set()

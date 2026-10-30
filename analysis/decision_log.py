@@ -124,6 +124,8 @@ def build_entry(result: dict, run_time=None):
         "outcome": None,
         "outcome_checked_at": None,
         "outcome_result": None,
+        # POPRAWKA: pełne timeframes (harmonics, candles, renko) — dla bogatego modala
+        "timeframes": result.get("timeframes") or {},
     }
 
 

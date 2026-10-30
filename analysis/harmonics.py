@@ -44,10 +44,11 @@ def find_pivots(df: pd.DataFrame, left: int = 3, right: int = 3) -> pd.DataFrame
 
 
 def _in_range(val: float, target) -> bool:
+    # POPRAWKA: zaostrzona tolerancja 0.08 -> 0.04 (mniej fałszywych formacji)
     if isinstance(target, (int, float)):
-        return abs(val - target) / target < 0.08
+        return abs(val - target) / target < 0.04
     low, high = target
-    return low * 0.92 <= val <= high * 1.08
+    return low * 0.96 <= val <= high * 1.04
 
 
 def detect_harmonics(df: pd.DataFrame, lookback_pivots: int = 40) -> List[dict]:

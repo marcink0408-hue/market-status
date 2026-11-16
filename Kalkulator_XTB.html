@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>XTB Kalkulator – poprawione obliczenia GOLD</title>
+    <style>
+        :root {
+            --bg: #121212; --card: #1e1e1e; --input: #2d2d2d; --text: #e0e0e0; --muted: #888;
+            --green: #4caf50; --red: #f44336; --blue: #007bff;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        h1 { margin: 0; font-size: 22px; color: var(--green); }
+        .btn-add { background: var(--blue); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 15px; }
+        .card { background: var(--card); border-radius: 8px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); display: flex; flex-direction: column; gap: 10px; }
+        
+        .card-top { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .card-top span { color: var(--green); }
+        
+        .info-panel { background: #252525; padding: 8px; border-radius: 4px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; color: #bbb; }
+        .info-panel div:nth-child(even) { text-align: right; }
+        
+        .row { display: flex; gap: 10px; }
+        .col { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+        label { font-size: 11px; color: var(--muted); text-transform: uppercase; }
+        input, select { background: var(--input); color: white; border: 1px solid #444; padding: 6px; border-radius: 4px; font-size: 14px; width: 100%; box-sizing: border-box; }
+        
+        .vol-control { display: flex; align-items: center; gap: 5px; }
+        .btn-step { background: #333; border: 1px solid #555; color: white; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-weight: bold; display: flex; justify-content: center; align-items: center; }
+        .btn-step:hover { background: #444; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .in-vol { text-align: center; font-weight: bold; color: var(--green); }
+
+        .result-box { background: #111; border-left: 4px solid #333; padding: 10px; border-radius: 4px; margin-top: 5px; }
+        .result-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 3px; }
+        .result-main { font-size: 16px; font-weight: bold; border-top: 1px solid #333; padding-top: 5px; margin-top: 5px; }
+        
+        .v-green { color: var(--green); } .v-red { color: var(--red); } .v-white { color: #fff; }
+        .btn-del { background: transparent; color: var(--red); border: none; cursor: pointer; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Kalkulator XTB – poprawione obliczenia GOLD</h1>
+    <button class="btn-add" onclick="addNewInstrument()">+ Dodaj nowy</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+    // ==========================================
+    // BAZA INSTRUMENTÓW
+    // ==========================================
+    const instruments = [
+        { name: 'GOLD',     baseMargin: 80.645, lev: 20,  spread: 0.79,  swapL: -0.034389, swapS: -0.012833, pipsValue: 0.389, pipSize: 1.0,    price: 4150.18, minVol: 0.001 },
+        { name: 'US500',    baseMargin: 85.00,  lev: 20,  spread: 0.50,  swapL: -0.015000, swapS: -0.010000, pipsValue: 0.85,  pipSize: 0.1,    price: 5200.00, minVol: 0.01 },
+        { name: 'W20',      baseMargin: 20.00,  lev: 20,  spread: 1.00,  swapL: -0.020000, swapS: -0.015000, pipsValue: 0.20,  pipSize: 1.0,    price: 2400.00, minVol: 0.01 },
+        { name: 'EURPLN',   baseMargin: 42.00,  lev: 20,  spread: 0.20,  swapL: -0.012000, swapS: 0.004000,  pipsValue: 0.42,  pipSize: 0.0001, price: 4.28,    minVol: 0.01 },
+        { name: 'SILVER',   baseMargin: 50.00,  lev: 20,  spread: 0.25,  swapL: -0.025000, swapS: -0.018000, pipsValue: 0.50,  pipSize: 0.001,  price: 28.50,   minVol: 0.01 },
+        { name: 'EURUSD',   baseMargin: 43.00,  lev: 30,  spread: 0.05,  swapL: -0.008000, swapS: 0.002000,  pipsValue: 0.43,  pipSize: 0.0001, price: 1.08,    minVol: 0.01 },
+        { name: 'USDPLN',   baseMargin: 40.00,  lev: 20,  spread: 0.15,  swapL: -0.010000, swapS: 0.005000,  pipsValue: 0.40,  pipSize: 0.0001, price: 3.96,    minVol: 0.01 },
+        { name: 'USDJPY',   baseMargin: 43.00,  lev: 30,  spread: 0.06,  swapL: 0.001000,  swapS: -0.009000, pipsValue: 0.43,  pipSize: 0.01,   price: 154.00,  minVol: 0.01 },
+        { name: 'COPPER',   baseMargin: 30.00,  lev: 20,  spread: 0.40,  swapL: -0.018000, swapS: -0.012000, pipsValue: 0.30,  pipSize: 0.001,  price: 4.50,    minVol: 0.01 },
+        { name: 'EU50',     baseMargin: 35.00,  lev: 20,  spread: 0.60,  swapL: -0.014000, swapS: -0.011000, pipsValue: 0.35,  pipSize: 0.1,    price: 4900.00, minVol: 0.01 },
+        { name: 'UK100',    baseMargin: 38.00,  lev: 20,  spread: 0.55,  swapL: -0.016000, swapS: -0.013000, pipsValue: 0.38,  pipSize: 0.1,    price: 8100.00, minVol: 0.01 }
+    ];
+
+    const grid = document.getElementById('grid');
+    const round = (num, dec) => Number(Math.round(num + "e" + dec) + "e-" + dec);
+
+    function createCard(inst) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        card.innerHTML = `
+            <div class="card-top">
+                <span>${inst.name}</span>
+                <button class="btn-del" onclick="this.closest('.card').remove()">✖</button>
+            </div>
+            
+            <div class="info-panel">
+                <div>Dźwignia:</div><div>1:${inst.lev}</div>
+                <div>Depozyt (za 0.001):</div><div>${inst.baseMargin.toFixed(2)} PLN</div>
+                <div>Wartość 1 pipsa (za 0.001):</div><div>${inst.pipsValue.toFixed(3)} PLN</div>
+                <div>Spread ceny:</div><div>${inst.spread.toFixed(2)} jednostki ceny</div>
+                <div>Swap L / S:</div><div>${inst.swapL}% / ${inst.swapS}%</div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Wolumen (jak w XTB)</label>
+                    <div class="vol-control">
+                        <button class="btn-step" onclick="stepVol(this, -1)">-</button>
+                        <input type="number" class="in-vol" value="${inst.minVol}" step="any">
+                        <button class="btn-step" onclick="stepVol(this, 1)">+</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <label>Kierunek</label>
+                    <select class="in-kier">
+                        <option value="long">LONG</option>
+                        <option value="short">SHORT</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Cena wejścia (USD)</label>
+                    <input type="number" class="in-price" value="${inst.price}" min="0" step="0.01">
+                </div>
+                <div class="col">
+                    <label>Zmiana ceny (%)</label>
+                    <input type="number" class="in-proc" value="0" step="0.1">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label>Dni (Swap)</label>
+                    <input type="number" class="in-dni" value="0" min="0" step="1">
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-row"><span>Wymagany Depozyt:</span> <span class="res-margin" style="color:#fff; font-weight:bold;">0.00 PLN</span></div>
+                <div class="result-row"><span>Zysk/Strata z rynku:</span> <span class="res-rynek">0.00 PLN</span></div>
+                <div class="result-row"><span>Koszt spreadu (PLN):</span> <span class="res-spread">0.00 PLN</span></div>
+                <div class="result-row"><span>Koszt swapu (PLN):</span> <span class="res-swap">0.00 PLN</span></div>
+                <div class="result-row result-main"><span>Wynik Netto:</span> <span class="res-netto">0.00 PLN</span></div>
+            </div>
+        `;
+
+        card.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('input', () => calculate(card, inst));
+        });
+
+        return card;
+    }
+
+    function stepVol(btn, direction) {
+        const input = btn.parentElement.querySelector('.in-vol');
+        let val = parseFloat(input.value) || 0.001;
+        let step = 0.001;
+
+        if (direction === 1) {
+            if (val >= 1) step = 1;
+            else if (val >= 0.1) step = 0.1;
+            else if (val >= 0.01) step = 0.01;
+            else step = 0.001;
+        } else {
+            if (val > 1) step = 1;
+            else if (val > 0.1) step = 0.1;
+            else if (val > 0.01) step = 0.01;
+            else step = 0.001;
+        }
+
+        let newVal = round(val + (step * direction), 3);
+        if (newVal < 0.001) newVal = 0.001;
+        
+        input.value = newVal;
+        input.dispatchEvent(new Event('input'));
+    }
+
+    function calculate(card, inst) {
+        const vol = Math.max(0, parseFloat(card.querySelector('.in-vol').value) || 0);
+        const kier = card.querySelector('.in-kier').value;
+        const cenaWejscia = Math.max(0, parseFloat(card.querySelector('.in-price').value) || 0);
+        const proc = parseFloat(card.querySelector('.in-proc').value) || 0;
+        const dni = parseInt(card.querySelector('.in-dni').value) || 0;
+
+        const mnoznik = vol / inst.minVol;
+
+        // 1. Depozyt
+        const depozyt = inst.baseMargin * mnoznik;
+
+        // 2. POPRAWNY WZÓR NA ZYSK Z RYNKU
+        // Ruch ceny = edytowalna cena wejścia * (procent / 100)
+        const zmianaCeny = cenaWejscia * (proc / 100);
+        // Ile razy nasz ruch jest większy od 1 pipsa?
+        const wielokrotnoscPipsa = zmianaCeny / inst.pipSize;
+        // Zysk = wielokrotność * wartość pipsa * mnożnik
+        let zyskRynek = wielokrotnoscPipsa * inst.pipsValue * mnoznik;
+        
+        if (kier === 'short') {
+            zyskRynek = -zyskRynek;
+        }
+
+        // 3. Spread: spread jest różnicą CENY instrumentu, a nie kosztem w PLN.
+        // Przeliczamy go na pipsy, a następnie na PLN według wartości pipsa.
+        const kosztSpread = -((inst.spread / inst.pipSize) * inst.pipsValue * mnoznik);
+
+        // 4. Swap: stawka procentowa liczona od wartości nominalnej pozycji,
+        // nie od wymaganego depozytu. Wartość nominalna = depozyt * dźwignia.
+        const stawkaSwap = (kier === 'long') ? inst.swapL : inst.swapS;
+        const wartoscNominalna = depozyt * inst.lev;
+        const kosztSwap = wartoscNominalna * (stawkaSwap / 100) * dni; 
+
+        // 5. Netto
+        const netto = zyskRynek + kosztSpread + kosztSwap;
+
+        const fmt = (val) => (val > 0 ? "+" : "") + val.toFixed(2) + " PLN";
+        const setColor = (el, val) => {
+            el.textContent = fmt(val);
+            el.className = el.className.replace(/v-(green|red|white)/g, '').trim();
+            if (val > 0) el.classList.add('v-green');
+            else if (val < 0) el.classList.add('v-red');
+            else el.classList.add('v-white');
+        };
+
+        card.querySelector('.res-margin').textContent = depozyt.toFixed(2) + " PLN";
+        setColor(card.querySelector('.res-rynek'), zyskRynek);
+        setColor(card.querySelector('.res-spread'), kosztSpread);
+        setColor(card.querySelector('.res-swap'), kosztSwap);
+        setColor(card.querySelector('.res-netto'), netto);
+    }
+
+    function addNewInstrument() {
+        const newInst = {
+            name: 'NOWY', baseMargin: 50.00, lev: 20, spread: 0.50, 
+            swapL: -0.01, swapS: -0.01, pipsValue: 0.50, pipSize: 0.01, price: 100.00, minVol: 0.001
+        };
+        const newCard = createCard(newInst);
+        grid.appendChild(newCard);
+        newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        calculate(newCard, newInst);
+    }
+
+    instruments.forEach(inst => {
+        const card = createCard(inst);
+        grid.appendChild(card);
+        calculate(card, inst);
+    });
+</script>
+
+</body>
+</html>

@@ -37,6 +37,11 @@ jobs:
         working-directory: frontend-react
         run: npm run build
 
+      - name: Copy JSON data into dist
+        run: |
+          mkdir -p frontend-react/dist/output
+          cp output/*.json frontend-react/dist/output/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

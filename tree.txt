@@ -1,0 +1,51 @@
+Folder PATH listing
+Volume serial number is 3229-B7ED
+C:.
+-   .gitignore
+-   app.py
+-   config.py
+-   Kalkulator_XTB.html
+-   lista.txt
+-   requirements.txt
+-   run_daily.py
+-   
++���.github
+-   L���workflows
+-           commit_log.yml
+-           daily.yml
+-           
++���.streamlit
+-       config.toml
+-       
++���analysis
+-       alerts.py
+-       analyzer.py
+-       candles.py
+-       chart_data.py
+-       chart_png.py
+-       classic_patterns.py
+-       decision.py
+-       decision_log.py
+-       harmonics.py
+-       renko.py
+-       signal_history.py
+-       __init__.py
+-       
++���data
+-       fetcher.py
+-       __init__.py
+-       
++���frontend
+-       index.html
+-       
++���output
+-       classic_patterns.json
+-       decisions_log.json
+-       ohlc.json
+-       ohlc_history.json
+-       signals_history.json
+-       status.json
+-       
+L���__pycache__
+        config.cpython-315.pyc
+        

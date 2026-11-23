@@ -10,7 +10,7 @@ Ukończony
 
 ## Wykonane zadania
 
-- Zapoznanie się z dokumentacją i strukturą plików JSON (status.json, ohlc.json, signals_history.json, backtest_results.json) oraz kodem źródłowym Python (analysis/chart_data.py, analysis/decision.py)
+- Zapoznanie się z dokumentacją i strukturą plików JSON (status.json, ohlc.json, signals_history.json) oraz kodem źródłowym Python (analysis/chart_data.py, analysis/decision.py)
 - Przeczytanie oryginalnego `frontend/index.html` jako źródła prawdy dla logiki renderowania wykresu, poziomów i markerów
 - Instalacja `lightweight-charts@4.2.2` (zgodna z wersją w oryginalnym HTML)
 - Utworzenie `frontend-react/src/components/chart/PriceChart.jsx` — komponent wykresu świecowego Lightweight Charts z pełnym cyklem życia
@@ -59,18 +59,36 @@ Zmodyfikowane:
 Wszystkie istniejące funkcjonalności zachowane bez zmian:
 - `frontend/index.html` — nienaruszony
 - `app.py` — nienaruszony
-- `analysis/` — nienaruszony
 - `data/` — nienaruszony
 - `config.py` — nienaruszony
 - `run_daily.py` — nienaruszony
-- `output/*.json` — nienaruszone
 - `.github/workflows/` — nienaruszone
+
+Usunięte w ramach rezygnacji z backtestów:
+- `analysis/backtest.py` — generator backtestów (nie był importowany przez inne moduły)
+- `output/backtest_results.json` — plik wyników backtestu
+- `frontend-react/src/components/stats/Statistics.jsx` — komponent statystyk backtestu w React
+
+Zmodyfikowane:
+- `analysis/` — usunięto `backtest.py` (pozostałe moduły nienaruszone)
+- `output/*.json` — usunięto `backtest_results.json` (pozostałe pliki nienaruszone)
 
 ## Sposób pobierania danych
 
-Wszystkie sześć plików JSON pobierane są przez `fetch()` z cache `no-store` (parametr `?v=` + timestamp). Ścieżki budowane z `import.meta.env.BASE_URL` + `output/<nazwa_pliku>`. Na GitHub Pages (`base: '/market-status/'`) prowadzi to do `/market-status/output/<plik>`. Lokalnie przez Vite dev serwer ścieżka `/output/` obsługiwana jest przez middleware serwujący pliki z `../output/`.
+Wszystkie pięć plików JSON pobierane są przez `fetch()` z cache `no-store` (parametr `?v=` + timestamp). Ścieżki budowane z `import.meta.env.BASE_URL` + `output/<nazwa_pliku>`. Na GitHub Pages (`base: '/market-status/'`) prowadzi to do `/market-status/output/<plik>`. Lokalnie przez Vite dev serwer ścieżka `/output/` obsługiwana jest przez middleware serwujący pliki z `../output/`.
 
 Dane OHLC, poziomy i markery harmoniczne pobierane są z `output/ohlc.json` (klucz `symbols[symbol]`), dane decyzyjne z `output/status.json`, formacje klasyczne z `output/classic_patterns.json`.
+
+## Etap 5 — ANULOWANY
+
+Etap 5 (Statystyki backtestu) został anulowany decyzją użytkownika. Funkcjonalność backtestów została usunięta z całego projektu:
+- Usunięto `analysis/backtest.py`
+- Usunięto `output/backtest_results.json`
+- Usunięto `frontend-react/src/components/stats/Statistics.jsx`
+- Usunięto odwołania do backtestu w `frontend-react/src/hooks/useMarketData.js` i `frontend-react/src/App.jsx`
+- Zaktualizowana dokumentacja: `docs/MIGRATION.md`, `docs/PROJECT.md`, `docs/MASTER.md`, `AGENTS.md`
+
+Pozostałe etapy (6, 7) zachowują swoją numerację i zakres bez zmian.
 
 ## Wynik kompilacji
 

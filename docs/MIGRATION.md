@@ -19,7 +19,7 @@
 
 ## Etap 2 — Ładowanie danych i panel instrumentów
 
-1. Implementacja pobierania plików JSON z `output/` (status, ohlc, decisions, classic, signals, backtest).
+1. Implementacja pobierania plików JSON z `output/` (status, ohlc, decisions, classic, signals).
 2. Wyświetlanie kafelków instrumentów z symbolem, nazwą, kierunkiem (LONG/SHORT/BRAK), oceną sygnału /100.
 3. Status połączenia i przycisk odświeżania danych.
 4. Sortowanie kafelków zgodnie z obecnym HTML (BRAK na końcu, potem po confidence malejąco).
@@ -40,11 +40,11 @@
 3. Formacje klasyczne z opisami i schematami — `ClassicPatterns.jsx`.
 4. Uzasadnienie sygnału (lista powodów) — `SignalJustification.jsx`.
 
-## Etap 5 — Statystyki backtestu
+## Etap 5 — Statystyki backtestu — ANULOWANY
 
-1. Siatka metryk backtestu (skuteczność, profit factor, maks. obsunięcie, liczba transakcji, średnie R:R, oczekiwana wartość, trening/test, test kroczący).
-2. Tabela wyników per formacja.
-3. Obsługa braku pliku `backtest_results.json`.
+Etap 5 został anulowany decyzją użytkownika. Funkcjonalność backtestów została usunięta z całego projektu (Python `analysis/backtest.py`, React `Statistics.jsx`, `output/backtest_results.json`). Nie implementuje się statystyk backtestu w React.
+
+Pozostałe etapy (6, 7) zachowują swoją numerację i zakres bez zmian.
 
 ## Etap 6 — Kalkulator XTB
 
@@ -67,4 +67,3 @@ Wszystkie etapy odczytują dane z tych samych plików JSON:
 - `output/decisions_log.json` — dziennik decyzji
 - `output/classic_patterns.json` — formacje klasyczne
 - `output/signals_history.json` — historia sygnałów
-- `output/backtest_results.json` — wyniki backtestu

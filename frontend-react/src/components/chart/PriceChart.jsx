@@ -82,6 +82,7 @@ export default function PriceChart({ candles, levels, harmonics }) {
   useEffect(() => {
     if (!chartRef.current) return;
     if (candles && Array.isArray(candles)) {
+      chartRef.current.series.setMarkers([]);
       chartRef.current.series.setData(candles);
       if (candles.length) {
         chartRef.current.instance.timeScale().fitContent();

@@ -115,7 +115,7 @@ function renderPriceLevels(series, levels) {
         price: Number(v),
         color,
         lineWidth: 2,
-        lineStyle: window.LightweightCharts.LineStyle.Dashed,
+        lineStyle: LineStyle.Dashed,
         axisLabelVisible: true,
         title,
       });
@@ -151,7 +151,7 @@ function renderHarmonics(chartInstance, series, harmonics) {
     const line = chartInstance.addLineSeries({
       color: isBullish ? '#35d07f' : '#ff6376',
       lineWidth: 2,
-      lineStyle: p.status === 'completed' ? window.LightweightCharts.LineStyle.Solid : window.LightweightCharts.LineStyle.Dashed,
+      lineStyle: p.status === 'completed' ? LineStyle.Solid : LineStyle.Dashed,
       priceLineVisible: false,
       lastValueVisible: false,
       crosshairMarkerVisible: false,

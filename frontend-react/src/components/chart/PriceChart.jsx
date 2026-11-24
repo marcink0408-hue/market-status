@@ -72,7 +72,7 @@ export default function PriceChart({ candles, levels, harmonics }) {
     return () => {
       resizeObserver.disconnect();
       removeAllPriceLevels();
-      removeAllHarmonics();
+      removeAllHarmonics(series);
       chartInstance.remove();
       chartRef.current = null;
     };
@@ -99,7 +99,7 @@ export default function PriceChart({ candles, levels, harmonics }) {
   // --- Aktualizacja markerów harmonicznych po zmianie instrumentu ---
   useEffect(() => {
     if (!chartRef.current) return;
-    removeAllHarmonics();
+    removeAllHarmonics(chartRef.current.series);
     renderHarmonics(chartRef.current.instance, chartRef.current.series, harmonics);
   }, [harmonics]);
 
@@ -175,7 +175,7 @@ export default function PriceChart({ candles, levels, harmonics }) {
     });
   }
 
-  function removeAllHarmonics() {
+  function removeAllHarmonics(series) {
     harmonicLinesRef.current.forEach(({ line }) => {
       try {
         line.remove();
@@ -184,6 +184,9 @@ export default function PriceChart({ candles, levels, harmonics }) {
       }
     });
     harmonicLinesRef.current = [];
+    if (series) {
+      series.setMarkers([]);
+    }
   }
 
   return <div ref={containerRef} className="w-full h-full" />;

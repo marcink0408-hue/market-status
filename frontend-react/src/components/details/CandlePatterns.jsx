@@ -64,9 +64,12 @@ const CandleSvg = ({ name, direction = 'bullish' }) => {
   );
 };
 
+const candleDupKey = (c) => `${c.name}|${c.direction}|${c.time}`;
+
 export default function CandlePatterns({ instrument }) {
   const tf = instrument?.timeframes?.['4H'] || {};
   const candles = tf.candles || [];
+  const lastBarTime = tf.last_time || instrument?.last_bar_time;
 
   if (!candles.length) {
     return (
@@ -79,13 +82,40 @@ export default function CandlePatterns({ instrument }) {
     );
   }
 
+  // Użyj last_bar_time jako punktu odniesienia. Pokaż tylko formacje z najnowszej zamkniętej świecy 4H.
+  const latestTime = Math.max(...candles.map((c) => new Date(c.time).getTime()));
+  const latestCandles = candles.filter((c) => new Date(c.time).getTime() === latestTime);
+
+  // Usuń rzeczywiste duplikaty (te same name, direction, time). Zachowaj odrębne wykrycia na tej samej świecy.
+  const seen = new Set();
+  const unique = latestCandles.filter((c) => {
+    const key = candleDupKey(c);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  // Sortuj od najnowszych.
+  unique.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+  if (!unique.length) {
+    return (
+      <div className="border border-border rounded-lg bg-panel2 p-4">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-sm font-semibold">🕯️ Formacje świecowe</span>
+        </div>
+        <p className="text-muted text-sm">Brak formacji świecowych na najnowszej świecy 4H.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-2">
         <span className="text-sm font-semibold">🕯️ Formacje świecowe</span>
       </div>
       <div className="space-y-3">
-        {candles.map((c, i) => {
+        {unique.map((c, i) => {
           const desc = lookupCandle(c.name) || ['🕯️', c.name || 'Formacja', 'Wykryta formacja.'];
           const isBullish = c.direction === 'bullish';
           const isBearish = c.direction === 'bearish';

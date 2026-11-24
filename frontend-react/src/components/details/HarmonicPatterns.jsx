@@ -33,17 +33,37 @@ const HarmonicSvg = () => (
   </svg>
 );
 
+const lastKnownTime = (h) => h.time_C || h.time_B || h.time_A || h.time_X;
+
+const harmonicDupKey = (h) =>
+  `${h.name}|${h.direction}|${h.status}|${h.X}|${h.A}|${h.B}|${h.C}|${h.D !== undefined ? h.D : h.D_projected}|${lastKnownTime(h)}`;
+
 export default function HarmonicPatterns({ instrument }) {
   const tf = instrument?.timeframes?.['4H'] || {};
   const harmonics = tf.harmonics || [];
 
-  if (!harmonics.length) {
+  // Pokazuj wyłącznie formacje w trakcie (forming). Zakonczone (completed) wyklucz z prezentacji bieżących okazji.
+  const forming = harmonics.filter((h) => h.status === 'forming');
+
+  // Usuń rzeczywiste duplikaty (porównaj wszystkie kluczowe pola, nie scalaj na podstawie podobnych nazw).
+  const seen = new Set();
+  const unique = forming.filter((h) => {
+    const key = harmonicDupKey(h);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  // Sortuj malejąco według czasu ostatniego znanego punktu.
+  unique.sort((a, b) => new Date(lastKnownTime(b)) - new Date(lastKnownTime(a)));
+
+  if (!unique.length) {
     return (
       <div className="border border-border rounded-lg bg-panel2 p-4">
         <div className="flex items-center gap-2 mb-1">
           <span className="text-sm font-semibold">🦋 Formacje harmoniczne</span>
         </div>
-        <p className="text-muted text-sm">Brak wykrytych formacji harmonicznych.</p>
+        <p className="text-muted text-sm">Brak aktywnych formacji harmonicznych.</p>
       </div>
     );
   }
@@ -54,8 +74,8 @@ export default function HarmonicPatterns({ instrument }) {
         <span className="text-sm font-semibold">🦋 Formacje harmoniczne</span>
       </div>
       <div className="space-y-3">
-        {harmonics.map((h, i) => {
-          const desc = lookupHarmonic(h.name) || [h.direction === 'bullish' ? '🟢' : '🔴', h.name || 'Formacja', 'Formacja wykryta.'];
+        {unique.map((h, i) => {
+          const desc = lookupHarmonic(h.name) || [h.direction === 'bullish' ? '🟢' : '🔴', h.name || 'Formacja', 'Formacja w trakcie wykształcania się.'];
           const isBullish = h.direction === 'bullish';
           const dVal = h.D !== undefined ? h.D : h.D_projected;
           const dLabel = h.D !== undefined ? 'D' : 'D (proj.)';
@@ -72,7 +92,7 @@ export default function HarmonicPatterns({ instrument }) {
                       {h.direction === 'bullish' ? 'Wzrostowa' : 'Spadkowa'}
                     </span>
                     <span className="px-1.5 py-0.5 rounded text-xs border border-amber-500/30 text-amber-400 bg-amber-500/10">
-                      {h.status === 'completed' ? 'Zakończona' : 'W trakcie'}
+                      W trakcie
                     </span>
                   </div>
                   <p className="text-muted text-xs mt-1">{desc[2]}</p>

@@ -1,3 +1,4 @@
+import { createChart, LineStyle } from 'lightweight-charts';
 import { useEffect, useRef } from 'react';
 
 const CHART_LAYOUT = {
@@ -33,11 +34,12 @@ export default function PriceChart({ candles, levels, harmonics }) {
 
   // --- Inicjalizacja wykresu przy montowaniu ---
   useEffect(() => {
-    if (!containerRef.current || typeof window.LightweightCharts === 'undefined') {
+    if (!containerRef.current) {
+      console.error('PriceChart: brak kontenera DOM do inicjalizacji wykresu.');
       return;
     }
 
-    const chartInstance = window.LightweightCharts.createChart(containerRef.current, {
+    const chartInstance = createChart(containerRef.current, {
       width: containerRef.current.clientWidth || 600,
       height: containerRef.current.clientHeight || 420,
       layout: CHART_LAYOUT,

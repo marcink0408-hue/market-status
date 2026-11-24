@@ -1,4 +1,4 @@
-const numOrDash = (v) => (v == null || !Number.isFinite(Number(v)) ? '—' : Number(v).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+const numOrDash = (v) => (v == null || !Number.isFinite(Number(v)) ? 'Brak danych' : Number(v).toLocaleString('pl-PL', { maximumFractionDigits: 6 }));
 
 export default function SignalJustification({ instrument }) {
   const reasons = instrument?.reasons || [];
@@ -26,7 +26,7 @@ export default function SignalJustification({ instrument }) {
           Kontekst D1: {instrument?.daily_align === 1 ? 'zgodny' : instrument?.daily_align === -1 ? 'przeciwny' : 'neutralny'}
         </span>
         <span className="px-2 py-1 rounded border border-border bg-panel2 text-xs">
-          ATR(14): {numOrDash(atr)}
+          ATR(14) · 4H: {numOrDash(atr)}
         </span>
       </div>
     </div>

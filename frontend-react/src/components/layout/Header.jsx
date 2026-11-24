@@ -13,8 +13,8 @@ export default function Header({ overallStatus, error, refreshing, refresh }) {
           M
         </div>
         <div>
-          <h1 className="text-lg font-bold tracking-tight">Market Status <span className="text-blue-400">·</span> Analiza 4H</h1>
-          <p className="text-xs text-muted">Sygnały, formacje i statystyki rynku w jednym miejscu</p>
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight">Market Status <span className="text-blue-400">·</span> Analiza wielointerwałowa</h1>
+          <p className="text-xs md:text-sm text-muted">Sygnały, formacje i analiza rynku w jednym miejscu.</p>
         </div>
       </div>
       <div className="flex items-center gap-3 flex-wrap">

@@ -1,71 +1,40 @@
-import { useMarketData } from '../../hooks/useMarketData';
 import InstrumentTile from './InstrumentTile';
+import { normalizeDecision, statusItems } from '../../utils/market';
 
-function decisionOf(item) {
-  const d = String(item?.decision || '').toUpperCase();
-  return ['LONG', 'SHORT'].includes(d) ? d : 'BRAK';
-}
-
-export default function InstrumentPanel({ onSelect }) {
-  const { data, overallStatus, error } = useMarketData();
-
-  const raw = data.status || [];
-  const items = Array.isArray(raw) ? raw : (raw.decisions || raw.signals || raw.results || []);
-
-  const instruments = items.map((item) => ({
+export default function InstrumentPanel({ data, overallStatus, error, activeSymbol, onSelect }) {
+  const instruments = statusItems(data.status).map((item) => ({
     ...item,
     symbol: item.symbol || item.instrument || '—',
     name: item.name || item.symbol || 'Instrument',
-    decision: decisionOf(item),
-    confidence: item.confidence ?? 0,
+    decision: normalizeDecision(item.decision),
   }));
-
   const sorted = [...instruments].sort((a, b) => {
-    const rank = (x) => (x.decision === 'BRAK' ? 1 : 0);
+    const rank = (item) => (item.decision === 'BRAK' ? 1 : 0);
     return rank(a) - rank(b) || (Number(b.confidence) || 0) - (Number(a.confidence) || 0);
   });
 
-  if (overallStatus === 'error') {
-    return (
-      <section className="space-y-4">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <h2 className="text-sm font-semibold">Instrumenty</h2>
-          <p className="text-xs text-muted">Kliknij kafelek, aby zobaczyć wykres i szczegóły sygnału.</p>
-        </div>
-        <div className="border border-dashed border-border rounded-xl bg-panel/50 p-4 text-center text-red-400 text-sm">
-          Błąd wczytywania danych: {error}
-        </div>
-      </section>
-    );
-  }
-
-  if (overallStatus === 'loading' || !instruments.length) {
-    return (
-      <section className="space-y-4">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <h2 className="text-sm font-semibold">Instrumenty</h2>
-          <p className="text-xs text-muted">Kliknij kafelek, aby zobaczyć wykres i szczegóły sygnału.</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="instrument-tiles">
-          <div className="flex flex-col h-full items-center justify-center p-4 border border-dashed border-border rounded-xl bg-panel/50 text-muted">
-            Ładowanie danych instrumentów…
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="space-y-4">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <h2 className="text-sm font-semibold">Instrumenty</h2>
-        <p className="text-xs text-muted">Kliknij kafelek, aby zobaczyć wykres i szczegóły sygnału.</p>
+    <section className="space-y-4" aria-labelledby="instruments-heading">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <h2 id="instruments-heading" className="text-xl font-bold">Instrumenty</h2>
+        <p className="text-xs text-muted">Wszystkie instrumenty z aktualnej analizy · wybierz, aby zobaczyć wykres</p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="instrument-tiles">
-        {sorted.map((instrument, idx) => (
-          <InstrumentTile key={idx} instrument={instrument} onSelect={onSelect} />
-        ))}
-      </div>
+      {overallStatus === 'error' ? (
+        <div className="border border-red-500/40 rounded-xl bg-red-500/10 p-4 text-red-300 text-sm">Błąd wczytywania danych: {error}</div>
+      ) : overallStatus === 'loading' || !instruments.length ? (
+        <div className="border border-dashed border-border rounded-xl bg-panel/50 p-6 text-center text-muted">Ładowanie danych instrumentów…</div>
+      ) : (
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3" id="instrument-tiles">
+          {sorted.map((instrument) => (
+            <InstrumentTile
+              key={instrument.symbol}
+              instrument={instrument}
+              selected={String(activeSymbol).toLowerCase() === String(instrument.symbol).toLowerCase()}
+              onSelect={onSelect}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

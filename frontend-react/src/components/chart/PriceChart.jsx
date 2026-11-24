@@ -1,24 +1,6 @@
 import { createChart, LineStyle } from 'lightweight-charts';
 import { useEffect, useRef } from 'react';
-
-const CHART_LAYOUT = {
-  background: { type: 'solid', color: '#080e17' },
-  textColor: '#b8c7da',
-};
-
-const CHART_GRID = {
-  vertLines: { color: '#172438' },
-  horzLines: { color: '#172438' },
-};
-
-const CANDLE_SERIES_OPTIONS = {
-  upColor: '#35d07f',
-  downColor: '#ff6376',
-  borderUpColor: '#35d07f',
-  borderDownColor: '#ff6376',
-  wickUpColor: '#35d07f',
-  wickDownColor: '#ff6376',
-};
+import { chartMarkers, harmonicLinePoints } from '../../utils/market';
 
 const LEVEL_CONFIG = [
   { key: 'entry', title: 'WEJŚCIE', color: '#70b7ff' },
@@ -26,169 +8,76 @@ const LEVEL_CONFIG = [
   { key: 'target', title: 'TAKE PROFIT', color: '#35d07f' },
 ];
 
-export default function PriceChart({ candles, levels, harmonics }) {
+export default function PriceChart({ payload }) {
   const containerRef = useRef(null);
-  const chartRef = useRef(null);
-  const priceLinesRef = useRef({});
-  const harmonicLinesRef = useRef([]);
 
-  // --- Inicjalizacja wykresu przy montowaniu ---
   useEffect(() => {
-    if (!containerRef.current) {
-      console.error('PriceChart: brak kontenera DOM do inicjalizacji wykresu.');
-      return;
-    }
+    if (!containerRef.current || !payload?.candles?.length) return undefined;
 
-    const chartInstance = createChart(containerRef.current, {
+    const chart = createChart(containerRef.current, {
       width: containerRef.current.clientWidth || 600,
-      height: containerRef.current.clientHeight || 420,
-      layout: CHART_LAYOUT,
-      grid: CHART_GRID,
+      height: containerRef.current.clientHeight || 480,
+      layout: { background: { type: 'solid', color: '#080e17' }, textColor: '#b8c7da' },
+      grid: { vertLines: { color: '#172438' }, horzLines: { color: '#172438' } },
       rightPriceScale: { borderColor: '#2a3b53' },
       timeScale: { borderColor: '#2a3b53', timeVisible: true, secondsVisible: false },
     });
-
-    const series = chartInstance.addCandlestickSeries(CANDLE_SERIES_OPTIONS);
-
-    chartRef.current = { instance: chartInstance, series };
-
-    if (candles && Array.isArray(candles) && candles.length) {
-      series.setData(candles);
-      chartInstance.timeScale().fitContent();
-    }
-
-    renderPriceLevels(series, levels);
-    renderHarmonics(chartInstance, series, harmonics);
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      if (chartInstance && entries[0]) {
-        chartInstance.applyOptions({
-          width: entries[0].contentRect.width,
-        });
-      }
+    const candleSeries = chart.addCandlestickSeries({
+      upColor: '#35d07f', downColor: '#ff6376',
+      borderUpColor: '#35d07f', borderDownColor: '#ff6376',
+      wickUpColor: '#35d07f', wickDownColor: '#ff6376',
     });
-    resizeObserver.observe(containerRef.current);
+    const overlaySeries = [];
 
-    return () => {
-      resizeObserver.disconnect();
-      removeAllPriceLevels();
-      removeAllHarmonics(series);
-      chartInstance.remove();
-      chartRef.current = null;
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    candleSeries.setData(payload.candles);
+    candleSeries.setMarkers(chartMarkers(payload));
 
-  // --- Aktualizacja danych świec po zmianie instrumentu ---
-  useEffect(() => {
-    if (!chartRef.current) return;
-    if (candles && Array.isArray(candles)) {
-      chartRef.current.series.setMarkers([]);
-      chartRef.current.series.setData(candles);
-      if (candles.length) {
-        chartRef.current.instance.timeScale().fitContent();
-      }
-    }
-  }, [candles]);
-
-  // --- Aktualizacja poziomów po zmianie instrumentu ---
-  useEffect(() => {
-    if (!chartRef.current) return;
-    removeAllPriceLevels();
-    renderPriceLevels(chartRef.current.series, levels);
-  }, [levels]);
-
-  // --- Aktualizacja markerów harmonicznych po zmianie instrumentu ---
-  useEffect(() => {
-    if (!chartRef.current) return;
-    removeAllHarmonics(chartRef.current.series);
-    renderHarmonics(chartRef.current.instance, chartRef.current.series, harmonics);
-  }, [harmonics]);
-
-  function renderPriceLevels(series, levels) {
-    if (!series || !levels) return;
     LEVEL_CONFIG.forEach(({ key, title, color }) => {
-      const v = levels[key];
-      if (v != null && Number.isFinite(Number(v))) {
-        priceLinesRef.current[key] = series.createPriceLine({
-          price: Number(v),
-          color,
-          lineWidth: 2,
-          lineStyle: LineStyle.Dashed,
+      const value = Number(payload.levels?.[key]);
+      if (payload.levels?.[key] != null && Number.isFinite(value)) {
+        candleSeries.createPriceLine({
+          price: value, color, lineWidth: 1, lineStyle: LineStyle.Dashed,
           axisLabelVisible: true,
-          title,
+          title: `${title} · ${payload.levels_timeframe || payload.timeframe}`,
         });
       }
     });
-  }
 
-  function removeAllPriceLevels() {
-    Object.values(priceLinesRef.current).forEach((line) => {
-      try {
-        line.remove();
-      } catch (e) {
-        // ignore
-      }
-    });
-    priceLinesRef.current = {};
-  }
-
-  function renderHarmonics(chartInstance, series, harmonics) {
-    if (!chartInstance || !series || !harmonics) return;
-
-    (harmonics || []).forEach((p) => {
-      const pts = p.points || [];
-      if (pts.length < 2) return;
-
-      const validPoints = pts
-        .filter((x) => x.time != null && x.value != null)
-        .map((x) => ({ time: x.time, value: x.value }))
-        .sort((a, b) => a.time - b.time);
-      if (validPoints.length < 2) return;
-
-      const isBullish = p.direction === 'bullish';
-      const line = chartInstance.addLineSeries({
-        color: isBullish ? '#35d07f' : '#ff6376',
+    payload.harmonics.forEach((pattern) => {
+      const points = harmonicLinePoints(pattern);
+      if (points.length < 2) return;
+      const line = chart.addLineSeries({
+        color: pattern.direction === 'bullish' ? '#35d07f' : '#ff6376',
         lineWidth: 2,
-        lineStyle: p.status === 'completed' ? LineStyle.Solid : LineStyle.Dashed,
+        lineStyle: pattern.status === 'completed' ? LineStyle.Solid : LineStyle.Dashed,
         priceLineVisible: false,
         lastValueVisible: false,
         crosshairMarkerVisible: false,
+        autoscaleInfoProvider: () => null,
       });
-      line.setData(validPoints);
-
-      const markers = [];
-      for (const point of pts) {
-        if (point.time == null) continue;
-        markers.push({
-          time: point.time,
-          position: isBullish ? 'belowBar' : 'aboveBar',
-          color: isBullish ? '#35d07f' : '#ff6376',
-          shape: 'circle',
-          text: `${p.name || 'H'} ${point.label || ''}`,
-        });
-      }
-
-      if (markers.length) {
-        series.setMarkers(markers);
-      }
-
-      harmonicLinesRef.current.push({ line, markers });
+      line.setData(points);
+      overlaySeries.push(line);
     });
-  }
 
-  function removeAllHarmonics(series) {
-    harmonicLinesRef.current.forEach(({ line }) => {
-      try {
-        line.remove();
-      } catch (e) {
-        // ignore
-      }
+    chart.timeScale().fitContent();
+    const observer = new ResizeObserver((entries) => {
+      if (entries[0]) chart.applyOptions({ width: entries[0].contentRect.width });
     });
-    harmonicLinesRef.current = [];
-    if (series) {
-      series.setMarkers([]);
-    }
-  }
+    observer.observe(containerRef.current);
 
-  return <div ref={containerRef} className="w-full h-full" />;
+    return () => {
+      observer.disconnect();
+      candleSeries.setMarkers([]);
+      overlaySeries.forEach((series) => chart.removeSeries(series));
+      chart.remove();
+    };
+  }, [payload]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-full h-full"
+      data-chart-identity={`${payload?.symbol || 'none'}:${payload?.timeframe || 'none'}`}
+    />
+  );
 }

@@ -1,5 +1,14 @@
 # docs/PROGRESS.md — Dziennik postępów migracji Market Status
 
+## 2026-11-24 — Analiza 1H / 4H / 1D i poprawka wykresu
+
+- Wykres otrzymuje dane wyłącznie dla wybranego symbolu i interwału; serie XABCD są poprawnie usuwane i wyłączone z autoskalowania.
+- Pipeline udostępnia rzeczywiste świece 1H, 4H agregowane z 1H oraz 1D, z pominięciem niezamkniętych świec. WIG20 ma awaryjną agregację dzienną według Europe/Warsaw.
+- Ocena bazowa i kierunek pozostają na 4H; jawne wagi kontekstu 1D/1H korygują wynik bez głosowania kierunku i bez unieważniania go przez słaby 1H.
+- Formacje, markery, ATR i kompletne zestawy Entry/SL/TP mają oznaczenie instrumentu lub interwału.
+- Interfejs ma pełnoszeroką listę wszystkich instrumentów, dużą ocenę, pełnoszeroki wykres i szczegóły pod wykresem.
+- Weryfikacja: 7 testów Python, 5 testów React, build Vite, walidacja JSON oraz test Chrome (instrumenty, interwały, zoom/pan, odświeżanie, mobile 390 px).
+
 ## Aktualny etap migracji
 
 Etap 4 — Formacje i uzasadnienie sygnału

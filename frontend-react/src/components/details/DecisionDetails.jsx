@@ -1,61 +1,53 @@
-const fmt = (v, digits = 2) => {
-  if (v === null || v === undefined || v === '' || !Number.isFinite(Number(v))) return '—';
-  return Number(v).toLocaleString('pl-PL', { minimumFractionDigits: digits, maximumFractionDigits: digits });
-};
+import { normalizeDecision } from '../../utils/market';
 
-const numOrDash = (v) => (v == null || !Number.isFinite(Number(v)) ? '—' : fmt(v));
-
-const decisionOf = (item) => {
-  const d = String(item?.decision || '').toUpperCase();
-  return ['LONG', 'SHORT'].includes(d) ? d : 'BRAK';
-};
-
-const directionLabel = (d) => (d === 'LONG' ? '↑ LONG' : d === 'SHORT' ? '↓ SHORT' : '— BRAK');
+const fmt = (value) => value == null || value === '' || !Number.isFinite(Number(value))
+  ? '—' : Number(value).toLocaleString('pl-PL', { maximumFractionDigits: 5 });
 
 export default function DecisionDetails({ instrument }) {
-  const d = decisionOf(instrument);
-  const cls = d === 'LONG' ? 'text-green-400' : d === 'SHORT' ? 'text-red-400' : 'text-[#b2bfd1]';
-  const rr = instrument.rr == null ? '—' : `1:${fmt(instrument.rr, 2)}`;
+  const decision = normalizeDecision(instrument.decision);
+  const color = decision === 'LONG' ? 'text-green-400' : decision === 'SHORT' ? 'text-red-400' : 'text-slate-300';
+  const background = decision === 'LONG'
+    ? 'from-green-950/60 border-green-500/40'
+    : decision === 'SHORT' ? 'from-red-950/60 border-red-500/40' : 'from-panel border-border';
+  const levelsTimeframe = instrument.levels_timeframe || '4H';
 
   return (
-    <div className="bg-gradient-to-r from-[#17263a] to-[#111b2a] border border-border rounded-xl p-4">
-      <div className="flex items-start justify-between gap-4">
+    <section className={`border rounded-2xl bg-gradient-to-r to-panel p-5 md:p-6 ${background}`}>
+      <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-center">
         <div>
-          <div className={`text-xl font-black ${cls}`}>{directionLabel(d)}</div>
-          <p className="text-xs text-muted mt-1">
-            {d === 'BRAK'
-              ? 'Brak potwierdzonego setupu.'
-              : `Sygnał ${d === 'LONG' ? 'wzrostowy' : 'spadkowy'} · ocena punktowa ${instrument.confidence ?? 0}/100`}
+          <p className="text-xs uppercase tracking-widest text-muted">Główny sygnał · {instrument.main_signal_timeframe || '4H'}</p>
+          <div className={`text-4xl md:text-5xl font-black mt-2 ${color}`}>
+            {decision === 'LONG' ? '↑ LONG' : decision === 'SHORT' ? '↓ SHORT' : '— BRAK'}
+          </div>
+          <p className="text-sm text-muted mt-3">
+            {decision === 'BRAK' ? 'Brak potwierdzonego setupu na 4H.' : `Kierunek z 4H · poziomy końcowe z ${levelsTimeframe}`}
           </p>
+          <p className="text-xs text-muted mt-1">Ocena punktowa modelu, nie prawdopodobieństwo zysku.</p>
         </div>
-        <div className="flex gap-2">
-          <span className="px-2 py-1 rounded border border-border bg-panel2 text-xs">Renko —</span>
-          <span className="px-2 py-1 rounded border border-border bg-panel2 text-xs">Harmoniczne —</span>
-          <span className="px-2 py-1 rounded border border-border bg-panel2 text-xs">Świece —</span>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-4">
-        <div className="border border-border rounded-lg bg-panel2 p-3">
-          <div className="text-[0.72rem] text-muted">Wejście</div>
-          <div className="font-black text-sm mt-1">{numOrDash(instrument.entry)}</div>
-        </div>
-        <div className="border border-border rounded-lg bg-panel2 p-3">
-          <div className="text-[0.72rem] text-muted">Stop Loss</div>
-          <div className="font-black text-sm mt-1 text-red-400">{numOrDash(instrument.stop)}</div>
-        </div>
-        <div className="border border-border rounded-lg bg-panel2 p-3">
-          <div className="text-[0.72rem] text-muted">Zasięg / Take Profit</div>
-          <div className="font-black text-sm mt-1 text-green-400">{numOrDash(instrument.target)}</div>
-        </div>
-        <div className="border border-border rounded-lg bg-panel2 p-3">
-          <div className="text-[0.72rem] text-muted">Stosunek zysku do ryzyka</div>
-          <div className="font-black text-sm mt-1">{rr}</div>
-        </div>
-        <div className="border border-border rounded-lg bg-panel2 p-3">
-          <div className="text-[0.72rem] text-muted">Ocena sygnału</div>
-          <div className="font-black text-sm mt-1">{instrument.confidence ?? 0}/100</div>
+        <div className={`text-left lg:text-right ${color}`}>
+          <span className="text-xs uppercase tracking-widest text-muted">Ocena sygnału</span>
+          <div className="text-6xl md:text-7xl leading-none font-black mt-1">
+            {instrument.confidence ?? '—'}<span className="text-2xl text-muted">/100</span>
+          </div>
         </div>
       </div>
-    </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        {[
+          ['Wejście', instrument.entry, 'text-text'],
+          ['Stop Loss', instrument.stop, 'text-red-400'],
+          ['Take Profit', instrument.target, 'text-green-400'],
+        ].map(([label, value, className]) => (
+          <div key={label} className="border border-border rounded-lg bg-bg/60 p-3">
+            <div className="text-xs text-muted">{label} <span className="text-blue-300">({levelsTimeframe})</span></div>
+            <div className={`font-black text-lg mt-1 ${className}`}>{fmt(value)}</div>
+          </div>
+        ))}
+        <div className="border border-border rounded-lg bg-bg/60 p-3">
+          <div className="text-xs text-muted">Zysk / ryzyko</div>
+          <div className="font-black text-lg mt-1">{instrument.rr == null ? '—' : `1:${fmt(instrument.rr)}`}</div>
+        </div>
+      </div>
+      {instrument.levels_basis && <p className="text-xs text-muted mt-3">{instrument.levels_basis}</p>}
+    </section>
   );
 }

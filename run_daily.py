@@ -56,16 +56,23 @@ def main():
     out_dir = ROOT / "output"
     out_dir.mkdir(exist_ok=True)
     chart_data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "timeframe": "4H", "symbols": {}
+        "timeframe": "4H", "timeframes": ["1H", "4H", "1D"], "symbols": {}
     }
     public_results = []
     for item in results:
         clean = dict(item)
-        payload = clean.pop("_chart", None)
-        if payload is not None:
-            chart_data["symbols"][item.get("symbol")] = payload
+        payloads = clean.pop("_charts", None)
+        legacy_payload = clean.pop("_chart", None)
+        if payloads:
+            default_payload = payloads.get("4H") or legacy_payload
+            if default_payload is not None:
+                chart_data["symbols"][item.get("symbol")] = {
+                    **default_payload, "timeframes": payloads,
+                }
+        elif legacy_payload is not None:
+            chart_data["symbols"][item.get("symbol")] = legacy_payload
         public_results.append(clean)
     chart_path = out_dir / "ohlc.json"
     tmp_chart = chart_path.with_suffix(".json.tmp")

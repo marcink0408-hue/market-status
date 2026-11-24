@@ -1,34 +1,31 @@
-export default function InstrumentTile({ instrument, onSelect }) {
+export default function InstrumentTile({ instrument, selected, onSelect }) {
+  const direction = instrument.decision;
+  const colors = direction === 'LONG'
+    ? 'border-green-500/50 bg-green-950/30 hover:border-green-400'
+    : direction === 'SHORT'
+      ? 'border-red-500/50 bg-red-950/30 hover:border-red-400'
+      : 'border-border bg-panel hover:border-slate-500';
+  const directionColor = direction === 'LONG' ? 'text-green-400' : direction === 'SHORT' ? 'text-red-400' : 'text-slate-300';
+  const hasScore = instrument.confidence != null && Number.isFinite(Number(instrument.confidence));
+
   return (
     <button
-      className="tile group relative w-full min-h-[148px] p-4 text-left border border-border rounded-xl bg-gradient-to-br from-[#162338] to-[#101723] text-text transition-all hover:-translate-y-1 hover:shadow-lg hover:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="button"
+      data-instrument={instrument.symbol}
+      aria-pressed={selected}
+      className={`relative w-full min-h-[142px] p-4 text-left border rounded-xl transition-all hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${colors} ${selected ? 'ring-2 ring-blue-400 shadow-lg shadow-blue-950/30' : ''}`}
       onClick={() => onSelect?.(instrument)}
-      role="tile"
-      aria-label={`Szczegóły ${instrument.symbol || 'Instrument'}`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="font-black text-lg tracking-tight">{instrument.symbol || '—'}</div>
-          <div className="text-[0.77rem] text-muted mt-1">{instrument.name || instrument.symbol || 'Instrument'}</div>
-        </div>
-        <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[0.73rem] font-black uppercase tracking-wider whitespace-nowrap ${
-          instrument.decision === 'LONG'
-            ? 'bg-[#163f30] text-green-400'
-            : instrument.decision === 'SHORT'
-              ? 'bg-[#4b202a] text-red-400'
-              : 'bg-[#29364a] text-[#b2bfd1]'
-        }`}>
-          {instrument.decision === 'LONG' ? '↑ LONG' : instrument.decision === 'SHORT' ? '↓ SHORT' : '— BRAK'}
-        </span>
+      <div className="font-black text-lg tracking-tight uppercase">{instrument.symbol}</div>
+      <div className="text-xs text-muted mt-0.5 truncate">{instrument.name}</div>
+      <div className={`mt-3 text-sm font-black ${directionColor}`}>
+        {direction === 'LONG' ? '↑ LONG' : direction === 'SHORT' ? '↓ SHORT' : '— BRAK'}
       </div>
-      <div className="mt-5 flex items-end justify-between gap-3">
-        <div>
-          <div className="text-[0.74rem] text-muted">Ocena sygnału</div>
-          <div className="font-black text-lg">
-            {instrument.decision === 'BRAK' ? '—' : `${instrument.confidence ?? 0}/100`}
-          </div>
-        </div>
-        <div className="text-[#9aaac0] text-xl">↗</div>
+      <div className="mt-1 flex items-end justify-between gap-2">
+        <span className={`text-3xl leading-none font-black ${directionColor}`}>
+          {hasScore ? instrument.confidence : '—'}<span className="text-sm text-muted">/100</span>
+        </span>
+        {selected && <span className="text-[0.65rem] uppercase tracking-wider text-blue-300">Wybrany</span>}
       </div>
     </button>
   );

@@ -1,39 +1,50 @@
+import { useEffect, useMemo, useState } from 'react';
 import PriceChart from '../chart/PriceChart';
 import InstrumentDetails from '../details/InstrumentDetails';
-
-const findChartPayload = (ohlc, symbol) => {
-  if (!ohlc || !ohlc.symbols || !symbol) return null;
-  const sym = String(symbol).toLowerCase();
-  return ohlc.symbols[sym] || ohlc.symbols[symbol] || null;
-};
+import { getChartPayload, TIMEFRAMES } from '../../utils/market';
 
 export default function MainWorkspace({ activeInstrument, data }) {
-  const chartPayload = activeInstrument ? findChartPayload(data.ohlc, activeInstrument.symbol) : null;
-  const candles = chartPayload?.candles || [];
-  const levels = chartPayload?.levels || {};
-  const harmonics = chartPayload?.harmonics || [];
+  const [timeframe, setTimeframe] = useState('4H');
+  const symbol = activeInstrument?.symbol;
+
+  useEffect(() => setTimeframe('4H'), [symbol]);
+  const payload = useMemo(
+    () => getChartPayload(data.ohlc, symbol, timeframe),
+    [data.ohlc, symbol, timeframe],
+  );
 
   return (
-    <section className="space-y-4">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <h2 className="text-sm font-semibold">Obszar roboczy</h2>
-        <p className="text-xs text-muted">
-          {activeInstrument ? `Wybrany instrument: ${activeInstrument.symbol}` : 'Wybierz instrument z panelu po lewej'}
-        </p>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="border border-border rounded-xl bg-[#080e17] p-1 flex flex-col h-[420px] min-h-[300px]">
-          <div className="flex-1 flex items-center justify-center border-b border-border text-muted text-sm">
-            {activeInstrument ? `Wykres 4H · ${activeInstrument.symbol}` : 'Wybierz instrument z panelu po lewej'}
+    <section className="space-y-6" aria-label="Obszar roboczy">
+      <div className="border border-border rounded-xl bg-[#080e17] overflow-hidden">
+        <div className="flex items-center justify-between gap-3 p-3 md:p-4 border-b border-border flex-wrap">
+          <div>
+            <h2 className="font-bold">Obszar roboczy A</h2>
+            <p className="text-xs text-muted mt-1">{activeInstrument ? `${activeInstrument.name} · ${timeframe}` : 'Wybierz instrument'}</p>
           </div>
-          {candles.length > 0 ? (
-            <div className="flex-1">
-              <PriceChart candles={candles} levels={levels} harmonics={harmonics} />
-            </div>
-          ) : null}
+          <div className="flex rounded-lg border border-border overflow-hidden" aria-label="Interwał wykresu">
+            {TIMEFRAMES.map((item) => (
+              <button
+                key={item}
+                type="button"
+                data-timeframe={item}
+                aria-pressed={timeframe === item}
+                onClick={() => setTimeframe(item)}
+                className={`px-4 py-2 text-sm font-bold transition-colors ${timeframe === item ? 'bg-blue-500 text-slate-950' : 'bg-panel text-muted hover:text-text'}`}
+              >{item}</button>
+            ))}
+          </div>
         </div>
-        <InstrumentDetails instrument={activeInstrument} data={data} />
+        <div className="h-[480px] md:h-[560px] w-full">
+          {payload ? (
+            <PriceChart key={`${payload.symbol}:${payload.timeframe}`} payload={payload} />
+          ) : (
+            <div className="h-full flex items-center justify-center text-muted text-sm p-6 text-center">
+              {activeInstrument ? `Brak danych ${timeframe} dla ${activeInstrument.symbol}.` : 'Wybierz instrument, aby wyświetlić wykres.'}
+            </div>
+          )}
+        </div>
       </div>
+      <InstrumentDetails instrument={activeInstrument} data={data} />
     </section>
   );
 }

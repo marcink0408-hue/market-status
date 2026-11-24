@@ -1,6 +1,6 @@
 ﻿# config.py
 SYMBOLS = {
-    "w20": {"yf": "WIG20.WA", "name": "WIG20"},
+    "w20": {"yf": "WIG20.WA", "name": "WIG20", "daily_timezone": "Europe/Warsaw"},
     "us500": {"yf": "^GSPC", "name": "S&P 500"},
     "gold": {"yf": "GC=F", "name": "Gold"},
     "silver": {"yf": "SI=F", "name": "Silver"},
@@ -14,10 +14,14 @@ SYMBOLS = {
 }
 
 TIMEFRAMES = {
-    "1H": {"interval": "1h", "period": "60d"},
+    "1H": {"interval": "1h", "period": "120d"},
     "4H": {"interval": "1h", "period": "120d"},
     "Daily": {"interval": "1d", "period": "2y"},
 }
+
+# Wagi kontekstu są jawnymi założeniami modelu, nie wynikami optymalizacji.
+# 4H wyznacza kierunek i bazową ocenę; 1D i 1H tylko ją korygują.
+MTF_CONTEXT_WEIGHTS = {"1D": 0.15, "1H": 0.10}
 
 RENKO_ATR_PERIOD = 14
 RENKO_ATR_MULTIPLIER = 0.5

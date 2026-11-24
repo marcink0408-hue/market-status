@@ -139,12 +139,13 @@ def build_message(item: dict) -> str:
     reasons = item.get("reasons") or []
     emoji = "🟢" if bias == "LONG" else "🔴"
     lines = [f"{emoji} <b>{sym}</b>", f"Decyzja: <b>{bias}</b> | Pewnosc: {conf}%"]
+    levels_tf = item.get("levels_timeframe") or "4H"
     if entry is not None:
-        lines.append(f"Wejscie: <b>{entry}</b>")
+        lines.append(f"Wejscie ({levels_tf}): <b>{entry}</b>")
     if stop is not None:
-        lines.append(f"Stop: {stop}")
+        lines.append(f"Stop ({levels_tf}): {stop}")
     if target is not None:
-        lines.append(f"Cel: {target}" + (f" (R:R 1:{rr})" if rr else ""))
+        lines.append(f"Cel ({levels_tf}): {target}" + (f" (R:R 1:{rr})" if rr else ""))
     if reasons:
         lines.append("")
         lines.extend(reasons[:4])

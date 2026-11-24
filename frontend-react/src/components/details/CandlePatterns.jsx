@@ -1,3 +1,5 @@
+import { timeframeData } from '../../utils/market';
+
 const CANDLE_DESC = {
   'bullish engulfing': ['🟩', 'Bullish Engulfing', 'Świeca wzrostowa obejmuje poprzednią.'],
   'bearish engulfing': ['🟥', 'Bearish Engulfing', 'Świeca spadkowa obejmuje poprzednią.'],
@@ -67,36 +69,31 @@ const CandleSvg = ({ name, direction = 'bullish' }) => {
 const candleDupKey = (c) => `${c.name}|${c.direction}|${c.time}`;
 
 export default function CandlePatterns({ instrument }) {
-  const tf = instrument?.timeframes?.['4H'] || {};
-  const candles = tf.candles || [];
-  const lastBarTime = tf.last_time || instrument?.last_bar_time;
+  const latestCandles = ['1D', '4H', '1H'].flatMap((timeframe) => {
+    const candles = timeframeData(instrument, timeframe).candles || [];
+    if (!candles.length) return [];
+    const latestTime = Math.max(...candles.map((candle) => new Date(candle.time).getTime()));
+    return candles
+      .filter((candle) => new Date(candle.time).getTime() === latestTime)
+      .map((candle) => ({ ...candle, timeframe }));
+  });
 
-  if (!candles.length) {
+  if (!latestCandles.length) {
     return (
       <div className="border border-border rounded-lg bg-panel2 p-4">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-semibold">🕯️ Formacje świecowe</span>
-        </div>
-        <p className="text-muted text-sm">Brak formacji świecowych.</p>
+        <div className="text-sm font-semibold mb-1">Formacje świecowe</div>
+        <p className="text-muted text-sm">Brak formacji świecowych na najnowszych świecach 1D, 4H i 1H.</p>
       </div>
     );
   }
 
-  // Użyj last_bar_time jako punktu odniesienia. Pokaż tylko formacje z najnowszej zamkniętej świecy 4H.
-  const latestTime = Math.max(...candles.map((c) => new Date(c.time).getTime()));
-  const latestCandles = candles.filter((c) => new Date(c.time).getTime() === latestTime);
-
-  // Usuń rzeczywiste duplikaty (te same name, direction, time). Zachowaj odrębne wykrycia na tej samej świecy.
   const seen = new Set();
-  const unique = latestCandles.filter((c) => {
-    const key = candleDupKey(c);
+  const unique = latestCandles.filter((candle) => {
+    const key = `${candle.timeframe}|${candleDupKey(candle)}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
-  });
-
-  // Sortuj od najnowszych.
-  unique.sort((a, b) => new Date(b.time) - new Date(a.time));
+  }).sort((a, b) => new Date(b.time) - new Date(a.time));
 
   if (!unique.length) {
     return (
@@ -112,7 +109,7 @@ export default function CandlePatterns({ instrument }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-sm font-semibold">🕯️ Formacje świecowe</span>
+        <span className="text-sm font-semibold">Formacje świecowe · najnowsza świeca każdego interwału</span>
       </div>
       <div className="space-y-3">
         {unique.map((c, i) => {
@@ -124,7 +121,7 @@ export default function CandlePatterns({ instrument }) {
               <div className="flex items-start justify-between gap-3 mb-1">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{desc[0]}</span>
-                  <div className="text-sm font-bold">{desc[1]}</div>
+                  <div className="text-sm font-bold">{desc[1]} <span className="text-blue-300 text-xs">· {c.timeframe}</span></div>
                   {isBullish ? (
                     <span className="px-1.5 py-0.5 rounded text-xs border border-green-500/30 text-green-400 bg-green-500/10">
                       Wzrostowa

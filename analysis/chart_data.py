@@ -16,7 +16,7 @@ def _num(value):
     except (TypeError,ValueError):
         return None
 
-def build_chart_payload(df, candles, harmonics, levels):
+def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="4H", levels_timeframe=None):
     rows=[]
     if df is not None and not df.empty:
         for stamp,row in df.iterrows():
@@ -61,6 +61,10 @@ def build_chart_payload(df, candles, harmonics, levels):
         if len(points) >= 4:
             harmonic_lines.append({
                 "name": p.get("name", "Harmoniczna"),
+                "symbol": symbol or p.get("symbol"),
+                "timeframe": timeframe,
+                "created_at": p.get("created_at") or p.get("time_D") or p.get("time_C"),
+                "lifecycle": p.get("lifecycle"),
                 "direction": p.get("direction"),
                 "status": p.get("status"),
                 "points": points
@@ -70,9 +74,12 @@ def build_chart_payload(df, candles, harmonics, levels):
 
     # --- ZMIENIONY RETURN: dodajemy "harmonics" i podnosimy schema_version ---
     return {
-        "schema_version": 2,
+        "schema_version": 3,
+        "symbol": symbol,
+        "timeframe": timeframe,
         "candles": rows,
-        "markers": markers,
+        "markers": [{**marker, "symbol": symbol, "timeframe": timeframe} for marker in markers],
         "harmonics": harmonic_lines,
+        "levels_timeframe": levels_timeframe or timeframe,
         "levels": {k: _num((levels or {}).get(k)) for k in ("entry","stop","target")}
     }

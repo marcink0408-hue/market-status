@@ -1,4 +1,6 @@
 import DecisionDetails from './DecisionDetails';
+import TimeframeAlignment from './TimeframeAlignment';
+
 import SignalPillars from './SignalPillars';
 import MarketContext from './MarketContext';
 import HarmonicPatterns from './HarmonicPatterns';
@@ -21,10 +23,10 @@ export default function InstrumentDetails({ instrument, data }) {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-2 mb-2">
           <h2 className="text-sm font-semibold">Szczegóły instrumentu</h2>
-          <p className="text-xs text-muted">Interwał 4H · szczegóły analizy</p>
+          <p className="text-xs text-muted">Analiza 1D / 4H / 1H · wybierz instrument powyżej</p>
         </div>
         <div className="border border-dashed border-border rounded-xl bg-panel/50 p-6 text-center text-muted">
-          Wybierz instrument z panelu po lewej, aby zobaczyć szczegóły.
+          Wybierz instrument z sekcji Instrumenty, aby zobaczyć szczegóły.
         </div>
       </section>
     );
@@ -36,10 +38,11 @@ export default function InstrumentDetails({ instrument, data }) {
     <section className="space-y-4">
       <div className="flex items-center justify-between gap-2 mb-2">
         <h2 className="text-sm font-semibold">Szczegóły instrumentu</h2>
-        <p className="text-xs text-muted">{item.name || instrument.symbol} · Interwał 4H · szczegóły analizy</p>
+        <p className="text-xs text-muted">{item.name || instrument.symbol} · główny sygnał 4H · kontekst 1D i 1H</p>
       </div>
 
       <DecisionDetails instrument={item} />
+      <TimeframeAlignment instrument={item} />
       <SignalPillars instrument={item} />
       <MarketContext instrument={item} />
       <HarmonicPatterns instrument={item} />

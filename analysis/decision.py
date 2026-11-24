@@ -2,14 +2,15 @@
 from __future__ import annotations
 import numpy as np
 import pandas as pd
+from config import MTF_CONTEXT_WEIGHTS
 
 STRONG_BULL = {"Bullish Engulfing", "Hammer", "Morning Star"}
 STRONG_BEAR = {"Bearish Engulfing", "Shooting Star", "Evening Star"}
 
 
-def _atr(df: pd.DataFrame, period: int = 14) -> float:
+def _atr(df: pd.DataFrame, period: int = 14):
     if df is None or len(df) < period + 1:
-        return 0.0
+        return None
     high, low, close = df["high"], df["low"], df["close"]
     tr = pd.concat([
         high - low,
@@ -17,7 +18,7 @@ def _atr(df: pd.DataFrame, period: int = 14) -> float:
         (low - close.shift()).abs(),
     ], axis=1).max(axis=1)
     val = tr.rolling(period).mean().iloc[-1]
-    return float(val) if not np.isnan(val) else 0.0
+    return float(val) if not np.isnan(val) else None
 
 
 def _best_candle(candles: list, direction: str):
@@ -137,9 +138,58 @@ def _min_conf_for_combo(has_renko, has_harm, has_candle) -> int:
     return 99
 
 
-def make_decision(df_4h, renko: dict, harmonics: list, candles: list, daily_renko=None) -> dict:
+def _context_bias(analysis):
+    if not analysis or analysis.get("error"):
+        return {"bias": "BRAK", "confidence": 0, "available": False}
+    scores = analysis.get("directional_scores") or {}
+    long_score = int(scores.get("LONG") or 0)
+    short_score = int(scores.get("SHORT") or 0)
+    if not scores and analysis.get("decision") in ("LONG", "SHORT"):
+        bias = analysis["decision"]
+        return {"bias": bias, "confidence": int(analysis.get("confidence") or 0), "available": True}
+    confidence = max(long_score, short_score)
+    if confidence <= 0 or abs(long_score - short_score) < 8:
+        bias = "BRAK"
+    else:
+        bias = "LONG" if long_score > short_score else "SHORT"
+    return {"bias": bias, "confidence": confidence, "available": True}
+
+
+def _apply_mtf_context(result, side, daily_analysis, hourly_analysis):
+    base = int(result.get("confidence") or 0)
+    score = float(base)
+    alignment = {"4H": {"bias": side, "status": "main", "score": base}}
+    for tf, analysis in (("1D", daily_analysis), ("1H", hourly_analysis)):
+        context = _context_bias(analysis)
+        relation = "missing"
+        if context["available"]:
+            if context["bias"] == "BRAK":
+                relation = "neutral"
+            elif context["bias"] == side:
+                relation = "confirms"
+                score += context["confidence"] * MTF_CONTEXT_WEIGHTS[tf]
+            else:
+                relation = "conflict"
+                score -= context["confidence"] * MTF_CONTEXT_WEIGHTS[tf]
+        alignment[tf] = {**context, "status": relation}
+        if relation == "confirms":
+            result["reasons"].append(f"{tf}: potwierdza kierunek {side} (kontekst, nie osobny sygnal)")
+        elif relation == "conflict":
+            result["reasons"].append(f"UWAGA {tf}: konflikt kierunku ({context['bias']} vs {side})")
+    result["base_confidence"] = base
+    result["confidence"] = int(min(max(round(score), 0), 100))
+    result["timeframe_alignment"] = alignment
+    daily = alignment["1D"]
+    result["daily_align"] = 1 if daily["status"] == "confirms" else -1 if daily["status"] == "conflict" else 0
+
+
+def make_decision(
+    df_4h, renko: dict, harmonics: list, candles: list, daily_renko=None,
+    daily_analysis=None, hourly_analysis=None, timeframe="4H",
+) -> dict:
     last_close = float(df_4h["close"].iloc[-1]) if df_4h is not None and len(df_4h) else None
-    atr = _atr(df_4h) if df_4h is not None else 0.0
+    atr_value = _atr(df_4h) if df_4h is not None else None
+    atr = atr_value or 0.0
     last_bar_time = str(df_4h.index[-1]) if df_4h is not None and len(df_4h) else None
 
     result = {
@@ -147,7 +197,9 @@ def make_decision(df_4h, renko: dict, harmonics: list, candles: list, daily_renk
         "reasons": [], "harmonic": None, "candle": None, "renko_signal": "brak", "price": last_close,
         "pillars": 0, "modules": {"renko": False, "harmonic": False, "candle": False},
         "contradiction": False, "daily_align": 0, "last_bar_time": last_bar_time,
-        "atr": round(atr, 5) if atr else None,
+        "atr": round(atr_value, 8) if atr_value is not None else None,
+        "timeframe": timeframe, "levels_timeframe": timeframe,
+        "levels_by_timeframe": {}, "timeframe_alignment": {},
     }
     if last_close is None:
         result["reasons"] = ["Brak danych 4H"]
@@ -203,7 +255,8 @@ def make_decision(df_4h, renko: dict, harmonics: list, candles: list, daily_renk
             reasons.append("Daily: zgodny kierunek Renko")
         elif daily_align == -1:
             reasons.append("Daily: przeciwny kierunek Renko")
-        conf = _confidence(has_renko, has_harm, has_candle, leg, h, c, contradiction, daily_align)
+        context_align = daily_align if daily_analysis is None and hourly_analysis is None else 0
+        conf = _confidence(has_renko, has_harm, has_candle, leg, h, c, contradiction, context_align)
         pillars = sum([has_renko, has_harm, has_candle])
         min_conf = _min_conf_for_combo(has_renko, has_harm, has_candle)
         return {
@@ -263,4 +316,33 @@ def make_decision(df_4h, renko: dict, harmonics: list, candles: list, daily_renk
             result["reasons"] = [f"Brak setupu ({side} {best['pillars']}/3, conf {best['conf']}%, prog {best['min_conf']}%):"] + best["reasons"]
         else:
             result["reasons"] = ["Brak sygnalow wejscia na 4H"]
+
+    result["directional_scores"] = {"LONG": long_s["conf"], "SHORT": short_s["conf"]}
+    result["base_confidence"] = result["confidence"]
+    own_levels = {
+        "timeframe": timeframe, "signal_timeframe": timeframe,
+        "entry": result.get("entry"), "stop": result.get("stop"),
+        "target": result.get("target"), "rr": result.get("rr"),
+    }
+    result["levels_by_timeframe"] = {timeframe: own_levels}
+    if daily_analysis is not None or hourly_analysis is not None:
+        reference_side = pick or ("LONG" if long_s["conf"] >= short_s["conf"] else "SHORT")
+        _apply_mtf_context(result, reference_side, daily_analysis, hourly_analysis)
+
+        # Precyzja 1H jest używana tylko jako kompletny, spójny zestaw zgodny z 4H.
+        hourly_levels = (hourly_analysis or {}).get("levels_by_timeframe", {}).get("1H")
+        if (
+            pick in ("LONG", "SHORT") and (hourly_analysis or {}).get("decision") == pick
+            and hourly_levels and all(hourly_levels.get(k) is not None for k in ("entry", "stop", "target"))
+        ):
+            result["levels_by_timeframe"]["1H"] = hourly_levels
+            result.update({
+                "entry": hourly_levels["entry"], "stop": hourly_levels["stop"],
+                "target": hourly_levels["target"], "rr": hourly_levels.get("rr"),
+                "levels_timeframe": "1H", "levels_basis": "Sygnal 1H zgodny z glownym kierunkiem 4H",
+            })
+        else:
+            result["levels_basis"] = "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow"
+    else:
+        result["levels_basis"] = f"Sygnal {timeframe}"
     return result

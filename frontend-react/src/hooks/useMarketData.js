@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const FILES = [
   'status',
@@ -34,8 +34,10 @@ export function useMarketData() {
   const [overallStatus, setOverallStatus] = useState('loading');
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const requestIdRef = useRef(0);
 
   const load = useCallback(async (isRefresh = false) => {
+    const requestId = ++requestIdRef.current;
     if (isRefresh) {
       setRefreshing(true);
     } else {
@@ -67,6 +69,8 @@ export function useMarketData() {
       }
     }));
 
+    if (requestId !== requestIdRef.current) return;
+
     if (requiredFailed) {
       setOverallStatus('error');
       setError(requiredError || 'Nie udało się wczytać danych statusu.');
@@ -81,6 +85,7 @@ export function useMarketData() {
 
   useEffect(() => {
     load();
+    return () => { requestIdRef.current += 1; };
   }, [load]);
 
   const refresh = useCallback(() => {

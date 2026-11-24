@@ -1,16 +1,27 @@
-const numOrDash = (v) => (v == null || !Number.isFinite(Number(v)) ? '—' : Number(v).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+import { timeframeData } from '../../utils/market';
+
+const number = (value) => value == null || !Number.isFinite(Number(value))
+  ? 'Brak danych' : Number(value).toLocaleString('pl-PL', { maximumFractionDigits: 6 });
 
 export default function MarketContext({ instrument }) {
-  const atr = instrument.atr_4h ?? instrument.atr;
-
+  const daily = timeframeData(instrument, '1D');
   return (
-    <div className="flex gap-2 flex-wrap">
-      <span className="px-2 py-1 rounded border border-border bg-panel2 text-xs">
-        Kontekst D1: {instrument.daily_context || 'brak'}
-      </span>
-      <span className="px-2 py-1 rounded border border-border bg-panel2 text-xs">
-        ATR(14): {numOrDash(atr)}
-      </span>
-    </div>
+    <section className="grid md:grid-cols-3 gap-3">
+      {['1D', '4H', '1H'].map((timeframe) => {
+        const frame = timeframeData(instrument, timeframe);
+        return (
+          <div key={timeframe} className="px-4 py-3 rounded-lg border border-border bg-panel2">
+            <div className="text-xs text-muted">ATR(14) · {timeframe}</div>
+            <div className="font-bold mt-1">{number(frame.atr ?? (timeframe === '4H' ? instrument.atr : null))}</div>
+          </div>
+        );
+      })}
+      <div className="md:col-span-3 px-4 py-3 rounded-lg border border-border bg-panel2 text-sm">
+        <span className="font-semibold">Kontekst D1: {instrument.daily_context || 'brak danych'}</span>
+        <span className="text-muted ml-2">
+          Renko: {daily.renko?.direction || 'brak'} · zakres 20 świec: {number(daily.market_levels?.recent_low)} – {number(daily.market_levels?.recent_high)}
+        </span>
+      </div>
+    </section>
   );
 }

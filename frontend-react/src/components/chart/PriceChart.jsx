@@ -103,88 +103,88 @@ export default function PriceChart({ candles, levels, harmonics }) {
     renderHarmonics(chartRef.current.instance, chartRef.current.series, harmonics);
   }, [harmonics]);
 
-  return <div ref={containerRef} className="w-full h-full" />;
-}
-
-function renderPriceLevels(series, levels) {
-  if (!series || !levels) return;
-  LEVEL_CONFIG.forEach(({ key, title, color }) => {
-    const v = levels[key];
-    if (v != null && Number.isFinite(Number(v))) {
-      priceLinesRef.current[key] = series.createPriceLine({
-        price: Number(v),
-        color,
-        lineWidth: 2,
-        lineStyle: LineStyle.Dashed,
-        axisLabelVisible: true,
-        title,
-      });
-    }
-  });
-}
-
-function removeAllPriceLevels() {
-  Object.values(priceLinesRef.current).forEach((line) => {
-    try {
-      line.remove();
-    } catch (e) {
-      // ignore
-    }
-  });
-  priceLinesRef.current = {};
-}
-
-function renderHarmonics(chartInstance, series, harmonics) {
-  if (!chartInstance || !series || !harmonics) return;
-
-  (harmonics || []).forEach((p) => {
-    const pts = p.points || [];
-    if (pts.length < 2) return;
-
-    const validPoints = pts
-      .filter((x) => x.time != null && x.value != null)
-      .map((x) => ({ time: x.time, value: x.value }))
-      .sort((a, b) => a.time - b.time);
-    if (validPoints.length < 2) return;
-
-    const isBullish = p.direction === 'bullish';
-    const line = chartInstance.addLineSeries({
-      color: isBullish ? '#35d07f' : '#ff6376',
-      lineWidth: 2,
-      lineStyle: p.status === 'completed' ? LineStyle.Solid : LineStyle.Dashed,
-      priceLineVisible: false,
-      lastValueVisible: false,
-      crosshairMarkerVisible: false,
+  function renderPriceLevels(series, levels) {
+    if (!series || !levels) return;
+    LEVEL_CONFIG.forEach(({ key, title, color }) => {
+      const v = levels[key];
+      if (v != null && Number.isFinite(Number(v))) {
+        priceLinesRef.current[key] = series.createPriceLine({
+          price: Number(v),
+          color,
+          lineWidth: 2,
+          lineStyle: LineStyle.Dashed,
+          axisLabelVisible: true,
+          title,
+        });
+      }
     });
-    line.setData(validPoints);
+  }
 
-    const markers = [];
-    for (const point of pts) {
-      if (point.time == null) continue;
-      markers.push({
-        time: point.time,
-        position: isBullish ? 'belowBar' : 'aboveBar',
+  function removeAllPriceLevels() {
+    Object.values(priceLinesRef.current).forEach((line) => {
+      try {
+        line.remove();
+      } catch (e) {
+        // ignore
+      }
+    });
+    priceLinesRef.current = {};
+  }
+
+  function renderHarmonics(chartInstance, series, harmonics) {
+    if (!chartInstance || !series || !harmonics) return;
+
+    (harmonics || []).forEach((p) => {
+      const pts = p.points || [];
+      if (pts.length < 2) return;
+
+      const validPoints = pts
+        .filter((x) => x.time != null && x.value != null)
+        .map((x) => ({ time: x.time, value: x.value }))
+        .sort((a, b) => a.time - b.time);
+      if (validPoints.length < 2) return;
+
+      const isBullish = p.direction === 'bullish';
+      const line = chartInstance.addLineSeries({
         color: isBullish ? '#35d07f' : '#ff6376',
-        shape: 'circle',
-        text: `${p.name || 'H'} ${point.label || ''}`,
+        lineWidth: 2,
+        lineStyle: p.status === 'completed' ? LineStyle.Solid : LineStyle.Dashed,
+        priceLineVisible: false,
+        lastValueVisible: false,
+        crosshairMarkerVisible: false,
       });
-    }
+      line.setData(validPoints);
 
-    if (markers.length) {
-      series.setMarkers(markers);
-    }
+      const markers = [];
+      for (const point of pts) {
+        if (point.time == null) continue;
+        markers.push({
+          time: point.time,
+          position: isBullish ? 'belowBar' : 'aboveBar',
+          color: isBullish ? '#35d07f' : '#ff6376',
+          shape: 'circle',
+          text: `${p.name || 'H'} ${point.label || ''}`,
+        });
+      }
 
-    harmonicLinesRef.current.push({ line, markers });
-  });
-}
+      if (markers.length) {
+        series.setMarkers(markers);
+      }
 
-function removeAllHarmonics() {
-  harmonicLinesRef.current.forEach(({ line }) => {
-    try {
-      line.remove();
-    } catch (e) {
-      // ignore
-    }
-  });
-  harmonicLinesRef.current = [];
+      harmonicLinesRef.current.push({ line, markers });
+    });
+  }
+
+  function removeAllHarmonics() {
+    harmonicLinesRef.current.forEach(({ line }) => {
+      try {
+        line.remove();
+      } catch (e) {
+        // ignore
+      }
+    });
+    harmonicLinesRef.current = [];
+  }
+
+  return <div ref={containerRef} className="w-full h-full" />;
 }

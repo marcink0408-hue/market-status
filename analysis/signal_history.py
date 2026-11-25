@@ -96,7 +96,10 @@ def _candle_time_plus_bars(candle_iso: str, bars: int) -> str | None:
 def _extract_completed_harmonics(result: dict) -> list:
     """Zwraca liste completed harmonics z result['timeframes']['4H']['harmonics']."""
     tf4 = (result.get("timeframes") or {}).get("4H") or {}
-    return [h for h in (tf4.get("harmonics") or []) if h.get("status") == "completed"]
+    return [
+        h for h in (tf4.get("harmonics") or [])
+        if h.get("status") == "completed" and h.get("lifecycle", "active") == "active"
+    ]
 
 
 def build_signal_entry(result: dict, harmonic: dict, run_time: str | None = None) -> dict | None:

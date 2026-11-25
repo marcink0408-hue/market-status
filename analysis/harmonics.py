@@ -72,6 +72,10 @@ def detect_harmonics(df: pd.DataFrame, lookback_pivots: int = 40) -> List[dict]:
             continue
         xab, abc, bcd, xad = AB / XA, BC / AB, CD / BC if BC else 0, AD / XA
         for pat in PATTERNS:
+            if pat.name == "Butterfly":
+                # D musi wyjść poza X; samo dopasowanie tolerancji nie wystarcza.
+                if (bullish and D >= X) or (not bullish and D <= X):
+                    continue
             if not _in_range(xab, pat.xab): continue
             if not _in_range(abc, pat.abc): continue
             if pat.bcd is not None and not _in_range(bcd, pat.bcd): continue

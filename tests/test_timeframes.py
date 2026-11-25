@@ -68,6 +68,14 @@ class MultiTimeframeDecisionTests(unittest.TestCase):
         self.assertEqual(result["confidence"], result["base_confidence"] + 12 - 8)
         self.assertEqual(result["levels_timeframe"], "4H")
 
+    def test_no_setup_does_not_expose_reference_bias_as_main_decision(self):
+        result = make_decision(
+            self.df, {}, [], [], daily_analysis=self.daily,
+            hourly_analysis=self.hourly_conflict,
+        )
+        self.assertEqual(result["decision"], "BRAK")
+        self.assertEqual(result["timeframe_alignment"]["4H"]["bias"], "BRAK")
+
     def test_complete_compatible_1h_levels_are_used_as_one_set(self):
         hourly = {
             "decision": "LONG", "directional_scores": {"LONG": 70, "SHORT": 0},

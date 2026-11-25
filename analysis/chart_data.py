@@ -16,7 +16,7 @@ def _num(value):
     except (TypeError,ValueError):
         return None
 
-def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="4H", levels_timeframe=None):
+def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="4H", levels_timeframe=None, signal_status=None, can_enter=False):
     rows=[]
     if df is not None and not df.empty:
         for stamp,row in df.iterrows():
@@ -30,7 +30,8 @@ def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="
         except Exception: continue
         if t not in valid_times: continue
         bull=p.get("direction")=="bullish"
-        markers.append({"time":t,"position":"belowBar" if bull else "aboveBar","color":"#22c55e" if bull else "#ef4444","shape":"arrowUp" if bull else "arrowDown","text":str(p.get("name","Świeca"))[:32]})
+        short_name = str(p.get("name","Świeca")).replace("Engulfing", "Eng.").replace("Shooting Star", "Shooting ★").replace("Morning Star", "Morning ★").replace("Evening Star", "Evening ★")
+        markers.append({"time":t,"position":"belowBar" if bull else "aboveBar","color":"#22c55e" if bull else "#ef4444","shape":"arrowUp" if bull else "arrowDown","text":short_name[:24]})
     for p in harmonics or []:
         try: t=_unix_seconds(p.get("time_D") if p.get("status")=="completed" else p.get("time_C"))
         except Exception: continue
@@ -58,6 +59,10 @@ def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="
                 })
             except Exception:
                 continue
+        if p.get("status") == "forming" and p.get("D_projected") is not None and points:
+            projected = _num(p.get("D_projected"))
+            if projected is not None:
+                points.append({"time": rows[-1]["time"], "value": projected, "label": "D?"})
         if len(points) >= 4:
             harmonic_lines.append({
                 "name": p.get("name", "Harmoniczna"),
@@ -81,5 +86,7 @@ def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="
         "markers": [{**marker, "symbol": symbol, "timeframe": timeframe} for marker in markers],
         "harmonics": harmonic_lines,
         "levels_timeframe": levels_timeframe or timeframe,
+        "signal_status": signal_status or "NONE",
+        "can_enter": bool(can_enter),
         "levels": {k: _num((levels or {}).get(k)) for k in ("entry","stop","target")}
     }

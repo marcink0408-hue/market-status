@@ -17,15 +17,17 @@ export default function PriceChart({ payload }) {
     const chart = createChart(containerRef.current, {
       width: containerRef.current.clientWidth || 600,
       height: containerRef.current.clientHeight || 480,
-      layout: { background: { type: 'solid', color: '#080e17' }, textColor: '#b8c7da' },
-      grid: { vertLines: { color: '#172438' }, horzLines: { color: '#172438' } },
-      rightPriceScale: { borderColor: '#2a3b53' },
-      timeScale: { borderColor: '#2a3b53', timeVisible: true, secondsVisible: false },
+      layout: { background: { type: 'solid', color: '#100d0d' }, textColor: '#b8b2b2' },
+      localization: { priceFormatter: (price) => Math.round(price).toLocaleString('pl-PL', { maximumFractionDigits: 0 }) },
+      grid: { vertLines: { color: '#2a1919' }, horzLines: { color: '#2a1919' } },
+      rightPriceScale: { borderColor: '#4a2725' },
+      timeScale: { borderColor: '#4a2725', timeVisible: true, secondsVisible: false },
     });
     const candleSeries = chart.addCandlestickSeries({
       upColor: '#35d07f', downColor: '#ff6376',
       borderUpColor: '#35d07f', borderDownColor: '#ff6376',
-      wickUpColor: '#35d07f', wickDownColor: '#ff6376',
+      wickUpColor: '#35d07f', wickDownColor: '#ff4d42',
+      priceFormat: { type: 'price', precision: 0, minMove: 1 },
     });
     const overlaySeries = [];
 
@@ -47,7 +49,7 @@ export default function PriceChart({ payload }) {
       const points = harmonicLinePoints(pattern);
       if (points.length < 2) return;
       const line = chart.addLineSeries({
-        color: pattern.direction === 'bullish' ? '#35d07f' : '#ff6376',
+        color: pattern.direction === 'bullish' ? '#35d07f' : '#ff4d42',
         lineWidth: 2,
         lineStyle: pattern.status === 'completed' ? LineStyle.Solid : LineStyle.Dashed,
         priceLineVisible: false,

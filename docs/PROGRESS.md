@@ -1,5 +1,14 @@
 # docs/PROGRESS.md — Dziennik postępów migracji Market Status
 
+## 2026-11-25 — Panel decyzyjny i cykl życia sygnału
+
+- Przebudowano istniejący React: ekran powitalny, nagłówek MARCIN – MÓJ XTB, dynamiczne GO, niebieskie ODŚWIEŻ, pięć kolumn instrumentów na desktopie i układ mobilny bez overflow.
+- Główny sygnał znajduje się nad wykresem; panel zawiera tylko decyzję, aktualny status, poziomy, krótkie uzasadnienie, wykres, istotne formacje i trzy kafelki interwałów. Raporty ATR/Renko/XABCD/formacji klasycznych pozostają w silniku, nie w UI.
+- Dodano `analysis/lifecycle.py`: PRZ, potwierdzenie D, target, negacja, wygaśnięcie oraz PENDING/ACTIVE/SL/TP. Terminy wynikają ze świec i długości nogi struktury; `can_enter=true` występuje tylko dla PENDING.
+- Butterfly wymaga poprawnego D poza X; nieaktualne harmoniczne nie zasilają decyzji, a widok wykresu porządkuje oznaczenia po buforze 5 dni. Poziomy i markery pozostają przypisane do symbolu i interwału.
+- Ceny są zaokrąglane wyłącznie w prezentacji. Dane `status.json` i `ohlc.json` zostały ponownie wygenerowane z rzeczywistego `run_daily.py`.
+- Weryfikacja: 17 testów Python, 8 testów React, walidacja JSON, build Vite oraz test Chrome desktop/mobile: powitanie, 11 instrumentów, zmiany symbolu i 1H/4H/1D, GOLD, W20 1H, odświeżanie, GO, brak błędów konsoli i brak overflow przy 390 px. BTC nie występuje w obecnym źródle danych.
+
 ## 2026-11-24 — Analiza 1H / 4H / 1D i poprawka wykresu
 
 - Wykres otrzymuje dane wyłącznie dla wybranego symbolu i interwału; serie XABCD są poprawnie usuwane i wyłączone z autoskalowania.

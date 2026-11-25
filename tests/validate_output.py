@@ -25,10 +25,15 @@ for item in status:
         assert payload["timeframe"] == timeframe
         assert payload["levels_timeframe"] == timeframe
         assert payload["candles"]
+        signal_status = payload.get("signal_status", "NONE")
+        assert signal_status in {"NONE", "NO_DATA", "PENDING", "ACTIVE", "STOP_LOSS", "TAKE_PROFIT", "EXPIRED", "INVALIDATED"}
+        assert not payload.get("can_enter") or signal_status == "PENDING"
+        if signal_status in {"STOP_LOSS", "TAKE_PROFIT", "EXPIRED", "INVALIDATED", "NO_DATA", "NONE"}:
+            assert all(payload["levels"].get(key) is None for key in ("entry", "stop", "target"))
         for harmonic in payload["harmonics"]:
             patterns += 1
             assert harmonic["symbol"] == symbol and harmonic["timeframe"] == timeframe
-            assert harmonic["lifecycle"] in ("active", "historical", "forming")
+            assert harmonic["lifecycle"] in {"active", "historical", "forming", "target_reached", "invalidated", "expired"}
         for marker in payload["markers"]:
             assert marker["symbol"] == symbol and marker["timeframe"] == timeframe
         atr = item["timeframes"][timeframe]["atr"]

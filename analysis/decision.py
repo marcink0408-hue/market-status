@@ -38,7 +38,14 @@ def _opposing_candle(candles: list, direction: str):
 
 
 def _best_harmonic(harmonics: list, direction: str):
-    same = [h for h in harmonics if h.get("direction") == direction]
+    same = [
+        h for h in harmonics
+        if h.get("direction") == direction
+        and (
+            h.get("lifecycle") in {"forming", "active"}
+            or (not h.get("lifecycle") and h.get("active") is not False)
+        )
+    ]
     if not same:
         return None
     completed = [h for h in same if h.get("status") == "completed"]
@@ -158,7 +165,7 @@ def _context_bias(analysis):
 def _apply_mtf_context(result, side, daily_analysis, hourly_analysis):
     base = int(result.get("confidence") or 0)
     score = float(base)
-    alignment = {"4H": {"bias": side, "status": "main", "score": base}}
+    alignment = {"4H": {"bias": side if result.get("decision") in ("LONG", "SHORT") else "BRAK", "status": "main", "score": base}}
     for tf, analysis in (("1D", daily_analysis), ("1H", hourly_analysis)):
         context = _context_bias(analysis)
         relation = "missing"
@@ -334,6 +341,7 @@ def make_decision(
         if (
             pick in ("LONG", "SHORT") and (hourly_analysis or {}).get("decision") == pick
             and hourly_levels and all(hourly_levels.get(k) is not None for k in ("entry", "stop", "target"))
+            and (hourly_analysis or {}).get("signal_status", "PENDING") in {"PENDING", "ACTIVE"}
         ):
             result["levels_by_timeframe"]["1H"] = hourly_levels
             result.update({

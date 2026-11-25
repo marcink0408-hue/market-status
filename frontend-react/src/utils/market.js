@@ -1,5 +1,26 @@
 export const TIMEFRAMES = ['1H', '4H', '1D'];
 
+export function currentDecision(instrument) {
+  const terminal = ['STOP_LOSS', 'TAKE_PROFIT', 'EXPIRED', 'INVALIDATED', 'NO_DATA'];
+  if (terminal.includes(instrument?.signal_status)) return 'BRAK';
+  // Zgodność wsteczna: stary JSON nie może pokazywać historycznej harmonicznej jako setupu.
+  if (!instrument?.signal_status && ['historical', 'invalidated', 'target_reached', 'expired'].includes(instrument?.harmonic?.lifecycle)) return 'BRAK';
+  return normalizeDecision(instrument?.decision);
+}
+
+export function formatPrice(value) {
+  return value == null || value === '' || !Number.isFinite(Number(value))
+    ? '—' : Math.round(Number(value)).toLocaleString('pl-PL', { maximumFractionDigits: 0 });
+}
+
+export function formatDate(value, includeTime = false) {
+  const date = new Date(value);
+  if (!value || !Number.isFinite(date.getTime())) return '—';
+  return date.toLocaleString('pl-PL', includeTime
+    ? { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }
+    : { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
 export function normalizeDecision(value) {
   const decision = String(value || '').toUpperCase();
   return ['LONG', 'SHORT'].includes(decision) ? decision : 'BRAK';
@@ -50,10 +71,16 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
   if (!candles.length) return null;
   const times = new Set(candles.map((candle) => candle.time));
   const markers = (source.markers || []).filter((marker) => (
-    identityMatches(marker, symbol, timeframe) && times.has(Number(marker.time))
+    identityMatches(marker, symbol, timeframe) && times.has(Number(marker.time)) && marker.shape !== 'circle'
   ));
+  const lastTime = Math.max(...candles.map((candle) => candle.time));
   const harmonics = (source.harmonics || [])
-    .filter((pattern) => identityMatches(pattern, symbol, timeframe))
+    .filter((pattern) => {
+      if (!identityMatches(pattern, symbol, timeframe)) return false;
+      if (['forming', 'active'].includes(pattern.lifecycle) || !pattern.lifecycle) return true;
+      const ended = Date.parse(pattern.closed_at || pattern.created_at || '') / 1000;
+      return Number.isFinite(ended) && ended <= lastTime && lastTime - ended <= 5 * 86400;
+    })
     .map((pattern) => ({
       ...pattern,
       symbol,
@@ -64,6 +91,10 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
     }))
     .filter((pattern) => pattern.points.length >= 2);
 
+  const terminal = ['STOP_LOSS', 'TAKE_PROFIT', 'EXPIRED', 'INVALIDATED', 'NO_DATA'];
+  const legacyHistoricalLevels = !source.signal_status && source.harmonics?.length > 0 && harmonics.length === 0;
+  const levels = terminal.includes(source.signal_status) || legacyHistoricalLevels ? {} : source.levels || {};
+
   return {
     ...source,
     symbol,
@@ -71,7 +102,7 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
     candles,
     markers,
     harmonics,
-    levels: source.levels || {},
+    levels,
     levels_timeframe: source.levels_timeframe || timeframe,
   };
 }
@@ -88,13 +119,18 @@ export function chartMarkers(payload) {
   const markers = [...(payload?.markers || [])];
   (payload?.harmonics || []).forEach((pattern) => {
     const bullish = pattern.direction === 'bullish';
-    pattern.points.forEach((point) => markers.push({
-      time: point.time,
-      position: bullish ? 'belowBar' : 'aboveBar',
-      color: bullish ? '#35d07f' : '#ff6376',
-      shape: 'circle',
-      text: `${pattern.name || 'H'} ${point.label || ''} · ${payload.timeframe}`,
-    }));
+    pattern.points.forEach((point) => {
+      const isCompletion = point.label === 'D' || point.label === 'D?' || (pattern.status === 'forming' && point.label === 'C');
+      markers.push({
+        time: point.time,
+        position: bullish ? 'belowBar' : 'aboveBar',
+        color: bullish ? '#35d07f' : '#ff4d42',
+        shape: 'circle',
+        text: isCompletion
+          ? `${String(pattern.name || 'H').toUpperCase()} · ${bullish ? 'WZROSTOWA' : 'SPADKOWA'} ${point.label || ''}`
+          : point.label || '',
+      });
+    });
   });
   return markers.sort((a, b) => Number(a.time) - Number(b.time));
 }

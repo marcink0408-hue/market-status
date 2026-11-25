@@ -1,32 +1,17 @@
 export default function InstrumentTile({ instrument, selected, onSelect }) {
   const direction = instrument.decision;
-  const colors = direction === 'LONG'
-    ? 'border-green-500/50 bg-green-950/30 hover:border-green-400'
-    : direction === 'SHORT'
-      ? 'border-red-500/50 bg-red-950/30 hover:border-red-400'
-      : 'border-border bg-panel hover:border-slate-500';
-  const directionColor = direction === 'LONG' ? 'text-green-400' : direction === 'SHORT' ? 'text-red-400' : 'text-slate-300';
+  const directionClass = direction === 'LONG' ? 'direction-long' : direction === 'SHORT' ? 'direction-short' : 'direction-none';
+  const icons = { gold: 'AU', silver: 'AG', copper: 'CU', eurusd: '€', eurpln: '€', usdpln: '$', usdjpy: '¥', us500: 'S&P', w20: 'W20', eu50: 'E50', uk100: 'UK', bitcoin: '₿', btc: '₿' };
   const hasScore = instrument.confidence != null && Number.isFinite(Number(instrument.confidence));
 
   return (
-    <button
-      type="button"
-      data-instrument={instrument.symbol}
-      aria-pressed={selected}
-      className={`relative w-full min-h-[142px] p-4 text-left border rounded-xl transition-all hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${colors} ${selected ? 'ring-2 ring-blue-400 shadow-lg shadow-blue-950/30' : ''}`}
-      onClick={() => onSelect?.(instrument)}
-    >
-      <div className="font-black text-lg tracking-tight uppercase">{instrument.symbol}</div>
-      <div className="text-xs text-muted mt-0.5 truncate">{instrument.name}</div>
-      <div className={`mt-3 text-sm font-black ${directionColor}`}>
-        {direction === 'LONG' ? '↑ LONG' : direction === 'SHORT' ? '↓ SHORT' : '— BRAK'}
-      </div>
-      <div className="mt-1 flex items-end justify-between gap-2">
-        <span className={`text-3xl leading-none font-black ${directionColor}`}>
-          {hasScore ? instrument.confidence : '—'}<span className="text-sm text-muted">/100</span>
-        </span>
-        {selected && <span className="text-[0.65rem] uppercase tracking-wider text-blue-300">Wybrany</span>}
-      </div>
+    <button type="button" data-instrument={instrument.symbol} aria-pressed={selected}
+      className={`instrument-tile ${selected ? 'instrument-selected' : ''}`} onClick={() => onSelect?.(instrument)}>
+      <span className="text-lg font-black uppercase tracking-wide text-white md:text-xl">{instrument.name || instrument.symbol}</span>
+      <span className="instrument-icon" aria-hidden="true">{icons[String(instrument.symbol).toLowerCase()] || String(instrument.symbol).slice(0, 3).toUpperCase()}</span>
+      <span className={`text-xl font-black ${directionClass}`}>{direction === 'LONG' ? '↑ LONG' : direction === 'SHORT' ? '↓ SHORT' : '— BRAK'}</span>
+      <span className="text-sm font-bold text-[var(--text-muted)]">{hasScore ? instrument.confidence : '—'}<span className="text-xs">/100</span></span>
+      {selected && <span className="selected-label">WYBRANY</span>}
     </button>
   );
 }

@@ -20,11 +20,38 @@
 
 ## Aktualny etap migracji
 
-Etap 3 — Analiza świec (fundament wyzwalacza)
+Etap 4 — Model gotowości (analysis/readiness.py)
 
 ## Status etapu
 
 Ukończony
+
+## Wykonane zadania (Etap 4)
+
+- `config.py`: dodano parametry modelu gotowości — `READINESS_WEIGHTS` (15/25/20/30/10), progi 29/30/54/55/79/80, `MIN_DIFFERENCE_POINTS = 5`, `MIN_RR = 1.5`, `INVALIDATION_BUFFER_ATR_MULT = 0.25`, `MAX_DATA_AGE = 2`, `SETUP_EXPIRY_BARS = 3`, `CONFIRMED_VALID_BARS = 2`.
+- `analysis/readiness.py` (nowy): model gotowości deterministyczny. `evaluate_side()` oblicza punkty per kryterium dla jednej strony (LONG/SHORT): kontekst 1D (15), struktura 4H (25/12/0), położenie S/R (20/10/0), wyzwalacz 1H (30/0), RR (10/0). `calculate_readiness()` łączy obie strony niezależnie, stosuje progi, blokady wejścia, wybór kierunku z `MIN_DIFFERENCE_POINTS`, missing conditions, schemat `entry_readiness` (symbol, main_timeframe, direction, readiness_pct, stage, setup_status, entry_allowed, blockers[], criteria[], scores, missing[], trigger_level, invalidation_level, entry, stop, target, rr, next_check_time, expires_at, data_as_of, generated_at). Brak wartości liczbowej = null. `_validate_levels()` waliduje Entry/SL/TP per stronę. `_check_blockers()` egzekwuje wszystkie 8 blokad centralnie w Pythonie.
+- `tests/test_readiness.py` (nowy): 33 testów — każde kryterium, wartości graniczne 0.5 ATR i RR 1.5, progi 29/30/54/55/79/80, każda blokada, niezależność LONG i SHORT, neutralny/brak 1D, nieprawidłowe Entry/SL/TP, schemat entry_readiness.
+
+## Testy
+
+99/99 testów pytest przechodzi (test_candles, test_lifecycle, test_timeframes, test_decision_mtf, test_sr_zones, test_readiness, test_chart_payload).
+Build Vite (`npm run build`) przechodzi pomyślnie (50 modułów, bez błędów).
+
+## Zmienione pliki
+
+- `config.py` — parametry modelu gotowości
+- `analysis/readiness.py` — nowy model gotowości
+- `tests/test_readiness.py` — nowe testy modelu gotowości
+- `docs/PROGRESS.md` — ten dziennik
+
+## Nierozwiązane kwestie
+
+- Model gotowości nie jest jeszcze podłączony do głównej decyzji (zgodnie ze specyfikacją — to nastąpi w Etapie 6).
+- Wymagane ponowne wygenerowanie output/status.json i output/ohlc.json przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance) — zadanie Etapu 6.
+
+## Następny krok
+
+Czekam na komendę do Etapu 5 (cykl życia setupu analysis/setup_lifecycle.py).
 
 ## Wykonane zadania (Etap 3)
 

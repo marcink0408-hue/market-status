@@ -38,6 +38,32 @@ SR_MULTITF_TOLERANCE_ATR_MULT = 0.5
 SR_MAX_ZONES_ABOVE = 2
 SR_MAX_ZONES_BELOW = 2
 
+# --- Parametry modelu gotowości (readiness) ---
+# Wagi kryteriów (razem 100 pkt), identyczne dla LONG i SHORT.
+READINESS_WEIGHTS = {
+    "context_1d": 15,   # Kontekst 1D
+    "structure_4h": 25, # Struktura 4H
+    "sr_position": 20,  # Położenie względem S/R
+    "trigger": 30,      # Wyzwalacz 1H
+    "rr": 10,           # Stosunek zysk/ryzyko
+}
+# Progi gotowości (stałe, nie oznaczają prawdopodobieństwa zysku).
+READINESS_THRESHOLD_NO_DIRECTION = 29   # 0-29: BRAK KIERUNKU
+READINESS_THRESHOLD_OBSERVE = 54        # 30-54: OBSERWUJ
+READINESS_THRESHOLD_PREPARATION = 79    # 55-79: PRZYGOTOWANIE
+READINESS_THRESHOLD_ENTRY_CANDIDATE = 80 # 80-100: kandydat do WEJŚCIA
+# Minimalna różnica punktowa między LONG i SHORT (konfiguracyjny parametr).
+MIN_DIFFERENCE_POINTS = 5
+# Minimalne RR dla wejścia.
+MIN_RR = 1.5
+# Bufor unieważnienia w ATR.
+INVALIDATION_BUFFER_ATR_MULT = 0.25
+# Maksymalny wiek danych (liczba oczekiwanych świec danego interwału).
+MAX_DATA_AGE = 2
+# Czas życia setupu (liczba świec 4H z realnej sesji).
+SETUP_EXPIRY_BARS = 3
+CONFIRMED_VALID_BARS = 2
+
 STALE_DATA_HOURS = 8
 STALE_DATA_WARN_HOURS = 5
 DECISIONS_LOG_MAX = 200

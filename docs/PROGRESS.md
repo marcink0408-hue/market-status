@@ -88,7 +88,7 @@ Brak nowych zmian kodu — wyłącznie weryfikacja istniejącego kodu.
 
 ## Stan końcowy projektu
 
-Wszystkie 7 etapy wykonane i zaakceptowane. Projekt gotowy do dalszych prac (np. Etap 6 — ponowne wygenerowanie output/ przez run_daily.py z danymi rynkowymi, gdy będzie dostępna sieć).
+Wszystkie 7 etapy wykonane i zaakceptowane. Projekt gotowy do dalszych prac (np. Etap 10A — Prawdziwy wyzwalacz 1H zakończony: wyzwalacz 1H opiera się na rzeczywistym zamknięciu świecy 1H (wariant A: wybicie poziomu S/R; wariant B: formacja w strefie ≤0.5 ATR), nie na statusie PENDING/ACTIVE. LONG i SHORT oceniane niezależnie. Projekt gotowy do dalszych prac (Etapy 10B-10D oczekują na komendę).
 
 
 ## Wykonane zadania (Etap 4)

@@ -6,7 +6,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 from data.fetcher import fetch_all
 from analysis.renko import build_renko, renko_status
 from analysis.harmonics import detect_harmonics
-from analysis.candles import detect_candlestick_patterns
+from analysis.candles import detect_candlestick_patterns, analyze_candle
 from analysis.classic_patterns import detect_classic_patterns
 from analysis.decision import make_decision
 from analysis.lifecycle import evaluate_harmonic, evaluate_signal, harmonic_is_visible
@@ -49,6 +49,139 @@ def analyze_tf(df, tf: str, symbol: str = "") -> dict:
         }
     except Exception as e:
         return {"symbol": symbol, "timeframe": "1D" if tf == "Daily" else tf, "error": str(e)}
+
+
+def _nearest_zone_breakout(zones: list[dict], zone_type: str, current_price: float | None) -> dict | None:
+    """Dla wybicia (wariant A): strefa po właściwej stronie ceny.
+
+    Dla RESISTANCE: strefa poniżej ceny (upper <= close) — cena wybiła się powyżej.
+    Dla SUPPORT: strefa powyżej ceny (lower >= close) — cena wybiła się poniżej.
+    Zwraca najbliższą strefę w tym kierunku.
+    """
+    if not zones or current_price is None:
+        return None
+    candidates = [z for z in zones if z.get("type") == zone_type]
+    if not candidates:
+        return None
+    if zone_type == "RESISTANCE":
+        below = [z for z in candidates if z.get("upper") is not None and z["upper"] <= current_price]
+        if not below:
+            return None
+        return max(below, key=lambda z: z["upper"])
+    if zone_type == "SUPPORT":
+        above = [z for z in candidates if z.get("lower") is not None and z["lower"] >= current_price]
+        if not above:
+            return None
+        return min(above, key=lambda z: z["lower"])
+    return None
+
+
+def _zone_containing_or_near(
+    zones: list[dict],
+    zone_type: str,
+    current_price: float | None,
+    atr_value: float | None,
+) -> dict | None:
+    """Dla formacji (wariant B): strefa w której cena jest wewnątrz,
+    lub najbliższa strefa w odległości <= 0.5 ATR od jej centrum."""
+    if not zones or current_price is None:
+        return None
+    candidates = [z for z in zones if z.get("type") == zone_type]
+    if not candidates:
+        return None
+    inside = [z for z in candidates
+              if z.get("lower") is not None and z.get("upper") is not None
+              and z["lower"] <= current_price <= z["upper"]]
+    if inside:
+        return inside[0]
+    if atr_value is not None:
+        best = None
+        best_dist = float("inf")
+        for z in candidates:
+            center = z.get("center")
+            if center is None:
+                continue
+            dist = abs(current_price - center)
+            if dist <= 0.5 * atr_value and dist < best_dist:
+                best = z
+                best_dist = dist
+        if best is not None:
+            return best
+    return None
+
+
+def evaluate_trigger_1h(
+    df_1h: Any,
+    sr_zones: list[dict],
+    atr: float | None,
+    side: str,
+) -> tuple[bool, float | None]:
+    """Sprawdza czy wyzwalacz 1H jest potwierdzony dla danego kierunku.
+
+    Wariant A: zamknięcie świecy 1H za poziomem wyzwalającym (granica strefy S/R).
+    Wariant B: zamknięta, kierunkowa formacja świecowa 1H wewnątrz strefy S/R
+    lub w odległości <= 0.5 ATR od niej.
+
+    Zwraca (potwierdzone, poziom_wyzwalajacy).
+    """
+    if df_1h is None or df_1h.empty:
+        return False, None
+
+    # Ostatnia zamknięta świeca 1H (wyłącznie zamknięte, bez lookahead w przyszłość).
+    last_closed = None
+    for i in range(len(df_1h) - 1, -1, -1):
+        candle = analyze_candle(df_1h, i, "1H")
+        if candle and candle.get("is_closed"):
+            last_closed = candle
+            break
+    if last_closed is None:
+        return False, None
+
+    close = last_closed["close"]
+
+    # --- Wariant A: wybicie poziomu wyzwalającego ---
+    if side == "LONG":
+        zone = _nearest_zone_breakout(sr_zones, "RESISTANCE", close)
+        if zone is not None and zone.get("upper") is not None and close > zone["upper"]:
+            return True, float(zone["upper"])
+    else:  # SHORT
+        zone = _nearest_zone_breakout(sr_zones, "SUPPORT", close)
+        if zone is not None and zone.get("lower") is not None and close < zone["lower"]:
+            return True, float(zone["lower"])
+
+    # --- Wariant B: kierunkowa formacja świecowa 1H w strefie lub <= 0.5 ATR od niej ---
+    atr_value = _atr_value(atr) if atr is not None else None
+    candles_1h = detect_candlestick_patterns(df_1h)
+    for candle in candles_1h:
+        # Formacja musi być na ostatniej zamkniętej świecy.
+        if candle.get("time") != last_closed["time"]:
+            continue
+        if side == "LONG" and candle.get("direction") == "bullish":
+            zone = _zone_containing_or_near(sr_zones, "SUPPORT", close, atr_value)
+            if zone is None:
+                continue
+            zone_center = zone.get("center")
+            if zone_center is not None:
+                return True, float(zone_center)
+        if side == "SHORT" and candle.get("direction") == "bearish":
+            zone = _zone_containing_or_near(sr_zones, "RESISTANCE", close, atr_value)
+            if zone is None:
+                continue
+            zone_center = zone.get("center")
+            if zone_center is not None:
+                return True, float(zone_center)
+
+    return False, None
+
+
+def _atr_value(atr) -> float | None:
+    try:
+        v = float(atr)
+        if v != v or abs(v) == float("inf") or v <= 0:
+            return None
+        return v
+    except (TypeError, ValueError):
+        return None
 
 
 def analyze_symbol(symbol_key: str) -> dict:
@@ -257,11 +390,18 @@ def analyze_symbol(symbol_key: str) -> dict:
                 sr_zones=(frame or {}).get("sr_zones", []),
                 current_price=frame.get("last_close"),
             )
-        hourly_dec = decisions.get("1H") or {}
-        trigger_confirmed = hourly_dec.get("signal_status") in ("PENDING", "ACTIVE")
-        trigger_level = hourly_dec.get("entry")
-        trigger_note = ("Wyzwalacz potwierdzony na zamkniętej świecy 1H" if trigger_confirmed
-                        else "Brak potwierdzonego wyzwalacza 1H")
+        # --- Prawdziwy wyzwalacz 1H (Etap 10A) ---
+        df_1h = data.get("1H")
+        frame_1h = result["timeframes"].get("1H") or {}
+        sr_zones_1h = frame_1h.get("sr_zones") or []
+        atr_1h = frame_1h.get("atr")
+
+        trigger_confirmed_long, trigger_level_long = evaluate_trigger_1h(
+            df_1h, sr_zones_1h, atr_1h, "LONG"
+        )
+        trigger_confirmed_short, trigger_level_short = evaluate_trigger_1h(
+            df_1h, sr_zones_1h, atr_1h, "SHORT"
+        )
 
         rr_val = dec.get("rr")
         entry_val = dec.get("entry")
@@ -278,7 +418,9 @@ def analyze_symbol(symbol_key: str) -> dict:
                 "note": "Renko: " + str(renko_dir) + ", harmoniczna aktywna: " + str(harmonic_active),
             },
             "sr_position": sr_position_long,
-            "trigger": {"confirmed": trigger_confirmed, "trigger_level": trigger_level, "note": trigger_note},
+            "trigger": {"confirmed": trigger_confirmed_long, "trigger_level": trigger_level_long,
+                        "note": "Wyzwalacz 1H potwierdzony" if trigger_confirmed_long
+                        else "Brak potwierdzonego wyzwalacza 1H"},
             "rr": {"rr": rr_val, "entry": entry_val, "stop": stop_val, "target": target_val,
                    "invalidation_level": stop_val,
                    "note": "RR: " + str(rr_val) if rr_val is not None else "brak RR"},
@@ -293,7 +435,9 @@ def analyze_symbol(symbol_key: str) -> dict:
                 "note": "Renko: " + str(renko_dir) + ", harmoniczna aktywna: " + str(harmonic_active),
             },
             "sr_position": sr_position_short,
-            "trigger": {"confirmed": trigger_confirmed, "trigger_level": trigger_level, "note": trigger_note},
+            "trigger": {"confirmed": trigger_confirmed_short, "trigger_level": trigger_level_short,
+                        "note": "Wyzwalacz 1H potwierdzony" if trigger_confirmed_short
+                        else "Brak potwierdzonego wyzwalacza 1H"},
             "rr": {"rr": rr_val, "entry": entry_val, "stop": stop_val, "target": target_val,
                    "invalidation_level": stop_val,
                    "note": "RR: " + str(rr_val) if rr_val is not None else "brak RR"},

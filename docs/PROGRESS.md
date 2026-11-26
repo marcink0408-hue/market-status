@@ -20,11 +20,45 @@
 
 ## Aktualny etap migracji
 
-Etap 4 — Model gotowości (analysis/readiness.py)
+Etap 5 — Cykl życia setupu (analysis/setup_lifecycle.py)
 
 ## Status etapu
 
 Ukończony
+
+## Wykonane zadania (Etap 5)
+
+- `analysis/setup_lifecycle.py` (nowy): moduł zarządzania cyklem życia setupu.
+  - Statusy: AKTYWNY, OCZEKUJĄCY, POTWIERDZONY, UNIEWAŻNIONY, WYGASŁY.
+  - Mapowanie gotowości na status: 30-54 → AKTYWNY, 55-79 → OCZEKUJĄCY, >=80 z wyzwalaczem → POTWIERDZONY.
+  - Przejścia statusów zgodnie z tabelą ze specyfikacji (AKTYWNY↔OCZEKUJĄCY→POTWIERDZONY, UNIEWAŻNIONY/WYGASŁY jako terminalne).
+  - Unieważnienie po zamknięciu świecy 1H za poziomem unieważnienia (nie po knocie).
+  - Wygasanie: SETUP_EXPIRY_BARS=3 świec 4H (niepotwierdzony), CONFIRMED_VALID_BARS=2 świec (potwierdzony), pomijając weekendy.
+  - Pierwsieństwo statusów: UNIEWAŻNIONY > WYGASŁY > POTWIERDZONY > OCZEKUJĄCY > AKTYWNY.
+  - Zapis stanu w `output/setup_state.json` z zapisem atomowym (odporny na przerwanie), bezpieczną migracją, obsługą uszkodzonego pliku bez awarii.
+  - Nowe ID setupu tylko przy nowym setupie; nie tworzy nowego ID przy każdym uruchomieniu.
+  - Funkcja pomocnicza `manage_lifecycle()`.
+- `tests/test_setup_lifecycle.py` (nowy): 18 testów — mapowanie gotowości, tworzenie setupu, wszystkie przejścia, blokady, brak ponownego tworzenia tego samego setupu, unieważnienie, wygasanie, dane nieaktualne, wymagane pola stanu, deterministyczna historia.
+
+## Testy
+
+117/117 testów pytest przechodzi (test_candles, test_lifecycle, test_timeframes, test_decision_mtf, test_sr_zones, test_readiness, test_setup_lifecycle, test_chart_payload).
+Build Vite (`npm run build`) przechodzi pomyślnie (50 modułów, bez błędów).
+
+## Zmienione pliki
+
+- `analysis/setup_lifecycle.py` — nowy moduł cyklu życia setupu
+- `tests/test_setup_lifecycle.py` — nowe testy cyklu życia
+- `docs/PROGRESS.md` — ten dziennik
+
+## Nierozwiązane kwestie
+
+- Cykl życia nie jest jeszcze podłączony do głównej decyzji i JSON (nastąpi w Etapie 6).
+- Wymagane ponowne wygenerowanie output/status.json i output/ohlc.json przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance) — zadanie Etapu 6.
+
+## Następny krok
+
+Czekam na komendę do Etapu 6 (integracja z silnikiem i JSON).
 
 ## Wykonane zadania (Etap 4)
 

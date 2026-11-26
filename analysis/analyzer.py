@@ -11,7 +11,10 @@ from analysis.classic_patterns import detect_classic_patterns
 from analysis.decision import make_decision
 from analysis.lifecycle import evaluate_harmonic, evaluate_signal, harmonic_is_visible
 from analysis.sr_zones import compute_zones_for_symbol, zones_for_chart, validate_zones
-from config import SYMBOLS
+from analysis.readiness import calculate_readiness
+from analysis.setup_lifecycle import manage_lifecycle
+from analysis.chart_data import build_chart_payload
+from config import SYMBOLS, MAX_DATA_AGE
 import json
 from datetime import datetime, timezone
 
@@ -176,7 +179,62 @@ def analyze_symbol(symbol_key: str) -> dict:
         daily_r = (result["timeframes"].get("Daily") or {}).get("renko") or {}
         result["daily_context"] = {"up": "wzrostowy", "down": "spadkowy"}.get(daily_r.get("direction"), "neutralny")
 
-        from analysis.chart_data import build_chart_payload
+        # --- entry_readiness: model gotowości + cykl życia setupu ---
+        import pandas as _pd
+        df_4h = data.get("4H")
+        current_price = dec.get("price")
+        atr_val = dec.get("atr")
+
+        data_fresh = True
+        if df_4h is not None and not df_4h.empty:
+            try:
+                last_bar = df_4h.index[-1]
+                if hasattr(last_bar, "tz_convert"):
+                    last_bar = last_bar.tz_convert("UTC")
+                else:
+                    last_bar = last_bar.tz_localize("UTC")
+                now_utc = datetime.now(timezone.utc)
+                max_age_delta = _pd.Timedelta(hours=MAX_DATA_AGE * 4)
+                data_fresh = (now_utc - last_bar) <= max_age_delta
+            except Exception:
+                data_fresh = False
+
+        renko = tf4.get("renko") or {}
+        harmonics = tf4.get("harmonics") or []
+        harmonic_active = any(h.get("lifecycle") in ("forming", "active") for h in harmonics)
+        renko_dir = renko.get("direction", "unknown")
+        renko_aligned_long = bool(renko.get("local_low") or (renko.get("last_reversal") and renko_dir == "up"))
+        renko_aligned_short = bool(renko.get("local_high") or (renko.get("last_reversal") and renko_dir == "down"))
+
+        sr_zones = tf4.get("sr_zones") or []
+        sr_position_long = {"price_in_zone": False, "zone_distance_atr": None, "zone_type": None, "note": ""}
+        sr_position_short = {"price_in_zone": False, "zone_distance_atr": None, "zone_type": None, "note": ""}
+        if current_price is not None and atr_val:
+            for z in sr_zones:
+                z_type = z.get("type")
+                z_lower = z.get("lower")
+                z_upper = z.get("upper")
+                z_center = z.get("center")
+                if z_type == "SUPPORT":
+                    in_zone = (z_lower is not None and z_upper is not None
+                               and z_lower <= current_price <= z_upper)
+                    dist = abs(current_price - z_center) / atr_val if z_center is not None else None
+                    if in_zone:
+                        sr_position_long = {"price_in_zone": True, "zone_distance_atr": 0.0,
+                                            "zone_type": "SUPPORT", "note": "Cena wewnątrz strefy wsparcia"}
+                    elif dist is not None and dist <= 0.5:
+                        sr_position_long = {"price_in_zone": False, "zone_distance_atr": dist,
+                                            "zone_type": "SUPPORT", "note": "W odległości <= 0.5 ATR od wsparcia"}
+                elif z_type == "RESISTANCE":
+                    in_zone = (z_lower is not None and z_upper is not None
+                               and z_lower <= current_price <= z_upper)
+                    dist = abs(current_price - z_center) / atr_val if z_center is not None else None
+                    if in_zone:
+                        sr_position_short = {"price_in_zone": True, "zone_distance_atr": 0.0,
+                                             "zone_type": "RESISTANCE", "note": "Cena wewnątrz strefy oporu"}
+                    elif dist is not None and dist <= 0.5:
+                        sr_position_short = {"price_in_zone": False, "zone_distance_atr": dist,
+                                             "zone_type": "RESISTANCE", "note": "W odległości <= 0.5 ATR od oporu"}
         charts = {}
         for raw_tf, canonical in (("1H", "1H"), ("4H", "4H"), ("Daily", "1D")):
             df = data.get(raw_tf)
@@ -199,6 +257,80 @@ def analyze_symbol(symbol_key: str) -> dict:
                 sr_zones=(frame or {}).get("sr_zones", []),
                 current_price=frame.get("last_close"),
             )
+        hourly_dec = decisions.get("1H") or {}
+        trigger_confirmed = hourly_dec.get("signal_status") in ("PENDING", "ACTIVE")
+        trigger_level = hourly_dec.get("entry")
+        trigger_note = ("Wyzwalacz potwierdzony na zamkniętej świecy 1H" if trigger_confirmed
+                        else "Brak potwierdzonego wyzwalacza 1H")
+
+        rr_val = dec.get("rr")
+        entry_val = dec.get("entry")
+        stop_val = dec.get("stop")
+        target_val = dec.get("target")
+
+        long_data = {
+            "context_1d": {"bias": (decisions.get("1D") or {}).get("decision", "BRAK"),
+                           "note": "Kontekst 1D: " + str((decisions.get("1D") or {}).get("decision", "BRAK"))},
+            "structure_4h": {
+                "renko_aligned": renko_aligned_long,
+                "harmonic_active": harmonic_active,
+                "direction_match": True,
+                "note": "Renko: " + str(renko_dir) + ", harmoniczna aktywna: " + str(harmonic_active),
+            },
+            "sr_position": sr_position_long,
+            "trigger": {"confirmed": trigger_confirmed, "trigger_level": trigger_level, "note": trigger_note},
+            "rr": {"rr": rr_val, "entry": entry_val, "stop": stop_val, "target": target_val,
+                   "invalidation_level": stop_val,
+                   "note": "RR: " + str(rr_val) if rr_val is not None else "brak RR"},
+        }
+        short_data = {
+            "context_1d": {"bias": (decisions.get("1D") or {}).get("decision", "BRAK"),
+                           "note": "Kontekst 1D: " + str((decisions.get("1D") or {}).get("decision", "BRAK"))},
+            "structure_4h": {
+                "renko_aligned": renko_aligned_short,
+                "harmonic_active": harmonic_active,
+                "direction_match": True,
+                "note": "Renko: " + str(renko_dir) + ", harmoniczna aktywna: " + str(harmonic_active),
+            },
+            "sr_position": sr_position_short,
+            "trigger": {"confirmed": trigger_confirmed, "trigger_level": trigger_level, "note": trigger_note},
+            "rr": {"rr": rr_val, "entry": entry_val, "stop": stop_val, "target": target_val,
+                   "invalidation_level": stop_val,
+                   "note": "RR: " + str(rr_val) if rr_val is not None else "brak RR"},
+        }
+
+        entry_readiness = calculate_readiness(
+            symbol=symbol_key,
+            main_timeframe="4H",
+            long_data=long_data,
+            short_data=short_data,
+            current_price=current_price,
+            atr=atr_val,
+            data_fresh=data_fresh,
+            long_invalidated=False,
+            short_invalidated=False,
+            long_expired=False,
+            short_expired=False,
+        )
+
+        lifecycle_state = manage_lifecycle(
+            symbol=symbol_key,
+            direction=dec.get("decision"),
+            readiness_pct=entry_readiness["readiness_pct"],
+            trigger_confirmed=trigger_confirmed,
+            blockers=entry_readiness["blockers"],
+            invalidation_level=stop_val,
+            entry=entry_val,
+            stop=stop_val,
+            target=target_val,
+            df_4h=df_4h,
+            current_bar_index=len(df_4h) - 1 if df_4h is not None else 0,
+            next_check_time=entry_readiness.get("next_check_time"),
+            data_fresh=data_fresh,
+        )
+
+        result["entry_readiness"] = entry_readiness
+        result["setup_lifecycle"] = lifecycle_state
         result["_charts"] = charts
         result["_chart"] = charts.get("4H")
 

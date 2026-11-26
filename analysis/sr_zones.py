@@ -117,7 +117,7 @@ def group_swings_into_zones(
             age_bars = max(0, last_bar_index - latest_bar)
 
             zone = {
-                "id": f"{zone_type}_{symbol}_{group[0]['interval']}_{int(center * 10000)}",
+                "id": f"{zone_type}_{group[0]['symbol']}_{group[0]['interval']}_{int(center * 10000)}",
                 "type": zone_type,
                 "lower": lower,
                 "upper": upper,

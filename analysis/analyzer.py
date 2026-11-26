@@ -104,6 +104,7 @@ def analyze_symbol(symbol_key: str) -> dict:
         result["stop"] = dec["stop"]
         result["target"] = dec.get("target")
         result["rr"] = dec.get("rr")
+        result["levels_source_timeframe"] = dec.get("levels_timeframe", "4H")
         result["price"] = dec["price"]
         result["pillars"] = dec.get("pillars", 0)
         result["modules"] = dec.get("modules") or {}

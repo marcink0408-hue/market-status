@@ -162,10 +162,35 @@ def _context_bias(analysis):
     return {"bias": bias, "confidence": confidence, "available": True}
 
 
-def _apply_mtf_context(result, side, daily_analysis, hourly_analysis):
-    base = int(result.get("confidence") or 0)
-    score = float(base)
-    alignment = {"4H": {"bias": side if result.get("decision") in ("LONG", "SHORT") else "BRAK", "status": "main", "score": base}}
+def _mtf_adjustment_for_side(direction, daily_analysis, hourly_analysis):
+    """Oblicza korektę MTF osobno dla danego kierunku (LONG/SHORT).
+    Zwraca (wartość_korekty, dict relacji per interwał).
+    Nie przenosi punktów między kierunkami.
+    """
+    adjustment = 0.0
+    relations = {}
+    for tf, analysis, weight in (("1D", daily_analysis, MTF_CONTEXT_WEIGHTS["1D"]),
+                                  ("1H", hourly_analysis, MTF_CONTEXT_WEIGHTS["1H"])):
+        context = _context_bias(analysis)
+        if not context["available"]:
+            relations[tf] = {"status": "missing", "bias": "BRAK", "confidence": 0, "adjustment": 0.0}
+            continue
+        if context["bias"] == "BRAK":
+            relations[tf] = {"status": "neutral", "bias": "BRAK", "confidence": context["confidence"], "adjustment": 0.0}
+        elif context["bias"] == direction:
+            adj = context["confidence"] * weight
+            adjustment += adj
+            relations[tf] = {"status": "confirms", "bias": context["bias"], "confidence": context["confidence"], "adjustment": adj}
+        else:
+            adj = -context["confidence"] * weight
+            adjustment += adj
+            relations[tf] = {"status": "conflict", "bias": context["bias"], "confidence": context["confidence"], "adjustment": adj}
+    return adjustment, relations
+
+
+def _apply_mtf_alignment(result, side, daily_analysis, hourly_analysis):
+    """Buduje timeframe_alignment i daily_align dla wybranej strony bez zmiany confidence."""
+    alignment = {"4H": {"bias": side if result.get("decision") in ("LONG", "SHORT") else "BRAK", "status": "main", "score": int(result.get("confidence") or 0)}}
     for tf, analysis in (("1D", daily_analysis), ("1H", hourly_analysis)):
         context = _context_bias(analysis)
         relation = "missing"
@@ -174,17 +199,9 @@ def _apply_mtf_context(result, side, daily_analysis, hourly_analysis):
                 relation = "neutral"
             elif context["bias"] == side:
                 relation = "confirms"
-                score += context["confidence"] * MTF_CONTEXT_WEIGHTS[tf]
             else:
                 relation = "conflict"
-                score -= context["confidence"] * MTF_CONTEXT_WEIGHTS[tf]
         alignment[tf] = {**context, "status": relation}
-        if relation == "confirms":
-            result["reasons"].append(f"{tf}: potwierdza kierunek {side} (kontekst, nie osobny sygnal)")
-        elif relation == "conflict":
-            result["reasons"].append(f"UWAGA {tf}: konflikt kierunku ({context['bias']} vs {side})")
-    result["base_confidence"] = base
-    result["confidence"] = int(min(max(round(score), 0), 100))
     result["timeframe_alignment"] = alignment
     daily = alignment["1D"]
     result["daily_align"] = 1 if daily["status"] == "confirms" else -1 if daily["status"] == "conflict" else 0
@@ -227,7 +244,7 @@ def make_decision(
         else:
             daily_align_long, daily_align_short = -1, 1
 
-    def eval_side(is_long: bool):
+    def eval_side(is_long: bool, daily_analysis=None, hourly_analysis=None):
         reasons = []
         direction = "bullish" if is_long else "bearish"
         has_renko = renko_long if is_long else renko_short
@@ -263,17 +280,20 @@ def make_decision(
         elif daily_align == -1:
             reasons.append("Daily: przeciwny kierunek Renko")
         context_align = daily_align if daily_analysis is None and hourly_analysis is None else 0
-        conf = _confidence(has_renko, has_harm, has_candle, leg, h, c, contradiction, context_align)
+        base_conf = _confidence(has_renko, has_harm, has_candle, leg, h, c, contradiction, context_align)
+        mtf_adj, mtf_relations = _mtf_adjustment_for_side("LONG" if is_long else "SHORT", daily_analysis, hourly_analysis)
+        conf = int(min(max(round(base_conf + mtf_adj), 0), 100))
         pillars = sum([has_renko, has_harm, has_candle])
         min_conf = _min_conf_for_combo(has_renko, has_harm, has_candle)
         return {
-            "pillars": pillars, "conf": conf, "min_conf": min_conf, "reasons": reasons,
+            "pillars": pillars, "conf": conf, "base_conf": base_conf, "min_conf": min_conf, "reasons": reasons,
             "h": h, "c": c, "has_renko": has_renko, "has_harm": has_harm, "has_candle": has_candle,
             "contradiction": contradiction, "daily_align": daily_align,
+            "mtf_adjustment": mtf_adj, "mtf_relations": mtf_relations,
         }
 
-    long_s = eval_side(True)
-    short_s = eval_side(False)
+    long_s = eval_side(True, daily_analysis, hourly_analysis)
+    short_s = eval_side(False, daily_analysis, hourly_analysis)
 
     def can_pick(s):
         if s["contradiction"] and s["pillars"] < 3:
@@ -289,11 +309,6 @@ def make_decision(
         pick = "LONG"
     if can_pick(short_s) and (not can_pick(long_s) or short_s["conf"] >= long_s["conf"] + 8):
         if pick is None or short_s["conf"] > long_s["conf"] + 8:
-            pick = "SHORT"
-    if pick is None:
-        if long_s["pillars"] >= 3 and can_pick(long_s) and long_s["conf"] >= short_s["conf"]:
-            pick = "LONG"
-        elif short_s["pillars"] >= 3 and can_pick(short_s) and short_s["conf"] >= long_s["conf"]:
             pick = "SHORT"
 
     if pick in ("LONG", "SHORT"):
@@ -325,32 +340,28 @@ def make_decision(
             result["reasons"] = ["Brak sygnalow wejscia na 4H"]
 
     result["directional_scores"] = {"LONG": long_s["conf"], "SHORT": short_s["conf"]}
-    result["base_confidence"] = result["confidence"]
+    best_base = long_s["base_conf"] if long_s["base_conf"] >= short_s["base_conf"] else short_s["base_conf"]
+    result["base_confidence"] = best_base
+    result["mtf_long_adjustment"] = long_s.get("mtf_adjustment", 0.0)
+    result["mtf_short_adjustment"] = short_s.get("mtf_adjustment", 0.0)
+    result["mtf_long_relations"] = long_s.get("mtf_relations", {})
+    result["mtf_short_relations"] = short_s.get("mtf_relations", {})
     own_levels = {
         "timeframe": timeframe, "signal_timeframe": timeframe,
         "entry": result.get("entry"), "stop": result.get("stop"),
         "target": result.get("target"), "rr": result.get("rr"),
     }
     result["levels_by_timeframe"] = {timeframe: own_levels}
+    alignment_side = pick if pick in ("LONG", "SHORT") else "BRAK"
     if daily_analysis is not None or hourly_analysis is not None:
-        reference_side = pick or ("LONG" if long_s["conf"] >= short_s["conf"] else "SHORT")
-        _apply_mtf_context(result, reference_side, daily_analysis, hourly_analysis)
-
-        # Precyzja 1H jest używana tylko jako kompletny, spójny zestaw zgodny z 4H.
-        hourly_levels = (hourly_analysis or {}).get("levels_by_timeframe", {}).get("1H")
-        if (
-            pick in ("LONG", "SHORT") and (hourly_analysis or {}).get("decision") == pick
-            and hourly_levels and all(hourly_levels.get(k) is not None for k in ("entry", "stop", "target"))
-            and (hourly_analysis or {}).get("signal_status", "PENDING") in {"PENDING", "ACTIVE"}
-        ):
-            result["levels_by_timeframe"]["1H"] = hourly_levels
-            result.update({
-                "entry": hourly_levels["entry"], "stop": hourly_levels["stop"],
-                "target": hourly_levels["target"], "rr": hourly_levels.get("rr"),
-                "levels_timeframe": "1H", "levels_basis": "Sygnal 1H zgodny z glownym kierunkiem 4H",
-            })
-        else:
-            result["levels_basis"] = "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow"
+        _apply_mtf_alignment(result, alignment_side, daily_analysis, hourly_analysis)
+        result["levels_basis"] = f"Sygnal {timeframe}; MTF ustawiony dla {alignment_side}"
     else:
+        result["timeframe_alignment"] = {
+            "4H": {"bias": alignment_side, "status": "main", "score": result["confidence"]},
+            "1D": {"status": "missing", "bias": "BRAK", "confidence": 0},
+            "1H": {"status": "missing", "bias": "BRAK", "confidence": 0},
+        }
+        result["daily_align"] = 0
         result["levels_basis"] = f"Sygnal {timeframe}"
     return result

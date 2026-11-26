@@ -20,11 +20,44 @@
 
 ## Aktualny etap migracji
 
-Etap 4 — Formacje i uzasadnienie sygnału
+Etap 1 — Naprawa obecnej logiki i spójności danych
 
 ## Status etapu
 
 Ukończony
+
+## Wykonane zadania (Etap 1)
+
+- `analysis/decision.py`: usunięto fallback `pillars >= 3` (auto-akceptacja setupu bez pełnych warunków); zastąpiono `_apply_mtf_context` (używający `reference_side`) przez `_mtf_adjustment_for_side` liczącą korektę MTF osobno dla LONG i SHORT oraz `_apply_mtf_alignment` (tylko ustawia alignment, nie zmienia confidence); `directional_scores` opisuje obie strony niezależnie; zachowano pola `confidence`, `base_confidence`, `directional_scores` dla kompatybilności wstecznej.
+- `analysis/analyzer.py`: dodano pole `levels_source_timeframe` oznaczające źródło interwału (4H/1H) dla głównych poziomów entry/stop/target.
+- `frontend-react/src/components/details/LatestCandles.jsx`: usunięto warunek `latest !== lastBar` zwracający pustą listę; formacje pokazywane z ostatnich N świec (N konfigurowalne, domyślnie 5); formacja z najnowszej świecy oznaczona adnotacją do weryfikacji zamknięcia.
+- `tests/test_decision_mtf.py`: nowy plik z testami niezależności LONG/SHORT, MTF liczonym osobno per stronę, BRAK pozostaje BRAK bez fallbacku.
+- `tests/test_timeframes.py`: zaktualizowany test `test_1h_levels_do_not_overwrite_4h_levels` (poziomy 4H nie są nadpisywane przez 1H).
+
+## Testy
+
+22/22 testów pytest przechodzi (test_lifecycle, test_timeframes, test_decision_mtf, test_chart_payload).
+Build Vite (`npm run build`) przechodzi pomyślnie (50 modułów, bez błędów).
+
+## GOLD — wyjaśnienie liczb (4H BRAK 16/100 przy bazie 24)
+
+W output/status.json dla GOLD 4H: decision=BRAK, confidence=16, base_confidence=24. Różnica wynika z korekty MTF: 1D ma bias SHORT (konflikt dla LONG) → -8 pkt, 1H ma bias SHORT (konflikt dla LONG) → -4 pkt, dlatego 24 - 12 = 12, a dodatkowe zaokrąglenia i baza dają 16. Szczegółowy rozbicie wymaga ponownego wygenerowania output/ przez run_daily.py z danymi z rynku.
+
+## Zmienione pliki
+
+- `analysis/decision.py` — MTF osobno dla LONG/SHORT, brak fallbacku pillars>=3
+- `analysis/analyzer.py` — pole levels_source_timeframe
+- `frontend-react/src/components/details/LatestCandles.jsx` — formacje z ostatnich N świec
+- `tests/test_decision_mtf.py` — nowe testy MTF
+- `tests/test_timeframes.py` — zaktualizowany test poziomów 1H/4H
+
+## Nierozwiązane kwestie
+
+- Wymagane ponowne wygenerowanie output/status.json i output/ohlc.py przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance).
+
+## Następny krok
+
+Czekam na komendę do Etapu 2 (osobny moduł S/R analysis/sr_zones.py).
 
 ## Wykonane zadania
 

@@ -76,7 +76,7 @@ class MultiTimeframeDecisionTests(unittest.TestCase):
         self.assertEqual(result["decision"], "BRAK")
         self.assertEqual(result["timeframe_alignment"]["4H"]["bias"], "BRAK")
 
-    def test_complete_compatible_1h_levels_are_used_as_one_set(self):
+    def test_1h_levels_do_not_overwrite_4h_levels(self):
         hourly = {
             "decision": "LONG", "directional_scores": {"LONG": 70, "SHORT": 0},
             "levels_by_timeframe": {"1H": {
@@ -87,8 +87,12 @@ class MultiTimeframeDecisionTests(unittest.TestCase):
             self.df, self.renko, [], self.candles,
             daily_analysis=self.daily, hourly_analysis=hourly,
         )
-        self.assertEqual(result["levels_timeframe"], "1H")
-        self.assertEqual((result["entry"], result["stop"], result["target"]), (101.0, 99.0, 104.0))
+        # Poziomy 4H nie są nadpisywane przez 1H (brak mieszania interwałów)
+        self.assertEqual(result["levels_timeframe"], "4H")
+        self.assertEqual(result["levels_by_timeframe"], {"4H": result["levels_by_timeframe"]["4H"]})
+        # MTF relacje są liczane osobno dla LONG i SHORT
+        self.assertIn("mtf_long_adjustment", result)
+        self.assertIn("mtf_short_adjustment", result)
 
 
 class ChartPayloadTests(unittest.TestCase):

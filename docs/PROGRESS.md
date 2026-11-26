@@ -20,45 +20,50 @@
 
 ## Aktualny etap migracji
 
-Etap 5 — Cykl życia setupu (analysis/setup_lifecycle.py)
+Etap 7 — Interfejs użytkownika
 
 ## Status etapu
 
 Ukończony
 
-## Wykonane zadania (Etap 5)
+## Wykonane zadania (Etap 7)
 
-- `analysis/setup_lifecycle.py` (nowy): moduł zarządzania cyklem życia setupu.
-  - Statusy: AKTYWNY, OCZEKUJĄCY, POTWIERDZONY, UNIEWAŻNIONY, WYGASŁY.
-  - Mapowanie gotowości na status: 30-54 → AKTYWNY, 55-79 → OCZEKUJĄCY, >=80 z wyzwalaczem → POTWIERDZONY.
-  - Przejścia statusów zgodnie z tabelą ze specyfikacji (AKTYWNY↔OCZEKUJĄCY→POTWIERDZONY, UNIEWAŻNIONY/WYGASŁY jako terminalne).
-  - Unieważnienie po zamknięciu świecy 1H za poziomem unieważnienia (nie po knocie).
-  - Wygasanie: SETUP_EXPIRY_BARS=3 świec 4H (niepotwierdzony), CONFIRMED_VALID_BARS=2 świec (potwierdzony), pomijając weekendy.
-  - Pierwsieństwo statusów: UNIEWAŻNIONY > WYGASŁY > POTWIERDZONY > OCZEKUJĄCY > AKTYWNY.
-  - Zapis stanu w `output/setup_state.json` z zapisem atomowym (odporny na przerwanie), bezpieczną migracją, obsługą uszkodzonego pliku bez awarii.
-  - Nowe ID setupu tylko przy nowym setupie; nie tworzy nowego ID przy każdym uruchomieniu.
-  - Funkcja pomocnicza `manage_lifecycle()`.
-- `tests/test_setup_lifecycle.py` (nowy): 18 testów — mapowanie gotowości, tworzenie setupu, wszystkie przejścia, blokady, brak ponownego tworzenia tego samego setupu, unieważnienie, wygasanie, dane nieaktualne, wymagane pola stanu, deterministyczna historia.
+- `frontend-react/src/components/details/SetupSummary.jsx` (nowy): panel główny wyświetlający wyłącznie dane `entry_readiness` z JSON:
+  1. Instrument i główny interwał
+  2. Kierunek: LONG / SHORT / BRAK KIERUNKU (z kolorem)
+  3. Etap setupu (BRAK KIERUNKU / OBSERWUJ / PRZYGOTOWANIE / KANDYDAT DO WEJŚCIA)
+  4. "Gotowość setupu: X%" z adnotacją że to nie szansa na zysk
+  5. Najważniejszy brakujący warunek (pierwszy z listy missing)
+  6. Poziom unieważnienia
+  7. Status setupu (AKTYWNY / OCZEKUJĄCY / POTWIERDZONY / UNIEWAŻNIONY / WYGASŁY)
+  8. Najbliższa ocena warunków (next_check_time)
+  9. "Dane z:" z rzeczywistym czasem (data_as_of)
+  10. Zgodność interwałów: 1D — kierunek, 4H — setup, 1H — wyzwalacz
+  - Przy POTWIERDZONY: "Warunki setupu spełnione. To nie jest rekomendacja inwestycyjna."
+  - Przy entry_allowed: Entry, SL, TP, RR
+  - Stała adnotacja: "Narzędzie analityczne, nie rekomendacja inwestycyjna."
+  - Bezpieczna obsługa braku entry_readiness (komunikat zamiast pozornych wartości)
+  - React wyłącznie wyświetla dane, nie przelicza gotowości ani nie egzekwuje blokad
+- `frontend-react/src/components/details/InstrumentDetails.jsx`: dodano SetupSummary na górze sekcji detali
 
 ## Testy
 
 117/117 testów pytest przechodzi (test_candles, test_lifecycle, test_timeframes, test_decision_mtf, test_sr_zones, test_readiness, test_setup_lifecycle, test_chart_payload).
-Build Vite (`npm run build`) przechodzi pomyślnie (50 modułów, bez błędów).
+Build Vite (`npm run build`) przechodzi pomyślnie (51 modułów, bez błędów).
 
 ## Zmienione pliki
 
-- `analysis/setup_lifecycle.py` — nowy moduł cyklu życia setupu
-- `tests/test_setup_lifecycle.py` — nowe testy cyklu życia
+- `frontend-react/src/components/details/SetupSummary.jsx` — nowy komponent panelu głównego
+- `frontend-react/src/components/details/InstrumentDetails.jsx` — dodano SetupSummary
 - `docs/PROGRESS.md` — ten dziennik
 
 ## Nierozwiązane kwestie
 
-- Cykl życia nie jest jeszcze podłączony do głównej decyzji i JSON (nastąpi w Etapie 6).
-- Wymagane ponowne wygenerowanie output/status.json i output/ohlc.json przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance) — zadanie Etapu 6.
+- Wymagane ponowne wygenerowanie output/status.json i output/ohlc.json przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance).
 
 ## Następny krok
 
-Czekam na komendę do Etapu 6 (integracja z silnikiem i JSON).
+Czekam na komendę do Etapu 8 (testy końcowe i odbiór).
 
 ## Wykonane zadania (Etap 4)
 

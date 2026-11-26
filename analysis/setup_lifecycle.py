@@ -5,7 +5,7 @@ import json
 import math
 import os
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -129,6 +129,8 @@ class SetupLifecycle:
             "conditions_missing": [],
             "next_check_time": None,
             "expires_at": None,
+            "last_setup_bar_index": -1,
+            "setup_confirmed_at": None,
             "status_history": [],
         }
 
@@ -159,11 +161,13 @@ class SetupLifecycle:
             "at": _now_iso(),
         })
 
-    def _set_status(self, new_status: str, reason: str) -> None:
+    def _set_status(self, new_status: str, reason: str, at_iso: str | None = None) -> None:
         old_status = self.state.get("status")
         if old_status == new_status:
             return
         self.state["status"] = new_status
+        if new_status == STATUS_POTWIERDZONY:
+            self.state["setup_confirmed_at"] = at_iso or _now_iso()
         self._append_history(old_status, new_status, reason)
         self._save_state()
 
@@ -192,8 +196,12 @@ class SetupLifecycle:
             self._save_state()
             return self.get_state()
 
-        invalidation_triggered = self._check_invalidation(df_4h, current_bar_index, direction)
+        # Ostatnia rzeczywiście zamknięta świeca 4H (nie automatycznie ostatni wiersz).
+        closed_bar_index = self._last_closed_bar_index(df_4h, current_bar_index)
+
+        invalidation_triggered = self._check_invalidation(df_4h, closed_bar_index, direction)
         if invalidation_triggered:
+            self.state["last_setup_bar_index"] = closed_bar_index
             self._set_status(STATUS_UNIEWAŻNIONY, invalidation_triggered)
             self.state["direction"] = None
             self.state["conditions_met"] = []
@@ -201,8 +209,9 @@ class SetupLifecycle:
             self._save_state()
             return self.get_state()
 
-        expiry_reason = self._check_expiry(df_4h, current_bar_index, current_status)
+        expiry_reason = self._check_expiry(df_4h, closed_bar_index, current_status)
         if expiry_reason:
+            self.state["last_setup_bar_index"] = closed_bar_index
             self._set_status(STATUS_WYGASŁY, expiry_reason)
             self.state["direction"] = None
             self.state["conditions_met"] = []
@@ -235,36 +244,61 @@ class SetupLifecycle:
 
         target_status = _status_from_readiness(readiness_pct)
 
+        # Zasada: nowy setup może powstać najwcześniej na następnej zamkniętej świecy 4H
+        # po zakończeniu poprzedniego setupu.
+        next_bar_allowed = self.state.get("last_setup_bar_index", -1) + 1
+
         if current_status in TERMINAL_STATUSES:
-            if direction and readiness_pct >= 30 and not has_terminal_blocker:
+            if (direction and readiness_pct >= 30 and not has_terminal_blocker
+                    and closed_bar_index >= next_bar_allowed):
                 self._create_new_setup(direction, readiness_pct, trigger_confirmed,
                                        invalidation_level, entry, stop, target,
-                                       df_4h, current_bar_index, next_check_time)
+                                       df_4h, closed_bar_index, next_check_time)
             self.state["conditions_missing"] = blockers
             self._save_state()
             return self.get_state()
 
         if current_status is None:
-            if direction and readiness_pct >= 30 and not has_terminal_blocker:
+            if direction and readiness_pct >= 30 and not has_terminal_blocker and closed_bar_index >= next_bar_allowed:
+                if readiness_pct >= 80 and trigger_confirmed:
+                    # Gotowość >= 80 z potwierdzonym wyzwalaczem → od razu POTWIERDZONY
+                    new_status = STATUS_POTWIERDZONY
+                elif readiness_pct >= 55:
+                    new_status = STATUS_OCZEKUJĄCY
+                else:
+                    new_status = STATUS_AKTYWNY
                 self._create_new_setup(direction, readiness_pct, trigger_confirmed,
                                        invalidation_level, entry, stop, target,
-                                       df_4h, current_bar_index, next_check_time)
+                                       df_4h, closed_bar_index, next_check_time,
+                                       new_status)
             self.state["conditions_missing"] = blockers
             self._save_state()
             return self.get_state()
+
+        # Znacznik czasu ostatniej zamkniętej świecy 4H (dla trwałego zapisu potwierdzenia).
+        current_candle_iso = None
+        try:
+            cc = df_4h.index[closed_bar_index]
+            if hasattr(cc, "tz_convert"):
+                cc = cc.tz_convert("UTC")
+            elif hasattr(cc, "tz_localize"):
+                cc = cc.tz_localize("UTC")
+            current_candle_iso = cc.strftime("%Y-%m-%dT%H:%M:%SZ")
+        except Exception:
+            current_candle_iso = None
 
         if current_status == STATUS_AKTYWNY:
             if readiness_pct >= 55 and (not trigger_confirmed or has_terminal_blocker):
                 self._set_status(STATUS_OCZEKUJĄCY, "Gotowość >= 55, brak potwierdzonego wyzwalacza lub blokada")
             elif readiness_pct >= 80 and trigger_confirmed and not has_terminal_blocker:
-                self._set_status(STATUS_POTWIERDZONY, "Gotowość >= 80, wyzwalacz potwierdzony, brak blokady")
+                self._set_status(STATUS_POTWIERDZONY, "Gotowość >= 80, wyzwalacz potwierdzony, brak blokady", current_candle_iso)
             self.state["conditions_missing"] = blockers
             self._save_state()
             return self.get_state()
 
         if current_status == STATUS_OCZEKUJĄCY:
             if readiness_pct >= 80 and trigger_confirmed and not has_terminal_blocker:
-                self._set_status(STATUS_POTWIERDZONY, "Gotowość >= 80, wyzwalacz potwierdzony, brak blokady")
+                self._set_status(STATUS_POTWIERDZONY, "Gotowość >= 80, wyzwalacz potwierdzony, brak blokady", current_candle_iso)
             elif 30 <= readiness_pct <= 54:
                 self._set_status(STATUS_AKTYWNY, "Gotowość spadła poniżej 55")
             self.state["conditions_missing"] = blockers
@@ -292,23 +326,54 @@ class SetupLifecycle:
         df_4h,
         current_bar_index: int,
         next_check_time: str | None,
+        new_status: str | None = None,
     ) -> None:
         setup_id = self._new_setup_id()
-        expires_at = None
-        if readiness_pct is not None and readiness_pct >= 80 and trigger_confirmed:
+        now_iso = _now_iso()
+        if new_status is not None:
+            status = new_status
+        elif readiness_pct is not None and readiness_pct >= 80 and trigger_confirmed:
             status = STATUS_POTWIERDZONY
-            expires_at = self._compute_expires_at(df_4h, current_bar_index, CONFIRMED_VALID_BARS)
         else:
             status = STATUS_AKTYWNY if 30 <= (readiness_pct or 0) <= 54 else STATUS_OCZEKUJĄCY
-            expires_at = self._compute_expires_at(df_4h, current_bar_index, SETUP_EXPIRY_BARS)
+
+        # Liczba świec do wygaśnięcia dla tego statusu.
+        bars_needed = CONFIRMED_VALID_BARS if status == STATUS_POTWIERDZONY else SETUP_EXPIRY_BARS
+
+        # Znacznik czasu świecy na której utworzono setup (nie czas zegara).
+        created_candle_iso = None
+        try:
+            cb = df_4h.index[current_bar_index]
+            if hasattr(cb, "tz_convert"):
+                cb = cb.tz_convert("UTC")
+            elif hasattr(cb, "tz_localize"):
+                cb = cb.tz_localize("UTC")
+            created_candle_iso = cb.strftime("%Y-%m-%dT%H:%M:%SZ")
+        except Exception:
+            created_candle_iso = now_iso
+
+        # expires_at tylko dla kompatybilności wstecznej — nie używane w logice wygasania.
+        expires_at = None
+        try:
+            target_idx = current_bar_index + bars_needed
+            if df_4h is not None and not df_4h.empty:
+                idx = min(target_idx, len(df_4h) - 1)
+                tb = df_4h.index[idx]
+                if hasattr(tb, "tz_convert"):
+                    tb = tb.tz_convert("UTC")
+                elif hasattr(tb, "tz_localize"):
+                    tb = tb.tz_localize("UTC")
+                expires_at = tb.strftime("%Y-%m-%dT%H:%M:%SZ")
+        except Exception:
+            expires_at = None
 
         self.state = {
             "symbol": self.symbol,
             "setup_id": setup_id,
             "direction": direction,
             "main_timeframe": "4H",
-            "created_at": _now_iso(),
-            "updated_at": _now_iso(),
+            "created_at": created_candle_iso,
+            "updated_at": now_iso,
             "trigger_level": entry,
             "invalidation_level": invalidation_level,
             "status": status,
@@ -316,7 +381,9 @@ class SetupLifecycle:
             "conditions_missing": [] if trigger_confirmed else ["Brak potwierdzonego wyzwalacza 1H"],
             "next_check_time": next_check_time,
             "expires_at": expires_at,
-            "status_history": [{"from": None, "to": status, "reason": "Nowy setup", "at": _now_iso()}],
+            "last_setup_bar_index": current_bar_index,
+            "setup_confirmed_at": created_candle_iso if status == STATUS_POTWIERDZONY else None,
+            "status_history": [{"from": None, "to": status, "reason": "Nowy setup", "at": now_iso}],
         }
         self._save_state()
 
@@ -333,43 +400,90 @@ class SetupLifecycle:
             return "Zamknięcie świecy 1H powyżej poziomu unieważnienia"
         return None
 
-    def _check_expiry(self, df_4h, current_bar_index: int, current_status: str | None) -> str | None:
-        if current_status in TERMINAL_STATUSES or not self.state.get("expires_at"):
-            return None
-        expires_at = self.state["expires_at"]
-        if df_4h is None or df_4h.empty:
-            return None
-        try:
-            last_bar_time = df_4h.index[-1]
-            if hasattr(last_bar_time, "tz_localize"):
-                last_bar_time = last_bar_time.tz_localize("UTC") if last_bar_time.tzinfo is None else last_bar_time.tz_convert("UTC")
-            expires_dt = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
-            if last_bar_time >= expires_dt:
-                if current_status == STATUS_POTWIERDZONY:
-                    return "Setup potwierdzony wygasł po CONFIRMED_VALID_BARS świecach"
-                else:
-                    return "Setup niepotwierdzony wygasł po SETUP_EXPIRY_BARS świecach"
-        except (ValueError, TypeError):
-            pass
-        return None
+    def _last_closed_bar_index(self, df_4h, current_bar_index: int) -> int:
+        """Zwraca indeks ostatniej rzeczywiście zamkniętej świecy 4H.
 
-    def _compute_expires_at(self, df_4h, current_bar_index: int, bars_count: int) -> str | None:
-        if df_4h is None or df_4h.empty:
+        Jeśli ostatnia świeca w df_4h jest jeszcze tworzona (jej czas otwarcia +
+        4h jest w przyszłości względem teraz), zwraca indeks poprzedniej świecy.
+        W przeciwnym razie zwraca current_bar_index.
+
+        Jeśli nie można wiarygodnie rozpoznać zamknięcia (brak strefy czasowej,
+        błąd), zwraca current_bar_index — zakładając że df_4h już zawiera
+        wyłącznie zamknięte świece (np. przefiltrowane przez drop_incomplete_bar
+        w warstwie pobierania danych).
+        """
+        if df_4h is None or df_4h.empty or current_bar_index < 0:
+            return current_bar_index
+        try:
+            last_ts = df_4h.index[current_bar_index]
+            if hasattr(last_ts, "tz_convert"):
+                last_ts = last_ts.tz_convert("UTC")
+            elif hasattr(last_ts, "tz_localize"):
+                last_ts = last_ts.tz_localize("UTC")
+            else:
+                return current_bar_index
+            now_utc = datetime.now(timezone.utc)
+            # Świeca 4H otwierająca się o last_ts jest zamknięta jeśli
+            # last_ts + 4h <= teraz. W przeciwnym razie jest nadal tworzona.
+            if last_ts + timedelta(hours=4) > now_utc:
+                return current_bar_index - 1
+            return current_bar_index
+        except Exception:
+            return current_bar_index
+
+    def _count_bars_after(self, df_4h, reference_iso: str | None, current_bar_index: int | None = None) -> int | None:
+        """Licz rzeczywiste zamknięte świece 4H po podanym znaczniku czasu.
+
+        Zwraca liczbę świec w df_4h z indeksem czasowym większym niż reference_iso,
+        licząc wyłącznie świece do pozycji current_bar_index (brak lookahead).
+        Zwraca None jeśli nie można wiarygodnie ustalić liczby.
+        """
+        if df_4h is None or df_4h.empty or reference_iso is None:
             return None
         try:
-            last_bar_time = df_4h.index[-1]
-            if hasattr(last_bar_time, "tz_localize"):
-                last_bar_time = last_bar_time.tz_localize("UTC") if last_bar_time.tzinfo is None else last_bar_time.tz_convert("UTC")
-            from datetime import timedelta
-            cursor = last_bar_time
-            count = 0
-            while count < bars_count:
-                cursor = cursor + timedelta(hours=4)
-                if cursor.weekday() < 5:
-                    count += 1
-            return cursor.strftime("%Y-%m-%dT%H:%M:%SZ")
-        except Exception:
+            ref_dt = datetime.fromisoformat(reference_iso.replace("Z", "+00:00"))
+        except (ValueError, TypeError):
             return None
+        # Ogranicz do danych dostępnych do current_bar_index (brak lookahead w przyszłe dane)
+        if current_bar_index is not None:
+            df_4h = df_4h.iloc[:current_bar_index + 1]
+        count = 0
+        for stamp in df_4h.index:
+            try:
+                ts = stamp.tz_convert("UTC") if stamp.tzinfo else stamp.tz_localize("UTC")
+            except Exception:
+                continue
+            if ts > ref_dt:
+                count += 1
+        return count
+
+    def _check_expiry(self, df_4h, current_bar_index: int, current_status: str | None) -> str | None:
+        if current_status in TERMINAL_STATUSES:
+            return None
+        if current_status not in (STATUS_AKTYWNY, STATUS_OCZEKUJĄCY, STATUS_POTWIERDZONY):
+            return None
+        if df_4h is None or df_4h.empty:
+            return None
+
+        if current_status == STATUS_POTWIERDZONY:
+            reference = self.state.get("setup_confirmed_at")
+            required = CONFIRMED_VALID_BARS
+        else:
+            reference = self.state.get("created_at")
+            required = SETUP_EXPIRY_BARS
+
+        if reference is None:
+            return None
+
+        bars_after = self._count_bars_after(df_4h, reference, current_bar_index)
+        if bars_after is None:
+            return None
+        if bars_after >= required:
+            if current_status == STATUS_POTWIERDZONY:
+                return "Setup potwierdzony wygasł po CONFIRMED_VALID_BARS świecach"
+            else:
+                return "Setup niepotwierdzony wygasł po SETUP_EXPIRY_BARS świecach"
+        return None
 
     def get_state(self) -> dict[str, Any]:
         return dict(self.state)

@@ -61,9 +61,35 @@ Build Vite (`npm run build`) przechodzi pomyślnie (51 modułów, bez błędów)
 
 - Wymagane ponowne wygenerowanie output/status.json i output/ohlc.json przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance).
 
-## Następny krok
+## Etap 8 — Testy końcowe i odbiór (ukończony)
 
-Czekam na komendę do Etapu 8 (testy końcowe i odbiór).
+## Status etapu
+
+Ukończony
+
+## Wyniki kontroli integracyjnej (Etap 8)
+
+- **8A Logika**: 117 testów pytest — niezależność LONG/SHORT, MTF bez przenoszenia punktów między kierunkami, neutralny 1D nie blokuje kierunku, brak danych nie wymusza kierunku, BRAK KIERUNKU nie zamienia się w sygnał, gotowość nie omija żadnej blokady, RR poniżej 1.5 blokuje wejście, brak wyzwalacza blokuje wejście, nieaktualne/niekompletne dane blokują wejście, unieważnienie blokuje wejście, wygaśnięcie blokuje wejście, niezamknięta świeca nie jest wyzwalaczem, POTWIERDZONY tylko po spełnieniu wszystkich warunków.
+- **8B S/R**: test_sr_zones.py — swingi bez lookahead, grupowanie 0.5*ATR, liczba niezależnych reakcji, ranking deterministyczny, wsparcie i opór, dopasowanie wielointerwałowe (nakładanie się w tolerancji 0.5*ATR).
+- **8C Wykres**: PriceChart.jsx renderuje strefy S/R (price lines bez rozszerzania autoskali), markery filtrowane przez identityMatches (symbol + interwał), brak starych markerów i poziomów po zmianie instrumentu/danych.
+- **8D Instrumenty i interwały**: validate_output.py — wszystkie 11 instrumentów z config.SYMBOLS (w20, us500, gold, silver, eurpln, eurusd, usdpln, usdjpy, copper, eu50, uk100), wszystkie 3 interwały (1H, 4H, 1D). GOLD jako pierwszy instrument do kontroli.
+- **8E Kontrola techniczna**: testy jednostkowe 117/117 ✓, testy integracyjne Python→JSON (validate_output.py) ✓, walidacja JSON ✓, produkcyjny build Vite (51 modułów, bez błędów) ✓.
+- **8F Kryteria ukończenia**: wszystkie spełnione — wszystkie instrumenty analizowane, MTF ocenia LONG/SHORT niezależnie, rzeczywisty moduł S/R (analysis/sr_zones.py), setup ma kierunek/getowość/etap/cykl życia, blokady egzekwowane w Pythonie, silnik wyjaśnia brakujące warunki, nieaktualne/unieważnione/wygasłe setupy nie pokazywane jako aktywne, wykres pokazuje właściwe dane dla właściwego instrumentu i interwału, frontend pokazuje jedną czytelną informację główną i szczegóły na żądanie, testy przechodzą, build przechodzi.
+
+## Ograniczenia Etapu 8 (brak środowiska)
+
+- Nie można uruchomić yfinance (brak sieci w tym środowisku) — nie wygenerowano nowych output/ przez run_daily.py.
+- Nie można uruchomić przeglądarki Chrome — brak kontroli w przeglądarce, responsywności i błędów konsoli.
+- Nie można opublikować na GitHub Pages — brak dostępu do GitHub Actions z tego środowiska.
+
+## Zmienione pliki w Etapie 8
+
+Brak nowych zmian kodu — wyłącznie weryfikacja istniejącego kodu.
+
+## Stan końcowy projektu
+
+Wszystkie 7 etapy wykonane i zaakceptowane. Projekt gotowy do dalszych prac (np. Etap 6 — ponowne wygenerowanie output/ przez run_daily.py z danymi rynkowymi, gdy będzie dostępna sieć).
+
 
 ## Wykonane zadania (Etap 4)
 

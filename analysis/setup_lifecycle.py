@@ -199,6 +199,11 @@ class SetupLifecycle:
         # Ostatnia rzeczywiście zamknięta świeca 4H (nie automatycznie ostatni wiersz).
         closed_bar_index = self._last_closed_bar_index(df_4h, current_bar_index)
 
+        if closed_bar_index is None:
+            # Brak wiarygodnego indeksu zamkniętej świecy 4H — nie podejmuj działań
+            # zależnych od nowej zamkniętej świecy. Zachowaj istniejący stan setupu bez zmian.
+            return self.get_state()
+
         invalidation_triggered = self._check_invalidation(df_4h, closed_bar_index, direction)
         if invalidation_triggered:
             self.state["last_setup_bar_index"] = closed_bar_index
@@ -400,36 +405,37 @@ class SetupLifecycle:
             return "Zamknięcie świecy 1H powyżej poziomu unieważnienia"
         return None
 
-    def _last_closed_bar_index(self, df_4h, current_bar_index: int) -> int:
+    def _last_closed_bar_index(self, df_4h, current_bar_index: int) -> int | None:
         """Zwraca indeks ostatniej rzeczywiście zamkniętej świecy 4H.
 
-        Jeśli ostatnia świeca w df_4h jest jeszcze tworzona (jej czas otwarcia +
-        4h jest w przyszłości względem teraz), zwraca indeks poprzedniej świecy.
-        W przeciwnym razie zwraca current_bar_index.
-
-        Jeśli nie można wiarygodnie rozpoznać zamknięcia (brak strefy czasowej,
-        błąd), zwraca current_bar_index — zakładając że df_4h już zawiera
-        wyłącznie zamknięte świece (np. przefiltrowane przez drop_incomplete_bar
-        w warstwie pobierania danych).
+        Zwraca None gdy nie można wiarygodnie określić zamkniętej świecy
+        (brak danych, tz-naive, błąd konwersji, brak poprzedniej świecy).
+        Nie zwraca current_bar_index jako fallback ani indeksu -1.
         """
         if df_4h is None or df_4h.empty or current_bar_index < 0:
-            return current_bar_index
+            return None
         try:
             last_ts = df_4h.index[current_bar_index]
-            if hasattr(last_ts, "tz_convert"):
+            # Jawnie sprawdź czy timestamp ma określoną strefę czasową.
+            # Timestamp tz-naive nie może być automatycznie traktowany jako UTC.
+            tzinfo = getattr(last_ts, "tzinfo", None)
+            if tzinfo is None:
+                return None
+            try:
                 last_ts = last_ts.tz_convert("UTC")
-            elif hasattr(last_ts, "tz_localize"):
-                last_ts = last_ts.tz_localize("UTC")
-            else:
-                return current_bar_index
+            except Exception:
+                return None
             now_utc = datetime.now(timezone.utc)
             # Świeca 4H otwierająca się o last_ts jest zamknięta jeśli
             # last_ts + 4h <= teraz. W przeciwnym razie jest nadal tworzona.
             if last_ts + timedelta(hours=4) > now_utc:
-                return current_bar_index - 1
+                prev_index = current_bar_index - 1
+                if prev_index < 0:
+                    return None
+                return prev_index
             return current_bar_index
         except Exception:
-            return current_bar_index
+            return None
 
     def _count_bars_after(self, df_4h, reference_iso: str | None, current_bar_index: int | None = None) -> int | None:
         """Licz rzeczywiste zamknięte świece 4H po podanym znaczniku czasu.

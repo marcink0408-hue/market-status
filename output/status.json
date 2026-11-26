@@ -2,80 +2,60 @@
   {
     "symbol": "w20",
     "name": "WIG20",
-    "updated": "2026-11-25T07:00:46Z",
+    "updated": "2026-11-26T06:59:31Z",
     "timeframes": {
       "1H": {
         "symbol": "w20",
         "timeframe": "1H",
         "renko": {
           "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
+          "consecutive": 8,
+          "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 440,
-          "last_close": 4064.946480887282,
+          "bricks_total": 509,
+          "last_close": 3983.0635463169624,
           "prev_leg_length": 1
         },
         "harmonics": [],
-        "candles": [
-          {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 1074,
-            "time": "2026-11-24 13:00:00+00:00",
-            "strength": "strong",
-            "symbol": "w20",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 1074,
-            "time": "2026-11-24 13:00:00+00:00",
-            "strength": "strong",
-            "symbol": "w20",
-            "timeframe": "1H"
-          }
-        ],
+        "candles": [],
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 4183.39013671875,
-          "recent_low": 4009.6298828125,
+          "recent_low": 3967.18994140625,
           "period_bars": 20,
           "timeframe": "1H"
         },
-        "bars": 1078,
-        "last_close": 4056.669921875,
-        "last_time": "2026-11-24 16:00:00+00:00",
-        "decision": "SHORT",
-        "bias": "SHORT",
-        "confidence": 60,
-        "base_confidence": 60,
-        "atr": 28.215768,
-        "entry": 4064.94648,
-        "stop": 4093.16225,
-        "target": 4022.62283,
-        "rr": 1.5,
+        "bars": 1057,
+        "last_close": 3980.68994140625,
+        "last_time": "2026-11-25 16:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 0,
+        "base_confidence": 0,
+        "atr": 25.4664481,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
         "levels_timeframe": "1H",
         "levels_by_timeframe": {
           "1H": {
             "timeframe": "1H",
             "signal_timeframe": "1H",
-            "entry": 4064.94648,
-            "stop": 4093.16225,
-            "target": 4022.62283,
-            "rr": 1.5
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
           }
         },
         "reasons": [
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x1)",
-          "Swieca: Evening Star (potwierdzenie)"
+          "Brak sygnalow wejscia na 4H"
         ],
-        "signal_status": "PENDING",
-        "can_enter": true,
-        "signal_origin": "2026-11-24T16:00:00Z",
-        "signal_valid_until": "2026-11-24T17:00:00Z",
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
         "activated_at": null,
         "closed_at": null,
         "signal_close_reason": null
@@ -85,12 +65,12 @@
         "timeframe": "4H",
         "renko": {
           "direction": "down",
-          "consecutive": 3,
+          "consecutive": 6,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 160,
-          "last_close": 4080.7115478515625,
+          "bricks_total": 157,
+          "last_close": 4005.4452514648438,
           "prev_leg_length": 5
         },
         "harmonics": [],
@@ -98,7 +78,7 @@
           {
             "name": "Evening Star",
             "direction": "bearish",
-            "bar": 356,
+            "bar": 347,
             "time": "2026-11-24 08:00:00+00:00",
             "strength": "strong",
             "symbol": "w20",
@@ -107,7 +87,7 @@
           {
             "name": "Morning Star",
             "direction": "bullish",
-            "bar": 353,
+            "bar": 344,
             "time": "2026-11-23 08:00:00+00:00",
             "strength": "strong",
             "symbol": "w20",
@@ -116,19 +96,19 @@
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 4321.5400390625,
-          "recent_low": 4009.6298828125,
+          "recent_high": 4267.43017578125,
+          "recent_low": 3967.18994140625,
           "period_bars": 20,
           "timeframe": "4H"
         },
-        "bars": 359,
-        "last_close": 4056.669921875,
-        "last_time": "2026-11-24 16:00:00+00:00",
+        "bars": 353,
+        "last_close": 3980.68994140625,
+        "last_time": "2026-11-25 16:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
-        "confidence": 18,
+        "confidence": 24,
         "base_confidence": 24,
-        "atr": 48.7779541,
+        "atr": 52.21936035,
         "entry": null,
         "stop": null,
         "target": null,
@@ -146,8 +126,7 @@
         },
         "reasons": [
           "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
-          "Swieca: Morning Star (potwierdzenie)",
-          "UWAGA 1H: konflikt kierunku (SHORT vs LONG)"
+          "Swieca: Morning Star (potwierdzenie)"
         ],
         "signal_status": "NONE",
         "can_enter": false,
@@ -162,12 +141,12 @@
         "timeframe": "1D",
         "renko": {
           "direction": "down",
-          "consecutive": 2,
+          "consecutive": 4,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 56,
-          "last_close": 4069.45303780692,
+          "bricks_total": 55,
+          "last_close": 3994.3009469168533,
           "prev_leg_length": 3
         },
         "harmonics": [],
@@ -175,7 +154,7 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 113,
+            "bar": 110,
             "time": "2026-11-15 23:00:00+00:00",
             "strength": "weak",
             "symbol": "w20",
@@ -185,18 +164,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 4321.5400390625,
-          "recent_low": 4009.6298828125,
+          "recent_low": 3967.18994140625,
           "period_bars": 20,
           "timeframe": "1D"
         },
-        "bars": 120,
-        "last_close": 4056.669921875,
-        "last_time": "2026-11-23 23:00:00+00:00",
+        "bars": 118,
+        "last_close": 3980.68994140625,
+        "last_time": "2026-11-24 23:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 85.82859584,
+        "atr": 87.15574428,
         "entry": null,
         "stop": null,
         "target": null,
@@ -228,12 +207,12 @@
         "timeframe": "1D",
         "renko": {
           "direction": "down",
-          "consecutive": 2,
+          "consecutive": 4,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 56,
-          "last_close": 4069.45303780692,
+          "bricks_total": 55,
+          "last_close": 3994.3009469168533,
           "prev_leg_length": 3
         },
         "harmonics": [],
@@ -241,7 +220,7 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 113,
+            "bar": 110,
             "time": "2026-11-15 23:00:00+00:00",
             "strength": "weak",
             "symbol": "w20",
@@ -251,18 +230,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 4321.5400390625,
-          "recent_low": 4009.6298828125,
+          "recent_low": 3967.18994140625,
           "period_bars": 20,
           "timeframe": "1D"
         },
-        "bars": 120,
-        "last_close": 4056.669921875,
-        "last_time": "2026-11-23 23:00:00+00:00",
+        "bars": 118,
+        "last_close": 3980.68994140625,
+        "last_time": "2026-11-24 23:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 85.82859584,
+        "atr": 87.15574428,
         "entry": null,
         "stop": null,
         "target": null,
@@ -291,14 +270,13 @@
       }
     },
     "decision": "BRAK",
-    "confidence": 18,
+    "confidence": 24,
     "entry": null,
     "stop": null,
-    "price": 4056.669921875,
+    "price": 3980.68994140625,
     "reasons": [
       "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
-      "Swieca: Morning Star (potwierdzenie)",
-      "UWAGA 1H: konflikt kierunku (SHORT vs LONG)"
+      "Swieca: Morning Star (potwierdzenie)"
     ],
     "summary": "WIG20 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
     "base_confidence": 24,
@@ -325,10 +303,10 @@
         "status": "neutral"
       },
       "1H": {
-        "bias": "SHORT",
-        "confidence": 60,
+        "bias": "BRAK",
+        "confidence": 0,
         "available": true,
-        "status": "conflict"
+        "status": "neutral"
       }
     },
     "levels_timeframe": "4H",
@@ -344,8 +322,8 @@
       }
     },
     "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-24 16:00:00+00:00",
-    "atr": 48.7779541,
+    "last_bar_time": "2026-11-25 16:00:00+00:00",
+    "atr": 52.21936035,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -358,34 +336,43 @@
     "signal_close_reason": null,
     "daily_context": "spadkowy",
     "overall_bias": "NIC",
-    "overall_confidence": 18,
+    "overall_confidence": 24,
     "overall_action": "Brak wejscia – czekaj",
     "overall_summary": "WIG20 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
   },
   {
     "symbol": "us500",
     "name": "S&P 500",
-    "updated": "2026-11-25T07:00:47Z",
+    "updated": "2026-11-26T06:59:31Z",
     "timeframes": {
       "1H": {
         "symbol": "us500",
         "timeframe": "1H",
         "renko": {
-          "direction": "down",
-          "consecutive": 2,
+          "direction": "up",
+          "consecutive": 5,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 181,
-          "last_close": 7185.959542410712,
-          "prev_leg_length": 9
+          "bricks_total": 189,
+          "last_close": 7192.929809570312,
+          "prev_leg_length": 7
         },
         "harmonics": [],
         "candles": [
           {
+            "name": "Morning Star",
+            "direction": "bullish",
+            "bar": 817,
+            "time": "2026-11-25 16:30:00+00:00",
+            "strength": "strong",
+            "symbol": "us500",
+            "timeframe": "1H"
+          },
+          {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 837,
+            "bar": 812,
             "time": "2026-11-24 18:30:00+00:00",
             "strength": "weak",
             "symbol": "us500",
@@ -394,27 +381,9 @@
           {
             "name": "Bearish Engulfing",
             "direction": "bearish",
-            "bar": 837,
+            "bar": 812,
             "time": "2026-11-24 18:30:00+00:00",
             "strength": "strong",
-            "symbol": "us500",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 835,
-            "time": "2026-11-24 16:30:00+00:00",
-            "strength": "strong",
-            "symbol": "us500",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Hammer",
-            "direction": "bullish",
-            "bar": 831,
-            "time": "2026-11-23 19:30:00+00:00",
-            "strength": "medium",
             "symbol": "us500",
             "timeframe": "1H"
           }
@@ -422,18 +391,409 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 7295.60009765625,
-          "recent_low": 6882.66015625,
+          "recent_low": 6970.10986328125,
           "period_bars": 20,
           "timeframe": "1H"
         },
-        "bars": 840,
-        "last_close": 7202.4501953125,
-        "last_time": "2026-11-24 20:30:00+00:00",
+        "bars": 822,
+        "last_close": 7182.72998046875,
+        "last_time": "2026-11-25 20:30:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 24,
         "base_confidence": 24,
-        "atr": 70.93791853,
+        "atr": 70.2714495,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1H",
+        "levels_by_timeframe": {
+          "1H": {
+            "timeframe": "1H",
+            "signal_timeframe": "1H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Morning Star (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "4H": {
+        "symbol": "us500",
+        "timeframe": "4H",
+        "renko": {
+          "direction": "up",
+          "consecutive": 1,
+          "last_reversal": true,
+          "local_high": false,
+          "local_low": true,
+          "bricks_total": 75,
+          "last_close": 7128.958844866073,
+          "prev_leg_length": 3
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 251,
+            "time": "2026-11-25 16:00:00+00:00",
+            "strength": "strong",
+            "symbol": "us500",
+            "timeframe": "4H"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 245,
+            "time": "2026-11-23 16:00:00+00:00",
+            "strength": "weak",
+            "symbol": "us500",
+            "timeframe": "4H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 7415.64013671875,
+          "recent_low": 6882.66015625,
+          "period_bars": 20,
+          "timeframe": "4H"
+        },
+        "bars": 253,
+        "last_close": 7182.72998046875,
+        "last_time": "2026-11-25 20:00:00+00:00",
+        "decision": "LONG",
+        "bias": "LONG",
+        "confidence": 72,
+        "base_confidence": 68,
+        "atr": 122.64439174,
+        "entry": 7128.95884,
+        "stop": 7006.31445,
+        "target": 7312.92543,
+        "rr": 1.5,
+        "levels_timeframe": "4H",
+        "levels_by_timeframe": {
+          "4H": {
+            "timeframe": "4H",
+            "signal_timeframe": "4H",
+            "entry": 7128.95884,
+            "stop": 7006.31445,
+            "target": 7312.92543,
+            "rr": 1.5
+          }
+        },
+        "reasons": [
+          "Renko: lokalny dolek / odwrocenie w gore (noga x3)",
+          "Swieca: Bullish Engulfing (potwierdzenie)",
+          "1D: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
+        ],
+        "signal_status": "PENDING",
+        "can_enter": true,
+        "signal_origin": "2026-11-25T20:00:00Z",
+        "signal_valid_until": "2026-11-26T00:00:00Z",
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "Daily": {
+        "symbol": "us500",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 3,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 138,
+          "last_close": 7204.239990234377,
+          "prev_leg_length": 7
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Morning Star",
+            "direction": "bullish",
+            "bar": 499,
+            "time": "2026-11-24 00:00:00+00:00",
+            "strength": "strong",
+            "symbol": "us500",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 498,
+            "time": "2026-11-23 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "us500",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 7732.2099609375,
+          "recent_low": 6882.66015625,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 501,
+        "last_close": 7182.77978515625,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "LONG",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 168.94430106,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Morning Star (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "1D": {
+        "symbol": "us500",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 3,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 138,
+          "last_close": 7204.239990234377,
+          "prev_leg_length": 7
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Morning Star",
+            "direction": "bullish",
+            "bar": 499,
+            "time": "2026-11-24 00:00:00+00:00",
+            "strength": "strong",
+            "symbol": "us500",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 498,
+            "time": "2026-11-23 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "us500",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 7732.2099609375,
+          "recent_low": 6882.66015625,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 501,
+        "last_close": 7182.77978515625,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "LONG",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 168.94430106,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Morning Star (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      }
+    },
+    "decision": "LONG",
+    "confidence": 72,
+    "entry": 7128.95884,
+    "stop": 7006.31445,
+    "price": 7182.72998046875,
+    "reasons": [
+      "Renko: lokalny dolek / odwrocenie w gore (noga x3)",
+      "Swieca: Bullish Engulfing (potwierdzenie)",
+      "1D: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
+    ],
+    "summary": "S&P 500 4H -> LONG @ 7128.95884 (4H) (stop 7006.31445, cel 7312.92543, ocena sygnalu 72/100, R:R 1:1.5)",
+    "base_confidence": 68,
+    "target": 7312.92543,
+    "rr": 1.5,
+    "pillars": 2,
+    "modules": {
+      "renko": true,
+      "harmonic": false,
+      "candle": true
+    },
+    "contradiction": false,
+    "daily_align": 1,
+    "timeframe_alignment": {
+      "4H": {
+        "bias": "LONG",
+        "status": "main",
+        "score": 68
+      },
+      "1D": {
+        "bias": "LONG",
+        "confidence": 24,
+        "available": true,
+        "status": "confirms"
+      },
+      "1H": {
+        "bias": "BRAK",
+        "confidence": 24,
+        "available": true,
+        "status": "neutral"
+      }
+    },
+    "levels_timeframe": "4H",
+    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
+    "levels_by_timeframe": {
+      "4H": {
+        "timeframe": "4H",
+        "signal_timeframe": "4H",
+        "entry": 7128.95884,
+        "stop": 7006.31445,
+        "target": 7312.92543,
+        "rr": 1.5
+      }
+    },
+    "main_signal_timeframe": "4H",
+    "last_bar_time": "2026-11-25 20:00:00+00:00",
+    "atr": 122.64439174,
+    "harmonic": null,
+    "candle": {
+      "name": "Bullish Engulfing",
+      "direction": "bullish",
+      "bar": 251,
+      "time": "2026-11-25 16:00:00+00:00",
+      "strength": "strong",
+      "symbol": "us500",
+      "timeframe": "4H"
+    },
+    "renko_signal": "Renko: lokalny dolek / odwrocenie w gore (noga x3)",
+    "signal_status": "PENDING",
+    "can_enter": true,
+    "signal_origin": "2026-11-25T20:00:00Z",
+    "signal_valid_until": "2026-11-26T00:00:00Z",
+    "activated_at": null,
+    "closed_at": null,
+    "signal_close_reason": null,
+    "daily_context": "wzrostowy",
+    "overall_bias": "LONG",
+    "overall_confidence": 72,
+    "overall_action": "Oczekuje na wejscie LONG @ 7128.95884",
+    "overall_summary": "S&P 500 4H -> LONG @ 7128.95884 (4H) (stop 7006.31445, cel 7312.92543, ocena sygnalu 72/100, R:R 1:1.5)"
+  },
+  {
+    "symbol": "gold",
+    "name": "Gold",
+    "updated": "2026-11-26T06:59:32Z",
+    "timeframes": {
+      "1H": {
+        "symbol": "gold",
+        "timeframe": "1H",
+        "renko": {
+          "direction": "up",
+          "consecutive": 8,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 592,
+          "last_close": 3607.10051618304,
+          "prev_leg_length": 4
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 2236,
+            "time": "2026-11-26 04:00:00+00:00",
+            "strength": "strong",
+            "symbol": "gold",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Morning Star",
+            "direction": "bullish",
+            "bar": 2234,
+            "time": "2026-11-26 02:00:00+00:00",
+            "strength": "strong",
+            "symbol": "gold",
+            "timeframe": "1H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 3634.699951171875,
+          "recent_low": 3453.800048828125,
+          "period_bars": 20,
+          "timeframe": "1H"
+        },
+        "bars": 2237,
+        "last_close": 3620.39990234375,
+        "last_time": "2026-11-26 04:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "LONG",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 33.04996164,
         "entry": null,
         "stop": null,
         "target": null,
@@ -462,430 +822,17 @@
         "signal_close_reason": null
       },
       "4H": {
-        "symbol": "us500",
-        "timeframe": "4H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": true,
-          "local_low": false,
-          "bricks_total": 91,
-          "last_close": 7199.281808035716,
-          "prev_leg_length": 6
-        },
-        "harmonics": [
-          {
-            "name": "Butterfly",
-            "direction": "bearish",
-            "status": "forming",
-            "X": 7415.64013671875,
-            "A": 6882.66015625,
-            "B": 7295.60009765625,
-            "C": 7138.93017578125,
-            "D_projected": 7652.28325,
-            "current": 7202.4501953125,
-            "time_X": "2026-11-19 12:00:00+00:00",
-            "time_A": "2026-11-20 20:00:00+00:00",
-            "time_B": "2026-11-23 12:00:00+00:00",
-            "time_C": "2026-11-24 12:00:00+00:00",
-            "symbol": "us500",
-            "timeframe": "4H",
-            "completed_at": null,
-            "entry_reached_at": null,
-            "valid_until": "2026-11-25T00:00:00Z",
-            "closed_at": null,
-            "close_reason": null,
-            "active": false,
-            "lifecycle": "forming",
-            "created_at": "2026-11-24 12:00:00+00:00"
-          }
-        ],
-        "candles": [
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 255,
-            "time": "2026-11-24 16:00:00+00:00",
-            "strength": "strong",
-            "symbol": "us500",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 252,
-            "time": "2026-11-23 16:00:00+00:00",
-            "strength": "weak",
-            "symbol": "us500",
-            "timeframe": "4H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 7487.83984375,
-          "recent_low": 6882.66015625,
-          "period_bars": 20,
-          "timeframe": "4H"
-        },
-        "bars": 257,
-        "last_close": 7202.4501953125,
-        "last_time": "2026-11-24 20:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 43,
-        "base_confidence": 47,
-        "atr": 104.30719866,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "4H",
-        "levels_by_timeframe": {
-          "4H": {
-            "timeframe": "4H",
-            "signal_timeframe": "4H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 2/3, conf 47%, prog 45%):",
-          "UWAGA: sprzeczna swieca Bullish Engulfing",
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x6)",
-          "Harmoniczna: Butterfly bearish (formuje sie (PRZ))",
-          "UWAGA 1D: konflikt kierunku (LONG vs SHORT)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "Daily": {
-        "symbol": "us500",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "up",
-          "consecutive": 3,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 128,
-          "last_close": 7223.625244140627,
-          "prev_leg_length": 7
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Morning Star",
-            "direction": "bullish",
-            "bar": 500,
-            "time": "2026-11-24 00:00:00+00:00",
-            "strength": "strong",
-            "symbol": "us500",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 499,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "us500",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 7758.43017578125,
-          "recent_low": 6882.66015625,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 501,
-        "last_close": 7201.08984375,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "LONG",
-        "confidence": 24,
-        "base_confidence": 24,
-        "atr": 176.60787528,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
-          "Swieca: Morning Star (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "1D": {
-        "symbol": "us500",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "up",
-          "consecutive": 3,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 128,
-          "last_close": 7223.625244140627,
-          "prev_leg_length": 7
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Morning Star",
-            "direction": "bullish",
-            "bar": 500,
-            "time": "2026-11-24 00:00:00+00:00",
-            "strength": "strong",
-            "symbol": "us500",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 499,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "us500",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 7758.43017578125,
-          "recent_low": 6882.66015625,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 501,
-        "last_close": 7201.08984375,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "LONG",
-        "confidence": 24,
-        "base_confidence": 24,
-        "atr": 176.60787528,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
-          "Swieca: Morning Star (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      }
-    },
-    "decision": "BRAK",
-    "confidence": 43,
-    "entry": null,
-    "stop": null,
-    "price": 7202.4501953125,
-    "reasons": [
-      "Brak setupu (SHORT 2/3, conf 47%, prog 45%):",
-      "UWAGA: sprzeczna swieca Bullish Engulfing",
-      "Renko: lokalny szczyt / odwrocenie w dol (noga x6)",
-      "Harmoniczna: Butterfly bearish (formuje sie (PRZ))",
-      "UWAGA 1D: konflikt kierunku (LONG vs SHORT)"
-    ],
-    "summary": "S&P 500 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
-    "base_confidence": 47,
-    "target": null,
-    "rr": null,
-    "pillars": 2,
-    "modules": {
-      "renko": true,
-      "harmonic": true,
-      "candle": false
-    },
-    "contradiction": true,
-    "daily_align": -1,
-    "timeframe_alignment": {
-      "4H": {
-        "bias": "BRAK",
-        "status": "main",
-        "score": 47
-      },
-      "1D": {
-        "bias": "LONG",
-        "confidence": 24,
-        "available": true,
-        "status": "conflict"
-      },
-      "1H": {
-        "bias": "BRAK",
-        "confidence": 24,
-        "available": true,
-        "status": "neutral"
-      }
-    },
-    "levels_timeframe": "4H",
-    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
-    "levels_by_timeframe": {
-      "4H": {
-        "timeframe": "4H",
-        "signal_timeframe": "4H",
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null
-      }
-    },
-    "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-24 20:00:00+00:00",
-    "atr": 104.30719866,
-    "harmonic": null,
-    "candle": null,
-    "renko_signal": "brak",
-    "signal_status": "NONE",
-    "can_enter": false,
-    "signal_origin": null,
-    "signal_valid_until": null,
-    "activated_at": null,
-    "closed_at": null,
-    "signal_close_reason": null,
-    "daily_context": "wzrostowy",
-    "overall_bias": "NIC",
-    "overall_confidence": 43,
-    "overall_action": "Brak wejscia – czekaj",
-    "overall_summary": "S&P 500 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
-  },
-  {
-    "symbol": "gold",
-    "name": "Gold",
-    "updated": "2026-11-25T07:00:47Z",
-    "timeframes": {
-      "1H": {
-        "symbol": "gold",
-        "timeframe": "1H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 13,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 1553,
-          "last_close": 3524.5236293247863,
-          "prev_leg_length": 1
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 2272,
-            "time": "2026-11-25 02:00:00+00:00",
-            "strength": "weak",
-            "symbol": "gold",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 2269,
-            "time": "2026-11-24 23:00:00+00:00",
-            "strength": "strong",
-            "symbol": "gold",
-            "timeframe": "1H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 3651.39990234375,
-          "recent_low": 3514.89990234375,
-          "period_bars": 20,
-          "timeframe": "1H"
-        },
-        "bars": 2277,
-        "last_close": 3519.39990234375,
-        "last_time": "2026-11-25 06:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "SHORT",
-        "confidence": 24,
-        "base_confidence": 24,
-        "atr": 16.75003488,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1H",
-        "levels_by_timeframe": {
-          "1H": {
-            "timeframe": "1H",
-            "signal_timeframe": "1H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-          "Swieca: Bearish Engulfing (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "4H": {
         "symbol": "gold",
         "timeframe": "4H",
         "renko": {
-          "direction": "down",
-          "consecutive": 5,
+          "direction": "up",
+          "consecutive": 4,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 262,
-          "last_close": 3554.05678013393,
-          "prev_leg_length": 6
+          "bricks_total": 223,
+          "last_close": 3581.2751464843777,
+          "prev_leg_length": 7
         },
         "harmonics": [
           {
@@ -921,26 +868,17 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 611,
-            "time": "2026-11-25 00:00:00+00:00",
+            "bar": 600,
+            "time": "2026-11-26 00:00:00+00:00",
             "strength": "weak",
-            "symbol": "gold",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 608,
-            "time": "2026-11-24 12:00:00+00:00",
-            "strength": "strong",
             "symbol": "gold",
             "timeframe": "4H"
           },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
-            "bar": 607,
-            "time": "2026-11-24 08:00:00+00:00",
+            "bar": 598,
+            "time": "2026-11-25 16:00:00+00:00",
             "strength": "strong",
             "symbol": "gold",
             "timeframe": "4H"
@@ -949,18 +887,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 3691.0,
-          "recent_low": 3502.89990234375,
+          "recent_low": 3453.800048828125,
           "period_bars": 20,
           "timeframe": "4H"
         },
-        "bars": 612,
-        "last_close": 3547.800048828125,
-        "last_time": "2026-11-25 00:00:00+00:00",
+        "bars": 601,
+        "last_close": 3602.10009765625,
+        "last_time": "2026-11-26 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
-        "confidence": 16,
+        "confidence": 21,
         "base_confidence": 24,
-        "atr": 44.45717076,
+        "atr": 52.44998605,
         "entry": null,
         "stop": null,
         "target": null,
@@ -980,7 +918,7 @@
           "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
           "Swieca: Bullish Engulfing (potwierdzenie)",
           "UWAGA 1D: konflikt kierunku (SHORT vs LONG)",
-          "UWAGA 1H: konflikt kierunku (SHORT vs LONG)"
+          "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
         ],
         "signal_status": "NONE",
         "can_enter": false,
@@ -997,18 +935,18 @@
           "direction": "down",
           "consecutive": 1,
           "last_reversal": true,
-          "local_high": true,
+          "local_high": false,
           "local_low": false,
-          "bricks_total": 243,
-          "last_close": 3581.185773577012,
-          "prev_leg_length": 2
+          "bricks_total": 234,
+          "last_close": 3570.157331194197,
+          "prev_leg_length": 1
         },
         "harmonics": [],
         "candles": [
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 497,
+            "bar": 496,
             "time": "2026-11-17 00:00:00+00:00",
             "strength": "weak",
             "symbol": "gold",
@@ -1018,18 +956,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 4157.7001953125,
-          "recent_low": 3502.89990234375,
+          "recent_low": 3425.199951171875,
           "period_bars": 20,
           "timeframe": "1D"
         },
         "bars": 503,
-        "last_close": 3561.89990234375,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 3535.800048828125,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "SHORT",
-        "confidence": 37,
-        "base_confidence": 37,
-        "atr": 113.25714983,
+        "confidence": 33,
+        "base_confidence": 33,
+        "atr": 118.6071603,
         "entry": null,
         "stop": null,
         "target": null,
@@ -1046,8 +984,8 @@
           }
         },
         "reasons": [
-          "Brak setupu (SHORT 1/3, conf 37%, prog 99%):",
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x2)"
+          "Brak setupu (SHORT 1/3, conf 33%, prog 99%):",
+          "Renko: lokalny szczyt / odwrocenie w dol (noga x1)"
         ],
         "signal_status": "NONE",
         "can_enter": false,
@@ -1064,18 +1002,18 @@
           "direction": "down",
           "consecutive": 1,
           "last_reversal": true,
-          "local_high": true,
+          "local_high": false,
           "local_low": false,
-          "bricks_total": 243,
-          "last_close": 3581.185773577012,
-          "prev_leg_length": 2
+          "bricks_total": 234,
+          "last_close": 3570.157331194197,
+          "prev_leg_length": 1
         },
         "harmonics": [],
         "candles": [
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 497,
+            "bar": 496,
             "time": "2026-11-17 00:00:00+00:00",
             "strength": "weak",
             "symbol": "gold",
@@ -1085,18 +1023,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 4157.7001953125,
-          "recent_low": 3502.89990234375,
+          "recent_low": 3425.199951171875,
           "period_bars": 20,
           "timeframe": "1D"
         },
         "bars": 503,
-        "last_close": 3561.89990234375,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 3535.800048828125,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "SHORT",
-        "confidence": 37,
-        "base_confidence": 37,
-        "atr": 113.25714983,
+        "confidence": 33,
+        "base_confidence": 33,
+        "atr": 118.6071603,
         "entry": null,
         "stop": null,
         "target": null,
@@ -1113,8 +1051,8 @@
           }
         },
         "reasons": [
-          "Brak setupu (SHORT 1/3, conf 37%, prog 99%):",
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x2)"
+          "Brak setupu (SHORT 1/3, conf 33%, prog 99%):",
+          "Renko: lokalny szczyt / odwrocenie w dol (noga x1)"
         ],
         "signal_status": "NONE",
         "can_enter": false,
@@ -1126,15 +1064,15 @@
       }
     },
     "decision": "BRAK",
-    "confidence": 16,
+    "confidence": 21,
     "entry": null,
     "stop": null,
-    "price": 3547.800048828125,
+    "price": 3602.10009765625,
     "reasons": [
       "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
       "Swieca: Bullish Engulfing (potwierdzenie)",
       "UWAGA 1D: konflikt kierunku (SHORT vs LONG)",
-      "UWAGA 1H: konflikt kierunku (SHORT vs LONG)"
+      "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
     ],
     "summary": "Gold 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
     "base_confidence": 24,
@@ -1156,15 +1094,15 @@
       },
       "1D": {
         "bias": "SHORT",
-        "confidence": 37,
+        "confidence": 33,
         "available": true,
         "status": "conflict"
       },
       "1H": {
-        "bias": "SHORT",
+        "bias": "LONG",
         "confidence": 24,
         "available": true,
-        "status": "conflict"
+        "status": "confirms"
       }
     },
     "levels_timeframe": "4H",
@@ -1180,8 +1118,8 @@
       }
     },
     "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-25 00:00:00+00:00",
-    "atr": 44.45717076,
+    "last_bar_time": "2026-11-26 00:00:00+00:00",
+    "atr": 52.44998605,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -1194,27 +1132,27 @@
     "signal_close_reason": null,
     "daily_context": "spadkowy",
     "overall_bias": "NIC",
-    "overall_confidence": 16,
+    "overall_confidence": 21,
     "overall_action": "Brak wejscia – czekaj",
     "overall_summary": "Gold 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
   },
   {
     "symbol": "silver",
     "name": "Silver",
-    "updated": "2026-11-25T07:00:48Z",
+    "updated": "2026-11-26T06:59:32Z",
     "timeframes": {
       "1H": {
         "symbol": "silver",
         "timeframe": "1H",
         "renko": {
-          "direction": "down",
-          "consecutive": 4,
+          "direction": "up",
+          "consecutive": 9,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 1669,
-          "last_close": 40.054970741271646,
-          "prev_leg_length": 1
+          "bricks_total": 826,
+          "last_close": 42.16499710083002,
+          "prev_leg_length": 3
         },
         "harmonics": [
           {
@@ -1248,48 +1186,39 @@
         ],
         "candles": [
           {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 2272,
-            "time": "2026-11-25 04:00:00+00:00",
-            "strength": "weak",
-            "symbol": "silver",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 2270,
-            "time": "2026-11-25 02:00:00+00:00",
-            "strength": "strong",
-            "symbol": "silver",
-            "timeframe": "1H"
-          },
-          {
             "name": "Bullish Engulfing",
             "direction": "bullish",
-            "bar": 2266,
-            "time": "2026-11-24 21:00:00+00:00",
+            "bar": 2231,
+            "time": "2026-11-26 02:00:00+00:00",
             "strength": "strong",
+            "symbol": "silver",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 2230,
+            "time": "2026-11-26 01:00:00+00:00",
+            "strength": "weak",
             "symbol": "silver",
             "timeframe": "1H"
           }
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 43.17499923706055,
-          "recent_low": 39.904998779296875,
+          "recent_high": 42.435001373291016,
+          "recent_low": 38.41999816894531,
           "period_bars": 20,
           "timeframe": "1H"
         },
-        "bars": 2275,
-        "last_close": 40.19499969482422,
-        "last_time": "2026-11-25 06:00:00+00:00",
+        "bars": 2234,
+        "last_close": 42.084999084472656,
+        "last_time": "2026-11-26 04:00:00+00:00",
         "decision": "BRAK",
-        "bias": "BRAK",
+        "bias": "LONG",
         "confidence": 24,
         "base_confidence": 24,
-        "atr": 0.39428629,
+        "atr": 0.66392871,
         "entry": null,
         "stop": null,
         "target": null,
@@ -1321,41 +1250,32 @@
         "symbol": "silver",
         "timeframe": "4H",
         "renko": {
-          "direction": "down",
+          "direction": "up",
           "consecutive": 5,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 305,
-          "last_close": 40.79284872327524,
-          "prev_leg_length": 4
+          "bricks_total": 269,
+          "last_close": 41.88141523088738,
+          "prev_leg_length": 7
         },
         "harmonics": [],
         "candles": [
           {
-            "name": "Hammer",
+            "name": "Bullish Engulfing",
             "direction": "bullish",
-            "bar": 607,
-            "time": "2026-11-24 08:00:00+00:00",
-            "strength": "medium",
+            "bar": 598,
+            "time": "2026-11-25 16:00:00+00:00",
+            "strength": "strong",
             "symbol": "silver",
             "timeframe": "4H"
           },
           {
             "name": "Bearish Engulfing",
             "direction": "bearish",
-            "bar": 605,
-            "time": "2026-11-24 00:00:00+00:00",
+            "bar": 591,
+            "time": "2026-11-24 12:00:00+00:00",
             "strength": "strong",
-            "symbol": "silver",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 604,
-            "time": "2026-11-23 20:00:00+00:00",
-            "strength": "weak",
             "symbol": "silver",
             "timeframe": "4H"
           }
@@ -1363,18 +1283,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 44.119998931884766,
-          "recent_low": 40.435001373291016,
+          "recent_low": 38.41999816894531,
           "period_bars": 20,
           "timeframe": "4H"
         },
-        "bars": 612,
-        "last_close": 40.59000015258789,
-        "last_time": "2026-11-25 00:00:00+00:00",
+        "bars": 601,
+        "last_close": 41.904998779296875,
+        "last_time": "2026-11-26 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
-        "confidence": 24,
+        "confidence": 26,
         "base_confidence": 24,
-        "atr": 1.03857177,
+        "atr": 1.16142927,
         "entry": null,
         "stop": null,
         "target": null,
@@ -1391,8 +1311,9 @@
           }
         },
         "reasons": [
-          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-          "Swieca: Bearish Engulfing (potwierdzenie)"
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Bullish Engulfing (potwierdzenie)",
+          "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
         ],
         "signal_status": "NONE",
         "can_enter": false,
@@ -1407,12 +1328,12 @@
         "timeframe": "1D",
         "renko": {
           "direction": "down",
-          "consecutive": 2,
+          "consecutive": 3,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 603,
-          "last_close": 41.31571074894495,
+          "bricks_total": 604,
+          "last_close": 40.39428274972097,
           "prev_leg_length": 2
         },
         "harmonics": [],
@@ -1420,7 +1341,7 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 502,
+            "bar": 501,
             "time": "2026-11-24 00:00:00+00:00",
             "strength": "weak",
             "symbol": "silver",
@@ -1429,19 +1350,19 @@
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 53.92499923706055,
-          "recent_low": 40.665000915527344,
+          "recent_high": 53.220001220703125,
+          "recent_low": 40.051998138427734,
           "period_bars": 20,
           "timeframe": "1D"
         },
         "bars": 503,
-        "last_close": 40.7599983215332,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 40.051998138427734,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 1.70857103,
+        "atr": 1.66771371,
         "entry": null,
         "stop": null,
         "target": null,
@@ -1473,12 +1394,12 @@
         "timeframe": "1D",
         "renko": {
           "direction": "down",
-          "consecutive": 2,
+          "consecutive": 3,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 603,
-          "last_close": 41.31571074894495,
+          "bricks_total": 604,
+          "last_close": 40.39428274972097,
           "prev_leg_length": 2
         },
         "harmonics": [],
@@ -1486,7 +1407,7 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 502,
+            "bar": 501,
             "time": "2026-11-24 00:00:00+00:00",
             "strength": "weak",
             "symbol": "silver",
@@ -1495,19 +1416,434 @@
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 53.92499923706055,
-          "recent_low": 40.665000915527344,
+          "recent_high": 53.220001220703125,
+          "recent_low": 40.051998138427734,
           "period_bars": 20,
           "timeframe": "1D"
         },
         "bars": 503,
-        "last_close": 40.7599983215332,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 40.051998138427734,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 1.70857103,
+        "atr": 1.66771371,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak sygnalow wejscia na 4H"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      }
+    },
+    "decision": "BRAK",
+    "confidence": 26,
+    "entry": null,
+    "stop": null,
+    "price": 41.904998779296875,
+    "reasons": [
+      "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+      "Swieca: Bullish Engulfing (potwierdzenie)",
+      "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
+    ],
+    "summary": "Silver 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
+    "base_confidence": 24,
+    "target": null,
+    "rr": null,
+    "pillars": 1,
+    "modules": {
+      "renko": false,
+      "harmonic": false,
+      "candle": true
+    },
+    "contradiction": false,
+    "daily_align": 0,
+    "timeframe_alignment": {
+      "4H": {
+        "bias": "BRAK",
+        "status": "main",
+        "score": 24
+      },
+      "1D": {
+        "bias": "BRAK",
+        "confidence": 0,
+        "available": true,
+        "status": "neutral"
+      },
+      "1H": {
+        "bias": "LONG",
+        "confidence": 24,
+        "available": true,
+        "status": "confirms"
+      }
+    },
+    "levels_timeframe": "4H",
+    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
+    "levels_by_timeframe": {
+      "4H": {
+        "timeframe": "4H",
+        "signal_timeframe": "4H",
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null
+      }
+    },
+    "main_signal_timeframe": "4H",
+    "last_bar_time": "2026-11-26 00:00:00+00:00",
+    "atr": 1.16142927,
+    "harmonic": null,
+    "candle": null,
+    "renko_signal": "brak",
+    "signal_status": "NONE",
+    "can_enter": false,
+    "signal_origin": null,
+    "signal_valid_until": null,
+    "activated_at": null,
+    "closed_at": null,
+    "signal_close_reason": null,
+    "daily_context": "spadkowy",
+    "overall_bias": "NIC",
+    "overall_confidence": 26,
+    "overall_action": "Brak wejscia – czekaj",
+    "overall_summary": "Silver 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
+  },
+  {
+    "symbol": "eurpln",
+    "name": "EUR/PLN",
+    "updated": "2026-11-26T06:59:33Z",
+    "timeframes": {
+      "1H": {
+        "symbol": "eurpln",
+        "timeframe": "1H",
+        "renko": {
+          "direction": "up",
+          "consecutive": 1,
+          "last_reversal": true,
+          "local_high": false,
+          "local_low": true,
+          "bricks_total": 1259,
+          "last_close": 4.470822181020423,
+          "prev_leg_length": 6
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 2764,
+            "time": "2026-11-25 21:00:00+00:00",
+            "strength": "strong",
+            "symbol": "eurpln",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 2763,
+            "time": "2026-11-25 20:00:00+00:00",
+            "strength": "weak",
+            "symbol": "eurpln",
+            "timeframe": "1H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 4.48769998550415,
+          "recent_low": 4.4644999504089355,
+          "period_bars": 20,
+          "timeframe": "1H"
+        },
+        "bars": 2773,
+        "last_close": 4.469860076904297,
+        "last_time": "2026-11-26 05:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 30,
+        "base_confidence": 30,
+        "atr": 0.00413142,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1H",
+        "levels_by_timeframe": {
+          "1H": {
+            "timeframe": "1H",
+            "signal_timeframe": "1H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 30%, prog 99%):",
+          "UWAGA: sprzeczna swieca Bearish Engulfing",
+          "Renko: lokalny dolek / odwrocenie w gore (noga x6)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "4H": {
+        "symbol": "eurpln",
+        "timeframe": "4H",
+        "renko": {
+          "direction": "down",
+          "consecutive": 2,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 212,
+          "last_close": 4.469295263290389,
+          "prev_leg_length": 7
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Evening Star",
+            "direction": "bearish",
+            "bar": 715,
+            "time": "2026-11-25 16:00:00+00:00",
+            "strength": "strong",
+            "symbol": "eurpln",
+            "timeframe": "4H"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 710,
+            "time": "2026-11-24 20:00:00+00:00",
+            "strength": "weak",
+            "symbol": "eurpln",
+            "timeframe": "4H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 4.48769998550415,
+          "recent_low": 4.436970233917236,
+          "period_bars": 20,
+          "timeframe": "4H"
+        },
+        "bars": 718,
+        "last_close": 4.471099853515625,
+        "last_time": "2026-11-26 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 0.01064931,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "4H",
+        "levels_by_timeframe": {
+          "4H": {
+            "timeframe": "4H",
+            "signal_timeframe": "4H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
+          "Swieca: Evening Star (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "Daily": {
+        "symbol": "eurpln",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 5,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 123,
+          "last_close": 4.453758682523451,
+          "prev_leg_length": 1
+        },
+        "harmonics": [
+          {
+            "name": "Butterfly",
+            "direction": "bearish",
+            "status": "forming",
+            "X": 4.425069808959961,
+            "A": 4.377099990844727,
+            "B": 4.4145002365112305,
+            "C": 4.3927998542785645,
+            "D_projected": 4.44637,
+            "current": 4.459000110626221,
+            "time_X": "2026-11-03 00:00:00+00:00",
+            "time_A": "2026-11-10 00:00:00+00:00",
+            "time_B": "2026-11-11 00:00:00+00:00",
+            "time_C": "2026-11-16 00:00:00+00:00",
+            "symbol": "eurpln",
+            "timeframe": "1D",
+            "completed_at": null,
+            "entry_reached_at": null,
+            "valid_until": "2026-11-19T00:00:00Z",
+            "closed_at": "2026-11-19T00:00:00Z",
+            "close_reason": "projected_structure_window_elapsed",
+            "active": false,
+            "lifecycle": "expired",
+            "created_at": "2026-11-16 00:00:00+00:00"
+          }
+        ],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 500,
+            "time": "2026-11-25 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "eurpln",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 4.487110137939453,
+          "recent_low": 4.377099990844727,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 501,
+        "last_close": 4.459000110626221,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 0,
+        "base_confidence": 0,
+        "atr": 0.02633796,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak sygnalow wejscia na 4H"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "1D": {
+        "symbol": "eurpln",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 5,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 123,
+          "last_close": 4.453758682523451,
+          "prev_leg_length": 1
+        },
+        "harmonics": [
+          {
+            "name": "Butterfly",
+            "direction": "bearish",
+            "status": "forming",
+            "X": 4.425069808959961,
+            "A": 4.377099990844727,
+            "B": 4.4145002365112305,
+            "C": 4.3927998542785645,
+            "D_projected": 4.44637,
+            "current": 4.459000110626221,
+            "time_X": "2026-11-03 00:00:00+00:00",
+            "time_A": "2026-11-10 00:00:00+00:00",
+            "time_B": "2026-11-11 00:00:00+00:00",
+            "time_C": "2026-11-16 00:00:00+00:00",
+            "symbol": "eurpln",
+            "timeframe": "1D",
+            "completed_at": null,
+            "entry_reached_at": null,
+            "valid_until": "2026-11-19T00:00:00Z",
+            "closed_at": "2026-11-19T00:00:00Z",
+            "close_reason": "projected_structure_window_elapsed",
+            "active": false,
+            "lifecycle": "expired",
+            "created_at": "2026-11-16 00:00:00+00:00"
+          }
+        ],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 500,
+            "time": "2026-11-25 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "eurpln",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 4.487110137939453,
+          "recent_low": 4.377099990844727,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 501,
+        "last_close": 4.459000110626221,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 0,
+        "base_confidence": 0,
+        "atr": 0.02633796,
         "entry": null,
         "stop": null,
         "target": null,
@@ -1539,12 +1875,12 @@
     "confidence": 24,
     "entry": null,
     "stop": null,
-    "price": 40.59000015258789,
+    "price": 4.471099853515625,
     "reasons": [
       "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-      "Swieca: Bearish Engulfing (potwierdzenie)"
+      "Swieca: Evening Star (potwierdzenie)"
     ],
-    "summary": "Silver 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
+    "summary": "EUR/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
     "base_confidence": 24,
     "target": null,
     "rr": null,
@@ -1570,7 +1906,7 @@
       },
       "1H": {
         "bias": "BRAK",
-        "confidence": 24,
+        "confidence": 30,
         "available": true,
         "status": "neutral"
       }
@@ -1588,8 +1924,8 @@
       }
     },
     "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-25 00:00:00+00:00",
-    "atr": 1.03857177,
+    "last_bar_time": "2026-11-26 00:00:00+00:00",
+    "atr": 0.01064931,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -1600,84 +1936,861 @@
     "activated_at": null,
     "closed_at": null,
     "signal_close_reason": null,
-    "daily_context": "spadkowy",
+    "daily_context": "wzrostowy",
     "overall_bias": "NIC",
     "overall_confidence": 24,
     "overall_action": "Brak wejscia – czekaj",
-    "overall_summary": "Silver 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
+    "overall_summary": "EUR/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
   },
   {
-    "symbol": "eurpln",
-    "name": "EUR/PLN",
-    "updated": "2026-11-25T07:00:49Z",
+    "symbol": "eurusd",
+    "name": "EUR/USD",
+    "updated": "2026-11-26T06:59:33Z",
     "timeframes": {
       "1H": {
-        "symbol": "eurpln",
+        "symbol": "eurusd",
         "timeframe": "1H",
         "renko": {
-          "direction": "up",
-          "consecutive": 6,
+          "direction": "down",
+          "consecutive": 5,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 2225,
-          "last_close": 4.4620636190686325,
-          "prev_leg_length": 4
+          "bricks_total": 2350,
+          "last_close": 1.0962750656264215,
+          "prev_leg_length": 11
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 2770,
+            "time": "2026-11-26 05:00:00+00:00",
+            "strength": "strong",
+            "symbol": "eurusd",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 2767,
+            "time": "2026-11-26 02:00:00+00:00",
+            "strength": "weak",
+            "symbol": "eurusd",
+            "timeframe": "1H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 1.0995051860809326,
+          "recent_low": 1.0937328338623047,
+          "period_bars": 20,
+          "timeframe": "1H"
+        },
+        "bars": 2771,
+        "last_close": 1.0963709354400635,
+        "last_time": "2026-11-26 05:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "LONG",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 0.00084294,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1H",
+        "levels_by_timeframe": {
+          "1H": {
+            "timeframe": "1H",
+            "signal_timeframe": "1H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Bullish Engulfing (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "4H": {
+        "symbol": "eurusd",
+        "timeframe": "4H",
+        "renko": {
+          "direction": "down",
+          "consecutive": 1,
+          "last_reversal": true,
+          "local_high": true,
+          "local_low": false,
+          "bricks_total": 454,
+          "last_close": 1.0964712074824705,
+          "prev_leg_length": 3
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Morning Star",
+            "direction": "bullish",
+            "bar": 714,
+            "time": "2026-11-25 12:00:00+00:00",
+            "strength": "strong",
+            "symbol": "eurusd",
+            "timeframe": "4H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 1.1008366346359253,
+          "recent_low": 1.0884946584701538,
+          "period_bars": 20,
+          "timeframe": "4H"
+        },
+        "bars": 718,
+        "last_close": 1.0963709354400635,
+        "last_time": "2026-11-26 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 34,
+        "base_confidence": 24,
+        "atr": 0.00211511,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "4H",
+        "levels_by_timeframe": {
+          "4H": {
+            "timeframe": "4H",
+            "signal_timeframe": "4H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Morning Star (potwierdzenie)",
+          "1D: potwierdza kierunek LONG (kontekst, nie osobny sygnal)",
+          "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "Daily": {
+        "symbol": "eurusd",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 1,
+          "last_reversal": true,
+          "local_high": false,
+          "local_low": true,
+          "bricks_total": 277,
+          "last_close": 1.096167113099779,
+          "prev_leg_length": 7
         },
         "harmonics": [],
         "candles": [
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 2835,
-            "time": "2026-11-25 05:00:00+00:00",
+            "bar": 497,
+            "time": "2026-11-25 00:00:00+00:00",
             "strength": "weak",
-            "symbol": "eurpln",
-            "timeframe": "1H"
-          },
+            "symbol": "eurusd",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 1.1275228261947632,
+          "recent_low": 1.088435411453247,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 498,
+        "last_close": 1.0962268114089966,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "LONG",
+        "confidence": 50,
+        "base_confidence": 50,
+        "atr": 0.00795955,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 50%, prog 99%):",
+          "Renko: lokalny dolek / odwrocenie w gore (noga x7)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "1D": {
+        "symbol": "eurusd",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 1,
+          "last_reversal": true,
+          "local_high": false,
+          "local_low": true,
+          "bricks_total": 277,
+          "last_close": 1.096167113099779,
+          "prev_leg_length": 7
+        },
+        "harmonics": [],
+        "candles": [
           {
-            "name": "Morning Star",
-            "direction": "bullish",
-            "bar": 2829,
-            "time": "2026-11-24 23:00:00+00:00",
-            "strength": "strong",
-            "symbol": "eurpln",
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 497,
+            "time": "2026-11-25 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "eurusd",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 1.1275228261947632,
+          "recent_low": 1.088435411453247,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 498,
+        "last_close": 1.0962268114089966,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "LONG",
+        "confidence": 50,
+        "base_confidence": 50,
+        "atr": 0.00795955,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 50%, prog 99%):",
+          "Renko: lokalny dolek / odwrocenie w gore (noga x7)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      }
+    },
+    "decision": "BRAK",
+    "confidence": 34,
+    "entry": null,
+    "stop": null,
+    "price": 1.0963709354400635,
+    "reasons": [
+      "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+      "Swieca: Morning Star (potwierdzenie)",
+      "1D: potwierdza kierunek LONG (kontekst, nie osobny sygnal)",
+      "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
+    ],
+    "summary": "EUR/USD 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
+    "base_confidence": 24,
+    "target": null,
+    "rr": null,
+    "pillars": 1,
+    "modules": {
+      "renko": false,
+      "harmonic": false,
+      "candle": true
+    },
+    "contradiction": false,
+    "daily_align": 1,
+    "timeframe_alignment": {
+      "4H": {
+        "bias": "BRAK",
+        "status": "main",
+        "score": 24
+      },
+      "1D": {
+        "bias": "LONG",
+        "confidence": 50,
+        "available": true,
+        "status": "confirms"
+      },
+      "1H": {
+        "bias": "LONG",
+        "confidence": 24,
+        "available": true,
+        "status": "confirms"
+      }
+    },
+    "levels_timeframe": "4H",
+    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
+    "levels_by_timeframe": {
+      "4H": {
+        "timeframe": "4H",
+        "signal_timeframe": "4H",
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null
+      }
+    },
+    "main_signal_timeframe": "4H",
+    "last_bar_time": "2026-11-26 00:00:00+00:00",
+    "atr": 0.00211511,
+    "harmonic": null,
+    "candle": null,
+    "renko_signal": "brak",
+    "signal_status": "NONE",
+    "can_enter": false,
+    "signal_origin": null,
+    "signal_valid_until": null,
+    "activated_at": null,
+    "closed_at": null,
+    "signal_close_reason": null,
+    "daily_context": "wzrostowy",
+    "overall_bias": "NIC",
+    "overall_confidence": 34,
+    "overall_action": "Brak wejscia – czekaj",
+    "overall_summary": "EUR/USD 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
+  },
+  {
+    "symbol": "usdpln",
+    "name": "USD/PLN",
+    "updated": "2026-11-26T06:59:34Z",
+    "timeframes": {
+      "1H": {
+        "symbol": "usdpln",
+        "timeframe": "1H",
+        "renko": {
+          "direction": "up",
+          "consecutive": 2,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 1154,
+          "last_close": 4.078236307416656,
+          "prev_leg_length": 7
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 2773,
+            "time": "2026-11-26 04:00:00+00:00",
+            "strength": "weak",
+            "symbol": "usdpln",
             "timeframe": "1H"
           },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
-            "bar": 2829,
-            "time": "2026-11-24 23:00:00+00:00",
+            "bar": 2768,
+            "time": "2026-11-25 23:00:00+00:00",
             "strength": "strong",
-            "symbol": "eurpln",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 2827,
-            "time": "2026-11-24 21:00:00+00:00",
-            "strength": "strong",
-            "symbol": "eurpln",
+            "symbol": "usdpln",
             "timeframe": "1H"
           }
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 4.468800067901611,
-          "recent_low": 4.4517598152160645,
+          "recent_high": 4.102019786834717,
+          "recent_low": 4.065499782562256,
           "period_bars": 20,
           "timeframe": "1H"
         },
-        "bars": 2837,
-        "last_close": 4.462800025939941,
-        "last_time": "2026-11-25 06:00:00+00:00",
+        "bars": 2775,
+        "last_close": 4.077970027923584,
+        "last_time": "2026-11-26 05:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "LONG",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 0.00697858,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1H",
+        "levels_by_timeframe": {
+          "1H": {
+            "timeframe": "1H",
+            "signal_timeframe": "1H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Bullish Engulfing (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "4H": {
+        "symbol": "usdpln",
+        "timeframe": "4H",
+        "renko": {
+          "direction": "down",
+          "consecutive": 2,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 299,
+          "last_close": 4.075898221560879,
+          "prev_leg_length": 3
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Evening Star",
+            "direction": "bearish",
+            "bar": 708,
+            "time": "2026-11-24 12:00:00+00:00",
+            "strength": "strong",
+            "symbol": "usdpln",
+            "timeframe": "4H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 4.102019786834717,
+          "recent_low": 4.042399883270264,
+          "period_bars": 20,
+          "timeframe": "4H"
+        },
+        "bars": 718,
+        "last_close": 4.079050064086914,
+        "last_time": "2026-11-26 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 25,
+        "base_confidence": 24,
+        "atr": 0.0138779,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "4H",
+        "levels_by_timeframe": {
+          "4H": {
+            "timeframe": "4H",
+            "signal_timeframe": "4H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
+          "Swieca: Evening Star (potwierdzenie)",
+          "1D: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)",
+          "UWAGA 1H: konflikt kierunku (LONG vs SHORT)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "Daily": {
+        "symbol": "usdpln",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 8,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 229,
+          "last_close": 4.064009521688733,
+          "prev_leg_length": 2
+        },
+        "harmonics": [
+          {
+            "name": "Deep Crab",
+            "direction": "bearish",
+            "status": "forming",
+            "X": 3.957170009613037,
+            "A": 3.8892500400543213,
+            "B": 3.9498000144958496,
+            "C": 3.894200086593628,
+            "D_projected": 3.99914,
+            "current": 4.0677900314331055,
+            "time_X": "2026-11-03 00:00:00+00:00",
+            "time_A": "2026-11-05 00:00:00+00:00",
+            "time_B": "2026-11-06 00:00:00+00:00",
+            "time_C": "2026-11-10 00:00:00+00:00",
+            "symbol": "usdpln",
+            "timeframe": "1D",
+            "completed_at": null,
+            "entry_reached_at": null,
+            "valid_until": "2026-11-12T00:00:00Z",
+            "closed_at": "2026-11-12T00:00:00Z",
+            "close_reason": "projected_structure_window_elapsed",
+            "active": false,
+            "lifecycle": "expired",
+            "created_at": "2026-11-10 00:00:00+00:00"
+          }
+        ],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 498,
+            "time": "2026-11-25 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "usdpln",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 489,
+            "time": "2026-11-11 00:00:00+00:00",
+            "strength": "medium",
+            "symbol": "usdpln",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 4.101590156555176,
+          "recent_low": 3.8892500400543213,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 499,
+        "last_close": 4.0677900314331055,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "SHORT",
+        "confidence": 20,
+        "base_confidence": 20,
+        "atr": 0.04052712,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (SHORT 1/3, conf 20%, prog 99%):",
+          "Swieca: Shooting Star (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "1D": {
+        "symbol": "usdpln",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 8,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 229,
+          "last_close": 4.064009521688733,
+          "prev_leg_length": 2
+        },
+        "harmonics": [
+          {
+            "name": "Deep Crab",
+            "direction": "bearish",
+            "status": "forming",
+            "X": 3.957170009613037,
+            "A": 3.8892500400543213,
+            "B": 3.9498000144958496,
+            "C": 3.894200086593628,
+            "D_projected": 3.99914,
+            "current": 4.0677900314331055,
+            "time_X": "2026-11-03 00:00:00+00:00",
+            "time_A": "2026-11-05 00:00:00+00:00",
+            "time_B": "2026-11-06 00:00:00+00:00",
+            "time_C": "2026-11-10 00:00:00+00:00",
+            "symbol": "usdpln",
+            "timeframe": "1D",
+            "completed_at": null,
+            "entry_reached_at": null,
+            "valid_until": "2026-11-12T00:00:00Z",
+            "closed_at": "2026-11-12T00:00:00Z",
+            "close_reason": "projected_structure_window_elapsed",
+            "active": false,
+            "lifecycle": "expired",
+            "created_at": "2026-11-10 00:00:00+00:00"
+          }
+        ],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 498,
+            "time": "2026-11-25 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "usdpln",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 489,
+            "time": "2026-11-11 00:00:00+00:00",
+            "strength": "medium",
+            "symbol": "usdpln",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 4.101590156555176,
+          "recent_low": 3.8892500400543213,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 499,
+        "last_close": 4.0677900314331055,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "SHORT",
+        "confidence": 20,
+        "base_confidence": 20,
+        "atr": 0.04052712,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (SHORT 1/3, conf 20%, prog 99%):",
+          "Swieca: Shooting Star (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      }
+    },
+    "decision": "BRAK",
+    "confidence": 25,
+    "entry": null,
+    "stop": null,
+    "price": 4.079050064086914,
+    "reasons": [
+      "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
+      "Swieca: Evening Star (potwierdzenie)",
+      "1D: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)",
+      "UWAGA 1H: konflikt kierunku (LONG vs SHORT)"
+    ],
+    "summary": "USD/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
+    "base_confidence": 24,
+    "target": null,
+    "rr": null,
+    "pillars": 1,
+    "modules": {
+      "renko": false,
+      "harmonic": false,
+      "candle": true
+    },
+    "contradiction": false,
+    "daily_align": 1,
+    "timeframe_alignment": {
+      "4H": {
+        "bias": "BRAK",
+        "status": "main",
+        "score": 24
+      },
+      "1D": {
+        "bias": "SHORT",
+        "confidence": 20,
+        "available": true,
+        "status": "confirms"
+      },
+      "1H": {
+        "bias": "LONG",
+        "confidence": 24,
+        "available": true,
+        "status": "conflict"
+      }
+    },
+    "levels_timeframe": "4H",
+    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
+    "levels_by_timeframe": {
+      "4H": {
+        "timeframe": "4H",
+        "signal_timeframe": "4H",
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null
+      }
+    },
+    "main_signal_timeframe": "4H",
+    "last_bar_time": "2026-11-26 00:00:00+00:00",
+    "atr": 0.0138779,
+    "harmonic": null,
+    "candle": null,
+    "renko_signal": "brak",
+    "signal_status": "NONE",
+    "can_enter": false,
+    "signal_origin": null,
+    "signal_valid_until": null,
+    "activated_at": null,
+    "closed_at": null,
+    "signal_close_reason": null,
+    "daily_context": "wzrostowy",
+    "overall_bias": "NIC",
+    "overall_confidence": 25,
+    "overall_action": "Brak wejscia – czekaj",
+    "overall_summary": "USD/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
+  },
+  {
+    "symbol": "usdjpy",
+    "name": "USD/JPY",
+    "updated": "2026-11-26T06:59:34Z",
+    "timeframes": {
+      "1H": {
+        "symbol": "usdjpy",
+        "timeframe": "1H",
+        "renko": {
+          "direction": "up",
+          "consecutive": 2,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 1847,
+          "last_close": 159.1523208618164,
+          "prev_leg_length": 2
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Morning Star",
+            "direction": "bullish",
+            "bar": 2751,
+            "time": "2026-11-25 23:00:00+00:00",
+            "strength": "strong",
+            "symbol": "usdjpy",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 2750,
+            "time": "2026-11-25 22:00:00+00:00",
+            "strength": "weak",
+            "symbol": "usdjpy",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 2749,
+            "time": "2026-11-25 21:00:00+00:00",
+            "strength": "strong",
+            "symbol": "usdjpy",
+            "timeframe": "1H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 159.45399475097656,
+          "recent_low": 158.656005859375,
+          "period_bars": 20,
+          "timeframe": "1H"
+        },
+        "bars": 2758,
+        "last_close": 159.156005859375,
+        "last_time": "2026-11-26 05:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 24,
         "base_confidence": 24,
-        "atr": 0.00277076,
+        "atr": 0.17921448,
         "entry": null,
         "stop": null,
         "target": null,
@@ -1706,1281 +2819,51 @@
         "signal_close_reason": null
       },
       "4H": {
-        "symbol": "eurpln",
+        "symbol": "usdjpy",
         "timeframe": "4H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": true,
-          "local_low": false,
-          "bricks_total": 243,
-          "last_close": 4.459479638508404,
-          "prev_leg_length": 4
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 733,
-            "time": "2026-11-24 20:00:00+00:00",
-            "strength": "weak",
-            "symbol": "eurpln",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 728,
-            "time": "2026-11-24 00:00:00+00:00",
-            "strength": "strong",
-            "symbol": "eurpln",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 725,
-            "time": "2026-11-23 12:00:00+00:00",
-            "strength": "strong",
-            "symbol": "eurpln",
-            "timeframe": "4H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 4.468800067901611,
-          "recent_low": 4.428530216217041,
-          "period_bars": 20,
-          "timeframe": "4H"
-        },
-        "bars": 735,
-        "last_close": 4.461299896240234,
-        "last_time": "2026-11-25 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 52,
-        "base_confidence": 52,
-        "atr": 0.00973858,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "4H",
-        "levels_by_timeframe": {
-          "4H": {
-            "timeframe": "4H",
-            "signal_timeframe": "4H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 2/3, conf 52%, prog 40%):",
-          "UWAGA: sprzeczna swieca Bullish Engulfing",
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x4)",
-          "Swieca: Bearish Engulfing (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "Daily": {
-        "symbol": "eurpln",
-        "timeframe": "1D",
         "renko": {
           "direction": "up",
-          "consecutive": 3,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 148,
-          "last_close": 4.429160935538153,
-          "prev_leg_length": 1
-        },
-        "harmonics": [
-          {
-            "name": "Butterfly",
-            "direction": "bearish",
-            "status": "forming",
-            "X": 4.425069808959961,
-            "A": 4.377099990844727,
-            "B": 4.4145002365112305,
-            "C": 4.3927998542785645,
-            "D_projected": 4.44637,
-            "current": 4.43563985824585,
-            "time_X": "2026-11-03 00:00:00+00:00",
-            "time_A": "2026-11-10 00:00:00+00:00",
-            "time_B": "2026-11-11 00:00:00+00:00",
-            "time_C": "2026-11-16 00:00:00+00:00",
-            "symbol": "eurpln",
-            "timeframe": "1D",
-            "completed_at": null,
-            "entry_reached_at": null,
-            "valid_until": "2026-11-19T00:00:00Z",
-            "closed_at": "2026-11-19T00:00:00Z",
-            "close_reason": "projected_structure_window_elapsed",
-            "active": false,
-            "lifecycle": "expired",
-            "created_at": "2026-11-16 00:00:00+00:00"
-          }
-        ],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 499,
-            "time": "2026-11-20 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "eurpln",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 4.461319923400879,
-          "recent_low": 4.377099990844727,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 500,
-        "last_close": 4.43563985824585,
-        "last_time": "2026-11-20 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 0,
-        "base_confidence": 0,
-        "atr": 0.02405221,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak sygnalow wejscia na 4H"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "1D": {
-        "symbol": "eurpln",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "up",
-          "consecutive": 3,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 148,
-          "last_close": 4.429160935538153,
-          "prev_leg_length": 1
-        },
-        "harmonics": [
-          {
-            "name": "Butterfly",
-            "direction": "bearish",
-            "status": "forming",
-            "X": 4.425069808959961,
-            "A": 4.377099990844727,
-            "B": 4.4145002365112305,
-            "C": 4.3927998542785645,
-            "D_projected": 4.44637,
-            "current": 4.43563985824585,
-            "time_X": "2026-11-03 00:00:00+00:00",
-            "time_A": "2026-11-10 00:00:00+00:00",
-            "time_B": "2026-11-11 00:00:00+00:00",
-            "time_C": "2026-11-16 00:00:00+00:00",
-            "symbol": "eurpln",
-            "timeframe": "1D",
-            "completed_at": null,
-            "entry_reached_at": null,
-            "valid_until": "2026-11-19T00:00:00Z",
-            "closed_at": "2026-11-19T00:00:00Z",
-            "close_reason": "projected_structure_window_elapsed",
-            "active": false,
-            "lifecycle": "expired",
-            "created_at": "2026-11-16 00:00:00+00:00"
-          }
-        ],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 499,
-            "time": "2026-11-20 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "eurpln",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 4.461319923400879,
-          "recent_low": 4.377099990844727,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 500,
-        "last_close": 4.43563985824585,
-        "last_time": "2026-11-20 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 0,
-        "base_confidence": 0,
-        "atr": 0.02405221,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak sygnalow wejscia na 4H"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      }
-    },
-    "decision": "BRAK",
-    "confidence": 52,
-    "entry": null,
-    "stop": null,
-    "price": 4.461299896240234,
-    "reasons": [
-      "Brak setupu (SHORT 2/3, conf 52%, prog 40%):",
-      "UWAGA: sprzeczna swieca Bullish Engulfing",
-      "Renko: lokalny szczyt / odwrocenie w dol (noga x4)",
-      "Swieca: Bearish Engulfing (potwierdzenie)"
-    ],
-    "summary": "EUR/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
-    "base_confidence": 52,
-    "target": null,
-    "rr": null,
-    "pillars": 2,
-    "modules": {
-      "renko": true,
-      "harmonic": false,
-      "candle": true
-    },
-    "contradiction": true,
-    "daily_align": 0,
-    "timeframe_alignment": {
-      "4H": {
-        "bias": "BRAK",
-        "status": "main",
-        "score": 52
-      },
-      "1D": {
-        "bias": "BRAK",
-        "confidence": 0,
-        "available": true,
-        "status": "neutral"
-      },
-      "1H": {
-        "bias": "BRAK",
-        "confidence": 24,
-        "available": true,
-        "status": "neutral"
-      }
-    },
-    "levels_timeframe": "4H",
-    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
-    "levels_by_timeframe": {
-      "4H": {
-        "timeframe": "4H",
-        "signal_timeframe": "4H",
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null
-      }
-    },
-    "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-25 00:00:00+00:00",
-    "atr": 0.00973858,
-    "harmonic": null,
-    "candle": null,
-    "renko_signal": "brak",
-    "signal_status": "NONE",
-    "can_enter": false,
-    "signal_origin": null,
-    "signal_valid_until": null,
-    "activated_at": null,
-    "closed_at": null,
-    "signal_close_reason": null,
-    "daily_context": "wzrostowy",
-    "overall_bias": "NIC",
-    "overall_confidence": 52,
-    "overall_action": "Brak wejscia – czekaj",
-    "overall_summary": "EUR/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
-  },
-  {
-    "symbol": "eurusd",
-    "name": "EUR/USD",
-    "updated": "2026-11-25T07:00:49Z",
-    "timeframes": {
-      "1H": {
-        "symbol": "eurusd",
-        "timeframe": "1H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 10,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 3485,
-          "last_close": 1.094262272119522,
-          "prev_leg_length": 1
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 2832,
-            "time": "2026-11-25 04:00:00+00:00",
-            "strength": "weak",
-            "symbol": "eurusd",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Shooting Star",
-            "direction": "bearish",
-            "bar": 2830,
-            "time": "2026-11-25 02:00:00+00:00",
-            "strength": "medium",
-            "symbol": "eurusd",
-            "timeframe": "1H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 1.0982975959777832,
-          "recent_low": 1.0934937000274658,
-          "period_bars": 20,
-          "timeframe": "1H"
-        },
-        "bars": 2835,
-        "last_close": 1.0939722061157227,
-        "last_time": "2026-11-25 06:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "SHORT",
-        "confidence": 20,
-        "base_confidence": 20,
-        "atr": 0.00064367,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1H",
-        "levels_by_timeframe": {
-          "1H": {
-            "timeframe": "1H",
-            "signal_timeframe": "1H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 1/3, conf 20%, prog 99%):",
-          "Swieca: Shooting Star (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "4H": {
-        "symbol": "eurusd",
-        "timeframe": "4H",
-        "renko": {
-          "direction": "down",
           "consecutive": 1,
           "last_reversal": true,
-          "local_high": true,
+          "local_high": false,
           "local_low": false,
-          "bricks_total": 366,
-          "last_close": 1.0955220035144246,
-          "prev_leg_length": 5
+          "bricks_total": 479,
+          "last_close": 159.2765710013253,
+          "prev_leg_length": 1
         },
         "harmonics": [],
         "candles": [
           {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 729,
-            "time": "2026-11-24 04:00:00+00:00",
-            "strength": "strong",
-            "symbol": "eurusd",
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 716,
+            "time": "2026-11-25 20:00:00+00:00",
+            "strength": "weak",
+            "symbol": "usdjpy",
             "timeframe": "4H"
           },
           {
             "name": "Hammer",
             "direction": "bullish",
-            "bar": 726,
-            "time": "2026-11-23 16:00:00+00:00",
+            "bar": 715,
+            "time": "2026-11-25 16:00:00+00:00",
             "strength": "medium",
-            "symbol": "eurusd",
+            "symbol": "usdjpy",
             "timeframe": "4H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 1.1008366346359253,
-          "recent_low": 1.0884946584701538,
-          "period_bars": 20,
-          "timeframe": "4H"
-        },
-        "bars": 735,
-        "last_close": 1.0948106050491333,
-        "last_time": "2026-11-25 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 57,
-        "base_confidence": 55,
-        "atr": 0.0025339,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "4H",
-        "levels_by_timeframe": {
-          "4H": {
-            "timeframe": "4H",
-            "signal_timeframe": "4H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 2/3, conf 55%, prog 40%):",
-          "UWAGA: sprzeczna swieca Hammer",
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x5)",
-          "Swieca: Bearish Engulfing (potwierdzenie)",
-          "1H: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "Daily": {
-        "symbol": "eurusd",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "down",
-          "consecutive": 7,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 283,
-          "last_close": 1.0921661896365022,
-          "prev_leg_length": 1
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 497,
-            "time": "2026-11-24 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "eurusd",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 1.1275228261947632,
-          "recent_low": 1.088435411453247,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 498,
-        "last_close": 1.090809941291809,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 0,
-        "base_confidence": 0,
-        "atr": 0.00803252,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak sygnalow wejscia na 4H"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "1D": {
-        "symbol": "eurusd",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "down",
-          "consecutive": 7,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 283,
-          "last_close": 1.0921661896365022,
-          "prev_leg_length": 1
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 497,
-            "time": "2026-11-24 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "eurusd",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 1.1275228261947632,
-          "recent_low": 1.088435411453247,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 498,
-        "last_close": 1.090809941291809,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 0,
-        "base_confidence": 0,
-        "atr": 0.00803252,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak sygnalow wejscia na 4H"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      }
-    },
-    "decision": "BRAK",
-    "confidence": 57,
-    "entry": null,
-    "stop": null,
-    "price": 1.0948106050491333,
-    "reasons": [
-      "Brak setupu (SHORT 2/3, conf 55%, prog 40%):",
-      "UWAGA: sprzeczna swieca Hammer",
-      "Renko: lokalny szczyt / odwrocenie w dol (noga x5)",
-      "Swieca: Bearish Engulfing (potwierdzenie)",
-      "1H: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
-    ],
-    "summary": "EUR/USD 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
-    "base_confidence": 55,
-    "target": null,
-    "rr": null,
-    "pillars": 2,
-    "modules": {
-      "renko": true,
-      "harmonic": false,
-      "candle": true
-    },
-    "contradiction": true,
-    "daily_align": 0,
-    "timeframe_alignment": {
-      "4H": {
-        "bias": "BRAK",
-        "status": "main",
-        "score": 55
-      },
-      "1D": {
-        "bias": "BRAK",
-        "confidence": 0,
-        "available": true,
-        "status": "neutral"
-      },
-      "1H": {
-        "bias": "SHORT",
-        "confidence": 20,
-        "available": true,
-        "status": "confirms"
-      }
-    },
-    "levels_timeframe": "4H",
-    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
-    "levels_by_timeframe": {
-      "4H": {
-        "timeframe": "4H",
-        "signal_timeframe": "4H",
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null
-      }
-    },
-    "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-25 00:00:00+00:00",
-    "atr": 0.0025339,
-    "harmonic": null,
-    "candle": null,
-    "renko_signal": "brak",
-    "signal_status": "NONE",
-    "can_enter": false,
-    "signal_origin": null,
-    "signal_valid_until": null,
-    "activated_at": null,
-    "closed_at": null,
-    "signal_close_reason": null,
-    "daily_context": "spadkowy",
-    "overall_bias": "NIC",
-    "overall_confidence": 57,
-    "overall_action": "Brak wejscia – czekaj",
-    "overall_summary": "EUR/USD 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
-  },
-  {
-    "symbol": "usdpln",
-    "name": "USD/PLN",
-    "updated": "2026-11-25T07:00:50Z",
-    "timeframes": {
-      "1H": {
-        "symbol": "usdpln",
-        "timeframe": "1H",
-        "renko": {
-          "direction": "up",
-          "consecutive": 7,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 1820,
-          "last_close": 4.078374079295583,
-          "prev_leg_length": 2
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 2836,
-            "time": "2026-11-25 04:00:00+00:00",
-            "strength": "weak",
-            "symbol": "usdpln",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Hammer",
-            "direction": "bullish",
-            "bar": 2834,
-            "time": "2026-11-25 02:00:00+00:00",
-            "strength": "medium",
-            "symbol": "usdpln",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 2831,
-            "time": "2026-11-24 23:00:00+00:00",
-            "strength": "strong",
-            "symbol": "usdpln",
-            "timeframe": "1H"
           },
           {
             "name": "Bearish Engulfing",
             "direction": "bearish",
-            "bar": 2829,
-            "time": "2026-11-24 21:00:00+00:00",
-            "strength": "strong",
-            "symbol": "usdpln",
-            "timeframe": "1H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 4.08204984664917,
-          "recent_low": 4.057300090789795,
-          "period_bars": 20,
-          "timeframe": "1H"
-        },
-        "bars": 2839,
-        "last_close": 4.080450057983398,
-        "last_time": "2026-11-25 06:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 24,
-        "base_confidence": 24,
-        "atr": 0.00518782,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1H",
-        "levels_by_timeframe": {
-          "1H": {
-            "timeframe": "1H",
-            "signal_timeframe": "1H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-          "Swieca: Bearish Engulfing (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "4H": {
-        "symbol": "usdpln",
-        "timeframe": "4H",
-        "renko": {
-          "direction": "up",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": false,
-          "local_low": true,
-          "bricks_total": 314,
-          "last_close": 4.073060750961304,
-          "prev_leg_length": 2
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 731,
-            "time": "2026-11-24 12:00:00+00:00",
-            "strength": "strong",
-            "symbol": "usdpln",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Shooting Star",
-            "direction": "bearish",
-            "bar": 730,
-            "time": "2026-11-24 08:00:00+00:00",
-            "strength": "medium",
-            "symbol": "usdpln",
-            "timeframe": "4H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 4.089700222015381,
-          "recent_low": 4.030099868774414,
-          "period_bars": 20,
-          "timeframe": "4H"
-        },
-        "bars": 735,
-        "last_close": 4.075799942016602,
-        "last_time": "2026-11-25 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 27,
-        "base_confidence": 24,
-        "atr": 0.01389146,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "4H",
-        "levels_by_timeframe": {
-          "4H": {
-            "timeframe": "4H",
-            "signal_timeframe": "4H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-          "Swieca: Evening Star (potwierdzenie)",
-          "1D: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "Daily": {
-        "symbol": "usdpln",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "up",
-          "consecutive": 7,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 228,
-          "last_close": 4.055475814001902,
-          "prev_leg_length": 1
-        },
-        "harmonics": [
-          {
-            "name": "Deep Crab",
-            "direction": "bearish",
-            "status": "forming",
-            "X": 3.957170009613037,
-            "A": 3.8892500400543213,
-            "B": 3.9498000144958496,
-            "C": 3.894200086593628,
-            "D_projected": 3.99914,
-            "current": 4.069389820098877,
-            "time_X": "2026-11-03 00:00:00+00:00",
-            "time_A": "2026-11-05 00:00:00+00:00",
-            "time_B": "2026-11-06 00:00:00+00:00",
-            "time_C": "2026-11-10 00:00:00+00:00",
-            "symbol": "usdpln",
-            "timeframe": "1D",
-            "completed_at": null,
-            "entry_reached_at": null,
-            "valid_until": "2026-11-12T00:00:00Z",
-            "closed_at": "2026-11-12T00:00:00Z",
-            "close_reason": "projected_structure_window_elapsed",
-            "active": false,
-            "lifecycle": "expired",
-            "created_at": "2026-11-10 00:00:00+00:00"
-          }
-        ],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 497,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "usdpln",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Shooting Star",
-            "direction": "bearish",
-            "bar": 490,
-            "time": "2026-11-11 00:00:00+00:00",
-            "strength": "medium",
-            "symbol": "usdpln",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 4.088620185852051,
-          "recent_low": 3.8892500400543213,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 499,
-        "last_close": 4.069389820098877,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "SHORT",
-        "confidence": 20,
-        "base_confidence": 20,
-        "atr": 0.04092998,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 1/3, conf 20%, prog 99%):",
-          "Swieca: Shooting Star (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "1D": {
-        "symbol": "usdpln",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "up",
-          "consecutive": 7,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 228,
-          "last_close": 4.055475814001902,
-          "prev_leg_length": 1
-        },
-        "harmonics": [
-          {
-            "name": "Deep Crab",
-            "direction": "bearish",
-            "status": "forming",
-            "X": 3.957170009613037,
-            "A": 3.8892500400543213,
-            "B": 3.9498000144958496,
-            "C": 3.894200086593628,
-            "D_projected": 3.99914,
-            "current": 4.069389820098877,
-            "time_X": "2026-11-03 00:00:00+00:00",
-            "time_A": "2026-11-05 00:00:00+00:00",
-            "time_B": "2026-11-06 00:00:00+00:00",
-            "time_C": "2026-11-10 00:00:00+00:00",
-            "symbol": "usdpln",
-            "timeframe": "1D",
-            "completed_at": null,
-            "entry_reached_at": null,
-            "valid_until": "2026-11-12T00:00:00Z",
-            "closed_at": "2026-11-12T00:00:00Z",
-            "close_reason": "projected_structure_window_elapsed",
-            "active": false,
-            "lifecycle": "expired",
-            "created_at": "2026-11-10 00:00:00+00:00"
-          }
-        ],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 497,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "weak",
-            "symbol": "usdpln",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Shooting Star",
-            "direction": "bearish",
-            "bar": 490,
-            "time": "2026-11-11 00:00:00+00:00",
-            "strength": "medium",
-            "symbol": "usdpln",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 4.088620185852051,
-          "recent_low": 3.8892500400543213,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 499,
-        "last_close": 4.069389820098877,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "SHORT",
-        "confidence": 20,
-        "base_confidence": 20,
-        "atr": 0.04092998,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 1/3, conf 20%, prog 99%):",
-          "Swieca: Shooting Star (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      }
-    },
-    "decision": "BRAK",
-    "confidence": 27,
-    "entry": null,
-    "stop": null,
-    "price": 4.075799942016602,
-    "reasons": [
-      "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-      "Swieca: Evening Star (potwierdzenie)",
-      "1D: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
-    ],
-    "summary": "USD/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
-    "base_confidence": 24,
-    "target": null,
-    "rr": null,
-    "pillars": 1,
-    "modules": {
-      "renko": false,
-      "harmonic": false,
-      "candle": true
-    },
-    "contradiction": false,
-    "daily_align": 1,
-    "timeframe_alignment": {
-      "4H": {
-        "bias": "BRAK",
-        "status": "main",
-        "score": 24
-      },
-      "1D": {
-        "bias": "SHORT",
-        "confidence": 20,
-        "available": true,
-        "status": "confirms"
-      },
-      "1H": {
-        "bias": "BRAK",
-        "confidence": 24,
-        "available": true,
-        "status": "neutral"
-      }
-    },
-    "levels_timeframe": "4H",
-    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
-    "levels_by_timeframe": {
-      "4H": {
-        "timeframe": "4H",
-        "signal_timeframe": "4H",
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null
-      }
-    },
-    "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-25 00:00:00+00:00",
-    "atr": 0.01389146,
-    "harmonic": null,
-    "candle": null,
-    "renko_signal": "brak",
-    "signal_status": "NONE",
-    "can_enter": false,
-    "signal_origin": null,
-    "signal_valid_until": null,
-    "activated_at": null,
-    "closed_at": null,
-    "signal_close_reason": null,
-    "daily_context": "wzrostowy",
-    "overall_bias": "NIC",
-    "overall_confidence": 27,
-    "overall_action": "Brak wejscia – czekaj",
-    "overall_summary": "USD/PLN 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
-  },
-  {
-    "symbol": "usdjpy",
-    "name": "USD/JPY",
-    "updated": "2026-11-25T07:00:50Z",
-    "timeframes": {
-      "1H": {
-        "symbol": "usdjpy",
-        "timeframe": "1H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": true,
-          "local_low": false,
-          "bricks_total": 2493,
-          "last_close": 159.31512505667564,
-          "prev_leg_length": 3
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 2820,
-            "time": "2026-11-25 06:00:00+00:00",
+            "bar": 714,
+            "time": "2026-11-25 12:00:00+00:00",
             "strength": "strong",
             "symbol": "usdjpy",
-            "timeframe": "1H"
+            "timeframe": "4H"
           },
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
-            "bar": 2817,
-            "time": "2026-11-25 03:00:00+00:00",
-            "strength": "strong",
-            "symbol": "usdjpy",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 2812,
-            "time": "2026-11-24 22:00:00+00:00",
-            "strength": "weak",
-            "symbol": "usdjpy",
-            "timeframe": "1H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 159.49600219726562,
-          "recent_low": 158.98699951171875,
-          "period_bars": 20,
-          "timeframe": "1H"
-        },
-        "bars": 2821,
-        "last_close": 159.2689971923828,
-        "last_time": "2026-11-25 06:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "SHORT",
-        "confidence": 48,
-        "base_confidence": 48,
-        "atr": 0.14257268,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1H",
-        "levels_by_timeframe": {
-          "1H": {
-            "timeframe": "1H",
-            "signal_timeframe": "1H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 2/3, conf 48%, prog 40%):",
-          "UWAGA: sprzeczna swieca Bullish Engulfing",
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x3)",
-          "Swieca: Evening Star (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "4H": {
-        "symbol": "usdjpy",
-        "timeframe": "4H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": true,
-          "local_low": false,
-          "bricks_total": 504,
-          "last_close": 159.1518532889229,
-          "prev_leg_length": 2
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 732,
+            "bar": 709,
             "time": "2026-11-24 16:00:00+00:00",
             "strength": "strong",
             "symbol": "usdjpy",
@@ -2989,17 +2872,8 @@
           {
             "name": "Evening Star",
             "direction": "bearish",
-            "bar": 731,
+            "bar": 708,
             "time": "2026-11-24 12:00:00+00:00",
-            "strength": "strong",
-            "symbol": "usdjpy",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 726,
-            "time": "2026-11-23 16:00:00+00:00",
             "strength": "strong",
             "symbol": "usdjpy",
             "timeframe": "4H"
@@ -3007,19 +2881,19 @@
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 159.84100341796875,
+          "recent_high": 159.58099365234375,
           "recent_low": 158.4080047607422,
           "period_bars": 20,
           "timeframe": "4H"
         },
-        "bars": 735,
-        "last_close": 159.28700256347656,
-        "last_time": "2026-11-25 00:00:00+00:00",
+        "bars": 718,
+        "last_close": 159.15199279785156,
+        "last_time": "2026-11-26 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
-        "confidence": 49,
-        "base_confidence": 44,
-        "atr": 0.34378488,
+        "confidence": 36,
+        "base_confidence": 36,
+        "atr": 0.34457179,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3036,11 +2910,10 @@
           }
         },
         "reasons": [
-          "Brak setupu (SHORT 2/3, conf 44%, prog 40%):",
-          "UWAGA: sprzeczna swieca Bullish Engulfing",
-          "Renko: lokalny szczyt / odwrocenie w dol (noga x2)",
-          "Swieca: Evening Star (potwierdzenie)",
-          "1H: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
+          "Brak setupu (LONG 2/3, conf 36%, prog 40%):",
+          "UWAGA: sprzeczna swieca Bearish Engulfing",
+          "Renko: lokalny dolek / odwrocenie w gore (noga x1)",
+          "Swieca: Hammer (potwierdzenie)"
         ],
         "signal_status": "NONE",
         "can_enter": false,
@@ -3059,27 +2932,27 @@
           "last_reversal": true,
           "local_high": true,
           "local_low": false,
-          "bricks_total": 459,
-          "last_close": 159.2731606619699,
+          "bricks_total": 447,
+          "last_close": 159.2913709368026,
           "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [
           {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
+            "name": "Doji",
+            "direction": "neutral",
             "bar": 485,
-            "time": "2026-11-24 00:00:00+00:00",
-            "strength": "strong",
+            "time": "2026-11-25 00:00:00+00:00",
+            "strength": "weak",
             "symbol": "usdjpy",
             "timeframe": "1D"
           },
           {
-            "name": "Doji",
-            "direction": "neutral",
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
             "bar": 484,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "weak",
+            "time": "2026-11-24 00:00:00+00:00",
+            "strength": "strong",
             "symbol": "usdjpy",
             "timeframe": "1D"
           }
@@ -3092,13 +2965,13 @@
           "timeframe": "1D"
         },
         "bars": 486,
-        "last_close": 159.00900268554688,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 159.26199340820312,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 25,
         "base_confidence": 25,
-        "atr": 0.93221174,
+        "atr": 0.93592616,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3136,27 +3009,27 @@
           "last_reversal": true,
           "local_high": true,
           "local_low": false,
-          "bricks_total": 459,
-          "last_close": 159.2731606619699,
+          "bricks_total": 447,
+          "last_close": 159.2913709368026,
           "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [
           {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
+            "name": "Doji",
+            "direction": "neutral",
             "bar": 485,
-            "time": "2026-11-24 00:00:00+00:00",
-            "strength": "strong",
+            "time": "2026-11-25 00:00:00+00:00",
+            "strength": "weak",
             "symbol": "usdjpy",
             "timeframe": "1D"
           },
           {
-            "name": "Doji",
-            "direction": "neutral",
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
             "bar": 484,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "weak",
+            "time": "2026-11-24 00:00:00+00:00",
+            "strength": "strong",
             "symbol": "usdjpy",
             "timeframe": "1D"
           }
@@ -3169,13 +3042,13 @@
           "timeframe": "1D"
         },
         "bars": 486,
-        "last_close": 159.00900268554688,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 159.26199340820312,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 25,
         "base_confidence": 25,
-        "atr": 0.93221174,
+        "atr": 0.93592616,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3206,19 +3079,18 @@
       }
     },
     "decision": "BRAK",
-    "confidence": 49,
+    "confidence": 36,
     "entry": null,
     "stop": null,
-    "price": 159.28700256347656,
+    "price": 159.15199279785156,
     "reasons": [
-      "Brak setupu (SHORT 2/3, conf 44%, prog 40%):",
-      "UWAGA: sprzeczna swieca Bullish Engulfing",
-      "Renko: lokalny szczyt / odwrocenie w dol (noga x2)",
-      "Swieca: Evening Star (potwierdzenie)",
-      "1H: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
+      "Brak setupu (LONG 2/3, conf 36%, prog 40%):",
+      "UWAGA: sprzeczna swieca Bearish Engulfing",
+      "Renko: lokalny dolek / odwrocenie w gore (noga x1)",
+      "Swieca: Hammer (potwierdzenie)"
     ],
     "summary": "USD/JPY 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
-    "base_confidence": 44,
+    "base_confidence": 36,
     "target": null,
     "rr": null,
     "pillars": 2,
@@ -3233,7 +3105,7 @@
       "4H": {
         "bias": "BRAK",
         "status": "main",
-        "score": 44
+        "score": 36
       },
       "1D": {
         "bias": "BRAK",
@@ -3242,10 +3114,10 @@
         "status": "neutral"
       },
       "1H": {
-        "bias": "SHORT",
-        "confidence": 48,
+        "bias": "BRAK",
+        "confidence": 24,
         "available": true,
-        "status": "confirms"
+        "status": "neutral"
       }
     },
     "levels_timeframe": "4H",
@@ -3261,8 +3133,8 @@
       }
     },
     "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-25 00:00:00+00:00",
-    "atr": 0.34378488,
+    "last_bar_time": "2026-11-26 00:00:00+00:00",
+    "atr": 0.34457179,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -3275,44 +3147,35 @@
     "signal_close_reason": null,
     "daily_context": "spadkowy",
     "overall_bias": "NIC",
-    "overall_confidence": 49,
+    "overall_confidence": 36,
     "overall_action": "Brak wejscia – czekaj",
     "overall_summary": "USD/JPY 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
   },
   {
     "symbol": "copper",
     "name": "Copper",
-    "updated": "2026-11-25T07:00:51Z",
+    "updated": "2026-11-26T06:59:35Z",
     "timeframes": {
       "1H": {
         "symbol": "copper",
         "timeframe": "1H",
         "renko": {
-          "direction": "down",
-          "consecutive": 5,
+          "direction": "up",
+          "consecutive": 6,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 850,
-          "last_close": 5.383213383810876,
-          "prev_leg_length": 3
+          "bricks_total": 640,
+          "last_close": 5.508999824523919,
+          "prev_leg_length": 2
         },
         "harmonics": [],
         "candles": [
           {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 2270,
-            "time": "2026-11-25 05:00:00+00:00",
-            "strength": "strong",
-            "symbol": "copper",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 2267,
-            "time": "2026-11-25 02:00:00+00:00",
+            "name": "Morning Star",
+            "direction": "bullish",
+            "bar": 2230,
+            "time": "2026-11-26 02:00:00+00:00",
             "strength": "strong",
             "symbol": "copper",
             "timeframe": "1H"
@@ -3320,8 +3183,17 @@
           {
             "name": "Bullish Engulfing",
             "direction": "bullish",
-            "bar": 2266,
-            "time": "2026-11-25 01:00:00+00:00",
+            "bar": 2230,
+            "time": "2026-11-26 02:00:00+00:00",
+            "strength": "strong",
+            "symbol": "copper",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 2228,
+            "time": "2026-11-26 00:00:00+00:00",
             "strength": "strong",
             "symbol": "copper",
             "timeframe": "1H"
@@ -3329,19 +3201,19 @@
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 5.7220001220703125,
-          "recent_low": 5.380499839782715,
+          "recent_high": 5.553500175476074,
+          "recent_low": 5.307499885559082,
           "period_bars": 20,
           "timeframe": "1H"
         },
-        "bars": 2272,
-        "last_close": 5.382999897003174,
-        "last_time": "2026-11-25 06:00:00+00:00",
+        "bars": 2233,
+        "last_close": 5.492499828338623,
+        "last_time": "2026-11-26 04:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 24,
         "base_confidence": 24,
-        "atr": 0.04121433,
+        "atr": 0.0499286,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3351,6 +3223,100 @@
           "1H": {
             "timeframe": "1H",
             "signal_timeframe": "1H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Morning Star (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "4H": {
+        "symbol": "copper",
+        "timeframe": "4H",
+        "renko": {
+          "direction": "up",
+          "consecutive": 2,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 151,
+          "last_close": 5.486821174621582,
+          "prev_leg_length": 5
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 600,
+            "time": "2026-11-26 00:00:00+00:00",
+            "strength": "weak",
+            "symbol": "copper",
+            "timeframe": "4H"
+          },
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 598,
+            "time": "2026-11-25 16:00:00+00:00",
+            "strength": "strong",
+            "symbol": "copper",
+            "timeframe": "4H"
+          },
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 596,
+            "time": "2026-11-25 08:00:00+00:00",
+            "strength": "medium",
+            "symbol": "copper",
+            "timeframe": "4H"
+          },
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 591,
+            "time": "2026-11-24 12:00:00+00:00",
+            "strength": "strong",
+            "symbol": "copper",
+            "timeframe": "4H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 5.788000106811523,
+          "recent_low": 5.307499885559082,
+          "period_bars": 20,
+          "timeframe": "4H"
+        },
+        "bars": 601,
+        "last_close": 5.489999771118164,
+        "last_time": "2026-11-26 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 0.10464287,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "4H",
+        "levels_by_timeframe": {
+          "4H": {
+            "timeframe": "4H",
+            "signal_timeframe": "4H",
             "entry": null,
             "stop": null,
             "target": null,
@@ -3369,93 +3335,17 @@
         "closed_at": null,
         "signal_close_reason": null
       },
-      "4H": {
-        "symbol": "copper",
-        "timeframe": "4H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 3,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 130,
-          "last_close": 5.454500062125074,
-          "prev_leg_length": 2
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 610,
-            "time": "2026-11-24 20:00:00+00:00",
-            "strength": "weak",
-            "symbol": "copper",
-            "timeframe": "4H"
-          },
-          {
-            "name": "Bearish Engulfing",
-            "direction": "bearish",
-            "bar": 608,
-            "time": "2026-11-24 12:00:00+00:00",
-            "strength": "strong",
-            "symbol": "copper",
-            "timeframe": "4H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 5.788000106811523,
-          "recent_low": 5.3979997634887695,
-          "period_bars": 20,
-          "timeframe": "4H"
-        },
-        "bars": 612,
-        "last_close": 5.454999923706055,
-        "last_time": "2026-11-25 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 24,
-        "base_confidence": 24,
-        "atr": 0.11874996,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "4H",
-        "levels_by_timeframe": {
-          "4H": {
-            "timeframe": "4H",
-            "signal_timeframe": "4H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-          "Swieca: Bearish Engulfing (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
       "Daily": {
         "symbol": "copper",
         "timeframe": "1D",
         "renko": {
           "direction": "down",
-          "consecutive": 3,
+          "consecutive": 4,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 339,
-          "last_close": 5.399106332233979,
+          "bricks_total": 362,
+          "last_close": 5.341142518179755,
           "prev_leg_length": 1
         },
         "harmonics": [],
@@ -3463,7 +3353,7 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 500,
+            "bar": 499,
             "time": "2026-11-20 00:00:00+00:00",
             "strength": "weak",
             "symbol": "copper",
@@ -3472,19 +3362,19 @@
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 6.641499996185303,
-          "recent_low": 5.362500190734863,
+          "recent_high": 6.636000156402588,
+          "recent_low": 5.304999828338623,
           "period_bars": 20,
           "timeframe": "1D"
         },
         "bars": 503,
-        "last_close": 5.362500190734863,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 5.332499980926514,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 0.13764279,
+        "atr": 0.13021425,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3516,12 +3406,12 @@
         "timeframe": "1D",
         "renko": {
           "direction": "down",
-          "consecutive": 3,
+          "consecutive": 4,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 339,
-          "last_close": 5.399106332233979,
+          "bricks_total": 362,
+          "last_close": 5.341142518179755,
           "prev_leg_length": 1
         },
         "harmonics": [],
@@ -3529,7 +3419,7 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 500,
+            "bar": 499,
             "time": "2026-11-20 00:00:00+00:00",
             "strength": "weak",
             "symbol": "copper",
@@ -3538,19 +3428,19 @@
         ],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 6.641499996185303,
-          "recent_low": 5.362500190734863,
+          "recent_high": 6.636000156402588,
+          "recent_low": 5.304999828338623,
           "period_bars": 20,
           "timeframe": "1D"
         },
         "bars": 503,
-        "last_close": 5.362500190734863,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "last_close": 5.332499980926514,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 0.13764279,
+        "atr": 0.13021425,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3582,10 +3472,10 @@
     "confidence": 24,
     "entry": null,
     "stop": null,
-    "price": 5.454999923706055,
+    "price": 5.489999771118164,
     "reasons": [
-      "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
-      "Swieca: Bearish Engulfing (potwierdzenie)"
+      "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+      "Swieca: Bullish Engulfing (potwierdzenie)"
     ],
     "summary": "Copper 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
     "base_confidence": 24,
@@ -3631,8 +3521,8 @@
       }
     },
     "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-25 00:00:00+00:00",
-    "atr": 0.11874996,
+    "last_bar_time": "2026-11-26 00:00:00+00:00",
+    "atr": 0.10464287,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -3652,19 +3542,19 @@
   {
     "symbol": "eu50",
     "name": "Euro Stoxx 50",
-    "updated": "2026-11-25T07:00:51Z",
+    "updated": "2026-11-26T06:59:35Z",
     "timeframes": {
       "1H": {
         "symbol": "eu50",
         "timeframe": "1H",
         "renko": {
           "direction": "down",
-          "consecutive": 2,
+          "consecutive": 7,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 578,
-          "last_close": 6004.7726004464275,
+          "bricks_total": 540,
+          "last_close": 5916.1256277901775,
           "prev_leg_length": 1
         },
         "harmonics": [
@@ -3677,7 +3567,7 @@
             "B": 6021.27001953125,
             "C": 6051.22998046875,
             "D_projected": 6001.32225,
-            "current": 6003.93017578125,
+            "current": 5904.97021484375,
             "time_X": "2026-11-23 12:00:00+00:00",
             "time_A": "2026-11-23 16:00:00+00:00",
             "time_B": "2026-11-24 10:00:00+00:00",
@@ -3687,10 +3577,10 @@
             "completed_at": null,
             "entry_reached_at": null,
             "valid_until": "2026-11-24T18:00:00Z",
-            "closed_at": null,
-            "close_reason": null,
+            "closed_at": "2026-11-24T18:00:00Z",
+            "close_reason": "projected_structure_window_elapsed",
             "active": false,
-            "lifecycle": "forming",
+            "lifecycle": "expired",
             "created_at": "2026-11-24 14:00:00+00:00"
           },
           {
@@ -3702,7 +3592,7 @@
             "B": 6021.27001953125,
             "C": 6051.22998046875,
             "D_projected": 5911.58284,
-            "current": 6003.93017578125,
+            "current": 5904.97021484375,
             "time_X": "2026-11-23 12:00:00+00:00",
             "time_A": "2026-11-23 16:00:00+00:00",
             "time_B": "2026-11-24 10:00:00+00:00",
@@ -3712,10 +3602,10 @@
             "completed_at": null,
             "entry_reached_at": null,
             "valid_until": "2026-11-24T18:00:00Z",
-            "closed_at": null,
-            "close_reason": null,
+            "closed_at": "2026-11-24T18:00:00Z",
+            "close_reason": "projected_structure_window_elapsed",
             "active": false,
-            "lifecycle": "forming",
+            "lifecycle": "expired",
             "created_at": "2026-11-24 14:00:00+00:00"
           }
         ],
@@ -3723,17 +3613,8 @@
           {
             "name": "Bearish Engulfing",
             "direction": "bearish",
-            "bar": 1076,
-            "time": "2026-11-24 15:00:00+00:00",
-            "strength": "strong",
-            "symbol": "eu50",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 1075,
-            "time": "2026-11-24 14:00:00+00:00",
+            "bar": 1055,
+            "time": "2026-11-25 15:00:00+00:00",
             "strength": "strong",
             "symbol": "eu50",
             "timeframe": "1H"
@@ -3741,17 +3622,17 @@
           {
             "name": "Doji",
             "direction": "neutral",
-            "bar": 1073,
-            "time": "2026-11-24 12:00:00+00:00",
+            "bar": 1054,
+            "time": "2026-11-25 14:00:00+00:00",
             "strength": "weak",
             "symbol": "eu50",
             "timeframe": "1H"
           },
           {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 1069,
-            "time": "2026-11-24 08:00:00+00:00",
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 1048,
+            "time": "2026-11-25 08:00:00+00:00",
             "strength": "strong",
             "symbol": "eu50",
             "timeframe": "1H"
@@ -3760,18 +3641,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 6086.10009765625,
-          "recent_low": 5944.5,
+          "recent_low": 5896.39990234375,
           "period_bars": 20,
           "timeframe": "1H"
         },
-        "bars": 1078,
-        "last_close": 6003.93017578125,
-        "last_time": "2026-11-24 16:00:00+00:00",
+        "bars": 1057,
+        "last_close": 5904.97021484375,
+        "last_time": "2026-11-25 16:00:00+00:00",
         "decision": "BRAK",
-        "bias": "LONG",
-        "confidence": 41,
-        "base_confidence": 41,
-        "atr": 29.38860212,
+        "bias": "BRAK",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 30.36861747,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3788,8 +3669,7 @@
           }
         },
         "reasons": [
-          "Brak setupu (LONG 2/3, conf 41%, prog 55%):",
-          "Harmoniczna: Gartley bullish (formuje sie (PRZ))",
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
           "Swieca: Bullish Engulfing (potwierdzenie)"
         ],
         "signal_status": "NONE",
@@ -3805,31 +3685,31 @@
         "timeframe": "4H",
         "renko": {
           "direction": "down",
-          "consecutive": 2,
+          "consecutive": 5,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 190,
-          "last_close": 6008.267717633929,
+          "bricks_total": 186,
+          "last_close": 5926.331612723214,
           "prev_leg_length": 4
         },
         "harmonics": [],
         "candles": [],
         "classic_patterns": [],
         "market_levels": {
-          "recent_high": 6388.85986328125,
-          "recent_low": 5944.5,
+          "recent_high": 6300.9501953125,
+          "recent_low": 5896.39990234375,
           "period_bars": 20,
           "timeframe": "4H"
         },
-        "bars": 359,
-        "last_close": 6003.93017578125,
-        "last_time": "2026-11-24 16:00:00+00:00",
+        "bars": 353,
+        "last_close": 5904.97021484375,
+        "last_time": "2026-11-25 16:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
-        "confidence": 4,
+        "confidence": 0,
         "base_confidence": 0,
-        "atr": 55.28208705,
+        "atr": 55.63424247,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3846,8 +3726,7 @@
           }
         },
         "reasons": [
-          "Brak sygnalow wejscia na 4H",
-          "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
+          "Brak sygnalow wejscia na 4H"
         ],
         "signal_status": "NONE",
         "can_enter": false,
@@ -3861,14 +3740,14 @@
         "symbol": "eu50",
         "timeframe": "1D",
         "renko": {
-          "direction": "up",
-          "consecutive": 2,
+          "direction": "down",
+          "consecutive": 3,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 245,
-          "last_close": 6044.048235212047,
-          "prev_leg_length": 9
+          "bricks_total": 238,
+          "last_close": 5911.718366350449,
+          "prev_leg_length": 2
         },
         "harmonics": [],
         "candles": [
@@ -3885,18 +3764,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 6430.6201171875,
-          "recent_low": 5941.9501953125,
+          "recent_low": 5894.4599609375,
           "period_bars": 20,
           "timeframe": "1D"
         },
-        "bars": 499,
-        "last_close": 6003.759765625,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "bars": 500,
+        "last_close": 5894.4599609375,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 99.53424944,
+        "atr": 101.07711356,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3927,14 +3806,14 @@
         "symbol": "eu50",
         "timeframe": "1D",
         "renko": {
-          "direction": "up",
-          "consecutive": 2,
+          "direction": "down",
+          "consecutive": 3,
           "last_reversal": false,
           "local_high": false,
           "local_low": false,
-          "bricks_total": 245,
-          "last_close": 6044.048235212047,
-          "prev_leg_length": 9
+          "bricks_total": 238,
+          "last_close": 5911.718366350449,
+          "prev_leg_length": 2
         },
         "harmonics": [],
         "candles": [
@@ -3951,18 +3830,18 @@
         "classic_patterns": [],
         "market_levels": {
           "recent_high": 6430.6201171875,
-          "recent_low": 5941.9501953125,
+          "recent_low": 5894.4599609375,
           "period_bars": 20,
           "timeframe": "1D"
         },
-        "bars": 499,
-        "last_close": 6003.759765625,
-        "last_time": "2026-11-24 00:00:00+00:00",
+        "bars": 500,
+        "last_close": 5894.4599609375,
+        "last_time": "2026-11-25 00:00:00+00:00",
         "decision": "BRAK",
         "bias": "BRAK",
         "confidence": 0,
         "base_confidence": 0,
-        "atr": 99.53424944,
+        "atr": 101.07711356,
         "entry": null,
         "stop": null,
         "target": null,
@@ -3991,13 +3870,12 @@
       }
     },
     "decision": "BRAK",
-    "confidence": 4,
+    "confidence": 0,
     "entry": null,
     "stop": null,
-    "price": 6003.93017578125,
+    "price": 5904.97021484375,
     "reasons": [
-      "Brak sygnalow wejscia na 4H",
-      "1H: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
+      "Brak sygnalow wejscia na 4H"
     ],
     "summary": "Euro Stoxx 50 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
     "base_confidence": 0,
@@ -4024,402 +3902,6 @@
         "status": "neutral"
       },
       "1H": {
-        "bias": "LONG",
-        "confidence": 41,
-        "available": true,
-        "status": "confirms"
-      }
-    },
-    "levels_timeframe": "4H",
-    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
-    "levels_by_timeframe": {
-      "4H": {
-        "timeframe": "4H",
-        "signal_timeframe": "4H",
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null
-      }
-    },
-    "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-24 16:00:00+00:00",
-    "atr": 55.28208705,
-    "harmonic": null,
-    "candle": null,
-    "renko_signal": "brak",
-    "signal_status": "NONE",
-    "can_enter": false,
-    "signal_origin": null,
-    "signal_valid_until": null,
-    "activated_at": null,
-    "closed_at": null,
-    "signal_close_reason": null,
-    "daily_context": "wzrostowy",
-    "overall_bias": "NIC",
-    "overall_confidence": 4,
-    "overall_action": "Brak wejscia – czekaj",
-    "overall_summary": "Euro Stoxx 50 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
-  },
-  {
-    "symbol": "uk100",
-    "name": "FTSE 100",
-    "updated": "2026-11-25T07:00:52Z",
-    "timeframes": {
-      "1H": {
-        "symbol": "uk100",
-        "timeframe": "1H",
-        "renko": {
-          "direction": "down",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": true,
-          "local_low": false,
-          "bricks_total": 740,
-          "last_close": 10473.6162109375,
-          "prev_leg_length": 2
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 1075,
-            "time": "2026-11-24 14:00:00+00:00",
-            "strength": "strong",
-            "symbol": "uk100",
-            "timeframe": "1H"
-          },
-          {
-            "name": "Doji",
-            "direction": "neutral",
-            "bar": 1069,
-            "time": "2026-11-24 08:00:00+00:00",
-            "strength": "weak",
-            "symbol": "uk100",
-            "timeframe": "1H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 10508.1396484375,
-          "recent_low": 10341.0498046875,
-          "period_bars": 20,
-          "timeframe": "1H"
-        },
-        "bars": 1078,
-        "last_close": 10467.509765625,
-        "last_time": "2026-11-24 16:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 24,
-        "base_confidence": 24,
-        "atr": 36.00146484,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1H",
-        "levels_by_timeframe": {
-          "1H": {
-            "timeframe": "1H",
-            "signal_timeframe": "1H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
-          "Swieca: Bullish Engulfing (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "4H": {
-        "symbol": "uk100",
-        "timeframe": "4H",
-        "renko": {
-          "direction": "up",
-          "consecutive": 3,
-          "last_reversal": false,
-          "local_high": false,
-          "local_low": false,
-          "bricks_total": 279,
-          "last_close": 10477.086983816966,
-          "prev_leg_length": 18
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 358,
-            "time": "2026-11-24 16:00:00+00:00",
-            "strength": "strong",
-            "symbol": "uk100",
-            "timeframe": "4H"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 10962.91015625,
-          "recent_low": 10330.080078125,
-          "period_bars": 20,
-          "timeframe": "4H"
-        },
-        "bars": 359,
-        "last_close": 10467.509765625,
-        "last_time": "2026-11-24 16:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "BRAK",
-        "confidence": 33,
-        "base_confidence": 24,
-        "atr": 58.9906529,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "4H",
-        "levels_by_timeframe": {
-          "4H": {
-            "timeframe": "4H",
-            "signal_timeframe": "4H",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
-          "Swieca: Bullish Engulfing (potwierdzenie)",
-          "1D: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "Daily": {
-        "symbol": "uk100",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "up",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": false,
-          "local_low": true,
-          "bricks_total": 247,
-          "last_close": 10418.66943359375,
-          "prev_leg_length": 8
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 504,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "strong",
-            "symbol": "uk100",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 500,
-            "time": "2026-11-17 00:00:00+00:00",
-            "strength": "strong",
-            "symbol": "uk100",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Shooting Star",
-            "direction": "bearish",
-            "bar": 499,
-            "time": "2026-11-16 00:00:00+00:00",
-            "strength": "medium",
-            "symbol": "uk100",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 10963.0,
-          "recent_low": 10330.0,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 506,
-        "last_close": 10467.099609375,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "LONG",
-        "confidence": 57,
-        "base_confidence": 57,
-        "atr": 128.90722656,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (LONG 2/3, conf 57%, prog 40%):",
-          "UWAGA: sprzeczna swieca Evening Star",
-          "Renko: lokalny dolek / odwrocenie w gore (noga x8)",
-          "Swieca: Bullish Engulfing (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      },
-      "1D": {
-        "symbol": "uk100",
-        "timeframe": "1D",
-        "renko": {
-          "direction": "up",
-          "consecutive": 1,
-          "last_reversal": true,
-          "local_high": false,
-          "local_low": true,
-          "bricks_total": 247,
-          "last_close": 10418.66943359375,
-          "prev_leg_length": 8
-        },
-        "harmonics": [],
-        "candles": [
-          {
-            "name": "Bullish Engulfing",
-            "direction": "bullish",
-            "bar": 504,
-            "time": "2026-11-23 00:00:00+00:00",
-            "strength": "strong",
-            "symbol": "uk100",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Evening Star",
-            "direction": "bearish",
-            "bar": 500,
-            "time": "2026-11-17 00:00:00+00:00",
-            "strength": "strong",
-            "symbol": "uk100",
-            "timeframe": "1D"
-          },
-          {
-            "name": "Shooting Star",
-            "direction": "bearish",
-            "bar": 499,
-            "time": "2026-11-16 00:00:00+00:00",
-            "strength": "medium",
-            "symbol": "uk100",
-            "timeframe": "1D"
-          }
-        ],
-        "classic_patterns": [],
-        "market_levels": {
-          "recent_high": 10963.0,
-          "recent_low": 10330.0,
-          "period_bars": 20,
-          "timeframe": "1D"
-        },
-        "bars": 506,
-        "last_close": 10467.099609375,
-        "last_time": "2026-11-24 00:00:00+00:00",
-        "decision": "BRAK",
-        "bias": "LONG",
-        "confidence": 57,
-        "base_confidence": 57,
-        "atr": 128.90722656,
-        "entry": null,
-        "stop": null,
-        "target": null,
-        "rr": null,
-        "levels_timeframe": "1D",
-        "levels_by_timeframe": {
-          "1D": {
-            "timeframe": "1D",
-            "signal_timeframe": "1D",
-            "entry": null,
-            "stop": null,
-            "target": null,
-            "rr": null
-          }
-        },
-        "reasons": [
-          "Brak setupu (LONG 2/3, conf 57%, prog 40%):",
-          "UWAGA: sprzeczna swieca Evening Star",
-          "Renko: lokalny dolek / odwrocenie w gore (noga x8)",
-          "Swieca: Bullish Engulfing (potwierdzenie)"
-        ],
-        "signal_status": "NONE",
-        "can_enter": false,
-        "signal_origin": null,
-        "signal_valid_until": null,
-        "activated_at": null,
-        "closed_at": null,
-        "signal_close_reason": null
-      }
-    },
-    "decision": "BRAK",
-    "confidence": 33,
-    "entry": null,
-    "stop": null,
-    "price": 10467.509765625,
-    "reasons": [
-      "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
-      "Swieca: Bullish Engulfing (potwierdzenie)",
-      "1D: potwierdza kierunek LONG (kontekst, nie osobny sygnal)"
-    ],
-    "summary": "FTSE 100 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
-    "base_confidence": 24,
-    "target": null,
-    "rr": null,
-    "pillars": 1,
-    "modules": {
-      "renko": false,
-      "harmonic": false,
-      "candle": true
-    },
-    "contradiction": false,
-    "daily_align": 1,
-    "timeframe_alignment": {
-      "4H": {
-        "bias": "BRAK",
-        "status": "main",
-        "score": 24
-      },
-      "1D": {
-        "bias": "LONG",
-        "confidence": 57,
-        "available": true,
-        "status": "confirms"
-      },
-      "1H": {
         "bias": "BRAK",
         "confidence": 24,
         "available": true,
@@ -4439,8 +3921,422 @@
       }
     },
     "main_signal_timeframe": "4H",
-    "last_bar_time": "2026-11-24 16:00:00+00:00",
-    "atr": 58.9906529,
+    "last_bar_time": "2026-11-25 16:00:00+00:00",
+    "atr": 55.63424247,
+    "harmonic": null,
+    "candle": null,
+    "renko_signal": "brak",
+    "signal_status": "NONE",
+    "can_enter": false,
+    "signal_origin": null,
+    "signal_valid_until": null,
+    "activated_at": null,
+    "closed_at": null,
+    "signal_close_reason": null,
+    "daily_context": "spadkowy",
+    "overall_bias": "NIC",
+    "overall_confidence": 0,
+    "overall_action": "Brak wejscia – czekaj",
+    "overall_summary": "Euro Stoxx 50 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
+  },
+  {
+    "symbol": "uk100",
+    "name": "FTSE 100",
+    "updated": "2026-11-26T06:59:36Z",
+    "timeframes": {
+      "1H": {
+        "symbol": "uk100",
+        "timeframe": "1H",
+        "renko": {
+          "direction": "down",
+          "consecutive": 4,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 598,
+          "last_close": 10442.259905133931,
+          "prev_leg_length": 3
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 1054,
+            "time": "2026-11-25 14:00:00+00:00",
+            "strength": "weak",
+            "symbol": "uk100",
+            "timeframe": "1H"
+          },
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 1051,
+            "time": "2026-11-25 11:00:00+00:00",
+            "strength": "strong",
+            "symbol": "uk100",
+            "timeframe": "1H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 10545.009765625,
+          "recent_low": 10423.6796875,
+          "period_bars": 20,
+          "timeframe": "1H"
+        },
+        "bars": 1057,
+        "last_close": 10433.66015625,
+        "last_time": "2026-11-25 16:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "SHORT",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 40.80803571,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1H",
+        "levels_by_timeframe": {
+          "1H": {
+            "timeframe": "1H",
+            "signal_timeframe": "1H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (SHORT 1/3, conf 24%, prog 99%):",
+          "Swieca: Bearish Engulfing (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "4H": {
+        "symbol": "uk100",
+        "timeframe": "4H",
+        "renko": {
+          "direction": "down",
+          "consecutive": 1,
+          "last_reversal": true,
+          "local_high": true,
+          "local_low": false,
+          "bricks_total": 283,
+          "last_close": 10440.767333984371,
+          "prev_leg_length": 3
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Bearish Engulfing",
+            "direction": "bearish",
+            "bar": 351,
+            "time": "2026-11-25 12:00:00+00:00",
+            "strength": "strong",
+            "symbol": "uk100",
+            "timeframe": "4H"
+          },
+          {
+            "name": "Doji",
+            "direction": "neutral",
+            "bar": 350,
+            "time": "2026-11-25 08:00:00+00:00",
+            "strength": "weak",
+            "symbol": "uk100",
+            "timeframe": "4H"
+          },
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 349,
+            "time": "2026-11-24 16:00:00+00:00",
+            "strength": "strong",
+            "symbol": "uk100",
+            "timeframe": "4H"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 10802.1103515625,
+          "recent_low": 10330.080078125,
+          "period_bars": 20,
+          "timeframe": "4H"
+        },
+        "bars": 353,
+        "last_close": 10433.66015625,
+        "last_time": "2026-11-25 16:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 50,
+        "base_confidence": 48,
+        "atr": 57.87074498,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "4H",
+        "levels_by_timeframe": {
+          "4H": {
+            "timeframe": "4H",
+            "signal_timeframe": "4H",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (SHORT 2/3, conf 48%, prog 40%):",
+          "UWAGA: sprzeczna swieca Bullish Engulfing",
+          "Renko: lokalny szczyt / odwrocenie w dol (noga x3)",
+          "Swieca: Bearish Engulfing (potwierdzenie)",
+          "1H: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "Daily": {
+        "symbol": "uk100",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 2,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 251,
+          "last_close": 10477.201904296866,
+          "prev_leg_length": 8
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 504,
+            "time": "2026-11-23 00:00:00+00:00",
+            "strength": "strong",
+            "symbol": "uk100",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Evening Star",
+            "direction": "bearish",
+            "bar": 500,
+            "time": "2026-11-17 00:00:00+00:00",
+            "strength": "strong",
+            "symbol": "uk100",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 499,
+            "time": "2026-11-16 00:00:00+00:00",
+            "strength": "medium",
+            "symbol": "uk100",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 10963.0,
+          "recent_low": 10330.0,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 507,
+        "last_close": 10426.900390625,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 124.88581194,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Bullish Engulfing (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      },
+      "1D": {
+        "symbol": "uk100",
+        "timeframe": "1D",
+        "renko": {
+          "direction": "up",
+          "consecutive": 2,
+          "last_reversal": false,
+          "local_high": false,
+          "local_low": false,
+          "bricks_total": 251,
+          "last_close": 10477.201904296866,
+          "prev_leg_length": 8
+        },
+        "harmonics": [],
+        "candles": [
+          {
+            "name": "Bullish Engulfing",
+            "direction": "bullish",
+            "bar": 504,
+            "time": "2026-11-23 00:00:00+00:00",
+            "strength": "strong",
+            "symbol": "uk100",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Evening Star",
+            "direction": "bearish",
+            "bar": 500,
+            "time": "2026-11-17 00:00:00+00:00",
+            "strength": "strong",
+            "symbol": "uk100",
+            "timeframe": "1D"
+          },
+          {
+            "name": "Shooting Star",
+            "direction": "bearish",
+            "bar": 499,
+            "time": "2026-11-16 00:00:00+00:00",
+            "strength": "medium",
+            "symbol": "uk100",
+            "timeframe": "1D"
+          }
+        ],
+        "classic_patterns": [],
+        "market_levels": {
+          "recent_high": 10963.0,
+          "recent_low": 10330.0,
+          "period_bars": 20,
+          "timeframe": "1D"
+        },
+        "bars": 507,
+        "last_close": 10426.900390625,
+        "last_time": "2026-11-25 00:00:00+00:00",
+        "decision": "BRAK",
+        "bias": "BRAK",
+        "confidence": 24,
+        "base_confidence": 24,
+        "atr": 124.88581194,
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null,
+        "levels_timeframe": "1D",
+        "levels_by_timeframe": {
+          "1D": {
+            "timeframe": "1D",
+            "signal_timeframe": "1D",
+            "entry": null,
+            "stop": null,
+            "target": null,
+            "rr": null
+          }
+        },
+        "reasons": [
+          "Brak setupu (LONG 1/3, conf 24%, prog 99%):",
+          "Swieca: Bullish Engulfing (potwierdzenie)"
+        ],
+        "signal_status": "NONE",
+        "can_enter": false,
+        "signal_origin": null,
+        "signal_valid_until": null,
+        "activated_at": null,
+        "closed_at": null,
+        "signal_close_reason": null
+      }
+    },
+    "decision": "BRAK",
+    "confidence": 50,
+    "entry": null,
+    "stop": null,
+    "price": 10433.66015625,
+    "reasons": [
+      "Brak setupu (SHORT 2/3, conf 48%, prog 40%):",
+      "UWAGA: sprzeczna swieca Bullish Engulfing",
+      "Renko: lokalny szczyt / odwrocenie w dol (noga x3)",
+      "Swieca: Bearish Engulfing (potwierdzenie)",
+      "1H: potwierdza kierunek SHORT (kontekst, nie osobny sygnal)"
+    ],
+    "summary": "FTSE 100 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie",
+    "base_confidence": 48,
+    "target": null,
+    "rr": null,
+    "pillars": 2,
+    "modules": {
+      "renko": true,
+      "harmonic": false,
+      "candle": true
+    },
+    "contradiction": true,
+    "daily_align": 0,
+    "timeframe_alignment": {
+      "4H": {
+        "bias": "BRAK",
+        "status": "main",
+        "score": 48
+      },
+      "1D": {
+        "bias": "BRAK",
+        "confidence": 24,
+        "available": true,
+        "status": "neutral"
+      },
+      "1H": {
+        "bias": "SHORT",
+        "confidence": 24,
+        "available": true,
+        "status": "confirms"
+      }
+    },
+    "levels_timeframe": "4H",
+    "levels_basis": "Glowny sygnal 4H; 1H nie dostarczyl zgodnego kompletu poziomow",
+    "levels_by_timeframe": {
+      "4H": {
+        "timeframe": "4H",
+        "signal_timeframe": "4H",
+        "entry": null,
+        "stop": null,
+        "target": null,
+        "rr": null
+      }
+    },
+    "main_signal_timeframe": "4H",
+    "last_bar_time": "2026-11-25 16:00:00+00:00",
+    "atr": 57.87074498,
     "harmonic": null,
     "candle": null,
     "renko_signal": "brak",
@@ -4453,7 +4349,7 @@
     "signal_close_reason": null,
     "daily_context": "wzrostowy",
     "overall_bias": "NIC",
-    "overall_confidence": 33,
+    "overall_confidence": 50,
     "overall_action": "Brak wejscia – czekaj",
     "overall_summary": "FTSE 100 4H -> brak setupu wejscia; kontekst 1D/1H uwzgledniony w ocenie"
   }

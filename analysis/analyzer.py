@@ -10,6 +10,7 @@ from analysis.candles import detect_candlestick_patterns
 from analysis.classic_patterns import detect_classic_patterns
 from analysis.decision import make_decision
 from analysis.lifecycle import evaluate_harmonic, evaluate_signal, harmonic_is_visible
+from analysis.sr_zones import compute_zones_for_symbol, zones_for_chart, validate_zones
 from config import SYMBOLS
 import json
 from datetime import datetime, timezone
@@ -71,6 +72,28 @@ def analyze_symbol(symbol_key: str) -> dict:
         result["timeframes"][tf] = analyze_tf(df, tf, symbol_key)
     if "Daily" in result["timeframes"]:
         result["timeframes"]["1D"] = result["timeframes"]["Daily"]
+
+    # --- Strefy S/R per interwał ---
+    sr_data_by_tf = {}
+    for raw_tf, df in data.items():
+        canonical = "1D" if raw_tf == "Daily" else raw_tf
+        frame = result["timeframes"].get(canonical)
+        if df is not None and not df.empty and frame and "error" not in frame:
+            sr_data_by_tf[canonical] = {
+                "df": df,
+                "current_price": frame.get("last_close"),
+                "atr": frame.get("atr"),
+            }
+    if sr_data_by_tf:
+        all_zones = compute_zones_for_symbol(sr_data_by_tf, symbol_key)
+        for tf, zones in all_zones.items():
+            if tf == "MULTITF":
+                continue
+            raw_tf = "Daily" if tf == "1D" else tf
+            frame = result["timeframes"].get(raw_tf)
+            if frame:
+                frame["sr_zones"] = validate_zones(zones)
+                frame["sr_zones_timeframe"] = tf
 
     decisions = {}
     for tf, canonical in (("1H", "1H"), ("Daily", "1D")):
@@ -173,6 +196,8 @@ def analyze_symbol(symbol_key: str) -> dict:
                 symbol=symbol_key, timeframe=canonical, levels_timeframe=canonical,
                 signal_status=frame_decision.get("signal_status"),
                 can_enter=frame_decision.get("can_enter", False),
+                sr_zones=(frame or {}).get("sr_zones", []),
+                current_price=frame.get("last_close"),
             )
         result["_charts"] = charts
         result["_chart"] = charts.get("4H")

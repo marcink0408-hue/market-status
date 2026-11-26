@@ -3,6 +3,8 @@ from __future__ import annotations
 import math
 import pandas as pd
 
+from analysis.sr_zones import validate_zones
+
 def _unix_seconds(value):
     ts = pd.Timestamp(value)
     if ts.tzinfo is None: ts = ts.tz_localize("UTC")
@@ -16,7 +18,7 @@ def _num(value):
     except (TypeError,ValueError):
         return None
 
-def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="4H", levels_timeframe=None, signal_status=None, can_enter=False):
+def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="4H", levels_timeframe=None, signal_status=None, can_enter=False, sr_zones=None, current_price=None):
     rows=[]
     if df is not None and not df.empty:
         for stamp,row in df.iterrows():
@@ -78,6 +80,7 @@ def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="
     markers.sort(key=lambda x:(x["time"],x["text"]))
 
     # --- ZMIENIONY RETURN: dodajemy "harmonics" i podnosimy schema_version ---
+    zones = validate_zones(sr_zones or []) if sr_zones else []
     return {
         "schema_version": 3,
         "symbol": symbol,
@@ -88,5 +91,8 @@ def build_chart_payload(df, candles, harmonics, levels, symbol=None, timeframe="
         "levels_timeframe": levels_timeframe or timeframe,
         "signal_status": signal_status or "NONE",
         "can_enter": bool(can_enter),
-        "levels": {k: _num((levels or {}).get(k)) for k in ("entry","stop","target")}
+        "levels": {k: _num((levels or {}).get(k)) for k in ("entry","stop","target")},
+        "sr_zones": zones,
+        "sr_zones_timeframe": timeframe,
+        "sr_zones_current_price": _num(current_price),
     }

@@ -45,6 +45,25 @@ export default function PriceChart({ payload }) {
       }
     });
 
+    // --- Strefy S/R: wsparcie (zielone) i opór (czerwone), bez rozszerzania autoskali ---
+    const SR_CONFIG = [
+      { type: "SUPPORT", color: "#35d07f", titlePrefix: "WSPIERANIE" },
+      { type: "RESISTANCE", color: "#ff6376", titlePrefix: "OPÓR" },
+    ];
+    (payload.sr_zones || []).forEach((zone) => {
+      const cfg = SR_CONFIG.find((c) => c.type === zone.type);
+      if (!cfg) return;
+      [zone.lower, zone.upper].forEach((price) => {
+        if (price == null || !Number.isFinite(Number(price))) return;
+        candleSeries.createPriceLine({
+          price: Number(price), color: cfg.color, lineWidth: 1,
+          lineStyle: LineStyle.Dashed,
+          axisLabelVisible: true,
+          title: `${cfg.titlePrefix} · ${zone.center} · ${zone.interval}`,
+        });
+      });
+    });
+
     payload.harmonics.forEach((pattern) => {
       const points = harmonicLinePoints(pattern);
       if (points.length < 2) return;

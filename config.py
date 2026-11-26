@@ -27,6 +27,17 @@ RENKO_ATR_PERIOD = 14
 RENKO_ATR_MULTIPLIER = 0.5
 HARMONIC_PATTERNS = ["Gartley", "Bat", "Crab", "Deep Crab", "Butterfly"]
 
+# --- Parametry stref wsparcia/oporu (S/R) ---
+# Swing high/low jest potwierdzany po tej liczbie świec z każdej strony (brak lookahead).
+SWING_CONFIRMATION_BARS = 3
+# Tolerancja grupowania swingów w strefę: 0.5 * ATR(14) danego interwału.
+SR_GROUP_TOLERANCE_ATR_MULT = 0.5
+# Tolerancja dopasowania stref wielointerwałowych: 0.5 * ATR(14) odpowiedniego interwału.
+SR_MULTITF_TOLERANCE_ATR_MULT = 0.5
+# Maksymalna liczba najważniejszych stref pokazywanych nad ceną i pod ceną.
+SR_MAX_ZONES_ABOVE = 2
+SR_MAX_ZONES_BELOW = 2
+
 STALE_DATA_HOURS = 8
 STALE_DATA_WARN_HOURS = 5
 DECISIONS_LOG_MAX = 200

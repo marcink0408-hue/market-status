@@ -20,11 +20,45 @@
 
 ## Aktualny etap migracji
 
-Etap 1 — Naprawa obecnej logiki i spójności danych
+Etap 2 — Osobny moduł S/R (analysis/sr_zones.py)
 
 ## Status etapu
 
 Ukończony
+
+## Wykonane zadania (Etap 2)
+
+- `config.py`: dodano parametry S/R — `SWING_CONFIRMATION_BARS = 3`, `SR_GROUP_TOLERANCE_ATR_MULT = 0.5`, `SR_MULTITF_TOLERANCE_ATR_MULT = 0.5`, `SR_MAX_ZONES_ABOVE = 2`, `SR_MAX_ZONES_BELOW = 2`.
+- `analysis/sr_zones.py` (nowy): wykrywanie swing high/low bez lookahead (potwierdzenie po 3 świecach z prawej); grupowanie swingów w strefy o szerokości 0.5*ATR(14); liczenie niezależnych reakcji; rozróżnienie SUPPORT/RESISTANCE; deterministyczny ranking (reakcje, wiek, odległość od ceny); dopasowanie wielointerwałowe (nakładanie się w tolerancji 0.5*ATR); walidacja stref (odrzuca nieprawidłowe); `filter_top_zones` (max 2 sopra, 2 opory); `zones_for_chart` do wykresu.
+- `analysis/analyzer.py`: oblicza strefy S/R dla każdego interwału (1H/4H/1D) per symbol i zapisuje je w `timeframes[tf].sr_zones`; przekazuje `sr_zones` i `current_price` do `build_chart_payload`.
+- `analysis/chart_data.py`: `build_chart_payload` przyjmuje `sr_zones` i `current_price`, waliduje strefy i dodaje je do payloadu (`sr_zones`, `sr_zones_timeframe`, `sr_zones_current_price`).
+- `frontend-react/src/utils/market.js`: `getChartPayload` przepuszcza `sr_zones`, `sr_zones_timeframe`, `sr_zones_current_price` z ohlc.json do wykresu.
+- `frontend-react/src/components/chart/PriceChart.jsx`: renderuje strefy S/R jako linię cenową dolnej i górnej granicy (wsparcie zielone #35d07f, opór czerwony #ff6376); strefy nie rozszerzają autoskali (price lines).
+- `tests/test_sr_zones.py` (nowy): 13 testów — wykrywanie swingów (brak lookahead), grupowanie, ranking deterministyczny, filter top zones (max 2/2), match multitf, walidacja, compute_zones_for_symbol.
+
+## Testy
+
+36/36 testów pytest przechodzi (test_lifecycle, test_timeframes, test_decision_mtf, test_sr_zones, test_chart_payload).
+Build Vite (`npm run build`) przechodzi pomyślnie (50 modułów, bez błędów).
+
+## Zmienione pliki
+
+- `config.py` — parametry S/R
+- `analysis/sr_zones.py` — nowy moduł S/R
+- `analysis/analyzer.py` — obliczanie stref S/R per interwał
+- `analysis/chart_data.py` — sr_zones w chart payload
+- `frontend-react/src/utils/market.js` — przepuszczanie sr_zones
+- `frontend-react/src/components/chart/PriceChart.jsx` — renderowanie stref S/R
+- `tests/test_sr_zones.py` — nowe testy S/R
+- `docs/PROGRESS.md` — ten dziennik
+
+## Nierozwiązane kwestie
+
+- Wymagane ponowne wygenerowanie output/status.json i output/ohlc.json przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance) — zadanie Etapu 6.
+
+## Następny krok
+
+Czekam na komendę do Etapu 3 (rozbudowa analysis/candles.py — analiza świec, fundament wyzwalacza).
 
 ## Wykonane zadania (Etap 1)
 

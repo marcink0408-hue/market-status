@@ -104,6 +104,9 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
     harmonics,
     levels,
     levels_timeframe: source.levels_timeframe || timeframe,
+    sr_zones: Array.isArray(source.sr_zones) ? source.sr_zones : [],
+    sr_zones_timeframe: source.sr_zones_timeframe || timeframe,
+    sr_zones_current_price: source.sr_zones_current_price != null ? source.sr_zones_current_price : null,
   };
 }
 

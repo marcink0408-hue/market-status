@@ -20,11 +20,35 @@
 
 ## Aktualny etap migracji
 
-Etap 2 — Osobny moduł S/R (analysis/sr_zones.py)
+Etap 3 — Analiza świec (fundament wyzwalacza)
 
 ## Status etapu
 
 Ukończony
+
+## Wykonane zadania (Etap 3)
+
+- `analysis/candles.py`: dodano `analyze_candle()` — eksportuje pola body, upper_wick, lower_wick, range, body_direction, close_position, close_location, is_closed, timeframe dla pojedynczej świecy; dodano `analyze_candle_sequence()` — sekwencja ostatnich N świec z opisem; dodano `candle_analysis_summary()` — opis ostatniej zamkniętej świecy, sekwencji, interwału i czasu analizy; dodano `_is_candle_closed()` — flaga zamkniętej/niezamkniętej świecy na podstawie czasu końca i interwału (1H/4H/1D); walidacja danych wejściowych (puste, NaN, zero, wartości skrajne); zachowana istniejąca funkcja `detect_candlestick_patterns` dla kompatybilności wstecznej.
+- `tests/test_candles.py` (nowy): 16 testów — pola świecy (wzrostowa/spadkowa/doji/zakres zerowy), walidacja wejść, flaga is_closed (przeszłość/przyszłość), sekwencja świec, podsumowanie analizy, puste dane.
+
+## Testy
+
+52/52 testów pytest przechodzi (test_candles, test_lifecycle, test_timeframes, test_decision_mtf, test_sr_zones, test_chart_payload).
+Build Vite (`npm run build`) przechodzi pomyślnie (50 modułów, bez błędów).
+
+## Zmienione pliki
+
+- `analysis/candles.py` — nowe funkcje analizy świec (analyze_candle, analyze_candle_sequence, candle_analysis_summary, _is_candle_closed)
+- `tests/test_candles.py` — nowe testy analizy świec
+- `docs/PROGRESS.md` — ten dziennik
+
+## Nierozwiązane kwestie
+
+- Wymagane ponowne wygenerowanie output/status.json i output/ohlc.json przez run_daily.py z aktualnymi danymi rynkowymi (wymaga sieci/yfinance) — zadanie Etapu 6.
+
+## Następny krok
+
+Czekam na komendę do Etapu 4 (model gotowości analysis/readiness.py).
 
 ## Wykonane zadania (Etap 2)
 

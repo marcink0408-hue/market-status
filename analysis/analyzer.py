@@ -14,7 +14,7 @@ from analysis.sr_zones import compute_zones_for_symbol, zones_for_chart, validat
 from analysis.readiness import calculate_readiness
 from analysis.setup_lifecycle import manage_lifecycle
 from analysis.chart_data import build_chart_payload
-from config import SYMBOLS, MAX_DATA_AGE
+from config import SYMBOLS, MAX_DATA_AGE, INVALIDATION_BUFFER_ATR_MULT
 import json
 from datetime import datetime, timezone
 
@@ -182,6 +182,105 @@ def _atr_value(atr) -> float | None:
         return v
     except (TypeError, ValueError):
         return None
+
+
+def _nearest_zone_above(zones: list[dict], zone_type: str, price: float | None) -> dict | None:
+    """Najbliższa strefa danego typu z center powyżej ceny (dla TP LONG)."""
+    if not zones or price is None:
+        return None
+    candidates = [z for z in zones if z.get("type") == zone_type and z.get("center") is not None and z["center"] > price]
+    if not candidates:
+        return None
+    return min(candidates, key=lambda z: z["center"])
+
+
+def _nearest_zone_below(zones: list[dict], zone_type: str, price: float | None) -> dict | None:
+    """Najbliższa strefa danego typu z center poniżej ceny (dla TP SHORT)."""
+    if not zones or price is None:
+        return None
+    candidates = [z for z in zones if z.get("type") == zone_type and z.get("center") is not None and z["center"] < price]
+    if not candidates:
+        return None
+    return max(candidates, key=lambda z: z["center"])
+
+
+def calculate_sl(side: str, entry: float | None, sr_zones: list[dict], current_price: float | None, invalidation_buffer: float | None) -> float | None:
+    """SL = poziom unieważnienia z buforem 0.25 ATR.
+
+    LONG: SL = lower granica najbliższej strefy SUPPORT poniżej ceny - bufor.
+    SHORT: SL = upper granica najbliższej strefy RESISTANCE powyżej ceny + bufor.
+    """
+    if entry is None or invalidation_buffer is None:
+        return None
+    if side == "LONG":
+        zone = _nearest_zone_below(sr_zones, "SUPPORT", current_price)
+        if zone is not None and zone.get("lower") is not None:
+            sl = float(zone["lower"]) - invalidation_buffer
+            return sl if sl < entry else None
+    else:
+        zone = _nearest_zone_above(sr_zones, "RESISTANCE", current_price)
+        if zone is not None and zone.get("upper") is not None:
+            sl = float(zone["upper"]) + invalidation_buffer
+            return sl if sl > entry else None
+    return None
+
+
+def calculate_tp(side: str, entry: float | None, sr_zones: list[dict]) -> float | None:
+    """TP = najbliższa przeciwna strefa S/R (środek strefy).
+
+    LONG: RESISTANCE powyżej Entry.
+    SHORT: SUPPORT poniżej Entry.
+    """
+    if entry is None:
+        return None
+    if side == "LONG":
+        zone = _nearest_zone_above(sr_zones, "RESISTANCE", entry)
+        if zone is not None and zone.get("center") is not None:
+            return float(zone["center"])
+    else:
+        zone = _nearest_zone_below(sr_zones, "SUPPORT", entry)
+        if zone is not None and zone.get("center") is not None:
+            return float(zone["center"])
+    return None
+
+
+def calculate_rr(side: str, entry: float | None, sl: float | None, tp: float | None) -> tuple[float | None, str]:
+    """RR = |TP - Entry| / |Entry - SL| z walidacją stron."""
+    if entry is None or sl is None or tp is None:
+        return None, "Brak kompletnych poziomów"
+    if side == "LONG":
+        if not (tp > entry and sl < entry):
+            return None, "Poziomy nieprawidłowe dla LONG"
+    else:
+        if not (tp < entry and sl > entry):
+            return None, "Poziomy nieprawidłowe dla SHORT"
+    risk = abs(entry - sl)
+    reward = abs(tp - entry)
+    if risk <= 0 or reward <= 0:
+        return None, "RR nieprawidłowy"
+    rr = reward / risk
+    return rr, f"RR: {round(rr, 2)}"
+
+
+def fallback_tp_from_levels(side: str, entry: float | None, dec_levels: dict) -> float | None:
+    """Fallback TP z _levels() tylko po walidacji stron i odległości > 0."""
+    if entry is None:
+        return None
+    fb_entry = dec_levels.get("entry")
+    fb_stop = dec_levels.get("stop")
+    fb_target = dec_levels.get("target")
+    if fb_entry is None or fb_stop is None or fb_target is None:
+        return None
+    fb_entry = float(fb_entry)
+    fb_stop = float(fb_stop)
+    fb_target = float(fb_target)
+    if side == "LONG":
+        if fb_target > fb_entry:
+            return fb_target
+    else:
+        if fb_target < fb_entry:
+            return fb_target
+    return None
 
 
 def analyze_symbol(symbol_key: str) -> dict:
@@ -403,10 +502,29 @@ def analyze_symbol(symbol_key: str) -> dict:
             df_1h, sr_zones_1h, atr_1h, "SHORT"
         )
 
-        rr_val = dec.get("rr")
-        entry_val = dec.get("entry")
-        stop_val = dec.get("stop")
-        target_val = dec.get("target")
+        # --- Etap 10B: Entry, SL, TP, RR osobno dla LONG i SHORT ---
+        current_price = dec.get("price")
+        atr_for_levels = _atr_value(atr_val) if atr_val is not None else None
+        invalidation_buffer = (atr_for_levels * INVALIDATION_BUFFER_ATR_MULT) if atr_for_levels else None
+
+        sr_zones_4h = tf4.get("sr_zones") or [] if tf4 else []
+
+        entry_long = float(trigger_level_long) if (trigger_confirmed_long and trigger_level_long is not None) else None
+        entry_short = float(trigger_level_short) if (trigger_confirmed_short and trigger_level_short is not None) else None
+
+        stop_long = calculate_sl("LONG", entry_long, sr_zones_4h, current_price, invalidation_buffer)
+        stop_short = calculate_sl("SHORT", entry_short, sr_zones_4h, current_price, invalidation_buffer)
+
+        tp_long = calculate_tp("LONG", entry_long, sr_zones_4h)
+        if tp_long is None:
+            tp_long = fallback_tp_from_levels("LONG", entry_long, dec)
+
+        tp_short = calculate_tp("SHORT", entry_short, sr_zones_4h)
+        if tp_short is None:
+            tp_short = fallback_tp_from_levels("SHORT", entry_short, dec)
+
+        rr_long, rr_long_note = calculate_rr("LONG", entry_long, stop_long, tp_long)
+        rr_short, rr_short_note = calculate_rr("SHORT", entry_short, stop_short, tp_short)
 
         long_data = {
             "context_1d": {"bias": (decisions.get("1D") or {}).get("decision", "BRAK"),
@@ -421,9 +539,9 @@ def analyze_symbol(symbol_key: str) -> dict:
             "trigger": {"confirmed": trigger_confirmed_long, "trigger_level": trigger_level_long,
                         "note": "Wyzwalacz 1H potwierdzony" if trigger_confirmed_long
                         else "Brak potwierdzonego wyzwalacza 1H"},
-            "rr": {"rr": rr_val, "entry": entry_val, "stop": stop_val, "target": target_val,
-                   "invalidation_level": stop_val,
-                   "note": "RR: " + str(rr_val) if rr_val is not None else "brak RR"},
+            "rr": {"rr": rr_long, "entry": entry_long, "stop": stop_long, "target": tp_long,
+                   "invalidation_level": stop_long,
+                   "note": rr_long_note},
         }
         short_data = {
             "context_1d": {"bias": (decisions.get("1D") or {}).get("decision", "BRAK"),
@@ -438,9 +556,9 @@ def analyze_symbol(symbol_key: str) -> dict:
             "trigger": {"confirmed": trigger_confirmed_short, "trigger_level": trigger_level_short,
                         "note": "Wyzwalacz 1H potwierdzony" if trigger_confirmed_short
                         else "Brak potwierdzonego wyzwalacza 1H"},
-            "rr": {"rr": rr_val, "entry": entry_val, "stop": stop_val, "target": target_val,
-                   "invalidation_level": stop_val,
-                   "note": "RR: " + str(rr_val) if rr_val is not None else "brak RR"},
+            "rr": {"rr": rr_short, "entry": entry_short, "stop": stop_short, "target": tp_short,
+                   "invalidation_level": stop_short,
+                   "note": rr_short_note},
         }
 
         entry_readiness = calculate_readiness(
@@ -457,16 +575,40 @@ def analyze_symbol(symbol_key: str) -> dict:
             short_expired=False,
         )
 
+        # Wybierz poziomy strony kierunkowej dla cyklu życia
+        chosen_direction = dec.get("decision")
+        if chosen_direction == "LONG":
+            lifecycle_entry = entry_long
+            lifecycle_stop = stop_long
+            lifecycle_target = tp_long
+            lifecycle_invalidation = stop_long
+            lifecycle_trigger_confirmed = trigger_confirmed_long
+            lifecycle_trigger_level = trigger_level_long
+        elif chosen_direction == "SHORT":
+            lifecycle_entry = entry_short
+            lifecycle_stop = stop_short
+            lifecycle_target = tp_short
+            lifecycle_invalidation = stop_short
+            lifecycle_trigger_confirmed = trigger_confirmed_short
+            lifecycle_trigger_level = trigger_level_short
+        else:
+            lifecycle_entry = None
+            lifecycle_stop = None
+            lifecycle_target = None
+            lifecycle_invalidation = None
+            lifecycle_trigger_confirmed = False
+            lifecycle_trigger_level = None
+
         lifecycle_state = manage_lifecycle(
             symbol=symbol_key,
-            direction=dec.get("decision"),
+            direction=chosen_direction,
             readiness_pct=entry_readiness["readiness_pct"],
-            trigger_confirmed=trigger_confirmed,
+            trigger_confirmed=lifecycle_trigger_confirmed,
             blockers=entry_readiness["blockers"],
-            invalidation_level=stop_val,
-            entry=entry_val,
-            stop=stop_val,
-            target=target_val,
+            invalidation_level=lifecycle_invalidation,
+            entry=lifecycle_entry,
+            stop=lifecycle_stop,
+            target=lifecycle_target,
             df_4h=df_4h,
             current_bar_index=len(df_4h) - 1 if df_4h is not None else 0,
             next_check_time=entry_readiness.get("next_check_time"),

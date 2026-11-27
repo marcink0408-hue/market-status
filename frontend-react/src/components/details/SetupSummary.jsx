@@ -159,8 +159,7 @@ export default function SetupSummary({ instrument }) {
 
       <div className="border border-border rounded-lg bg-panel2 p-3">
         <p className="text-[0.65rem] text-[var(--text-muted)] leading-relaxed">
-          Narzędzie analityczne, nie rekomendacja inwestycyjna.
-          {blockers.length > 0 ? ' Blokady wejścia: ' + blockers.join(', ') + '.' : ''}
+          {blockers.length > 0 ? 'Blokady wejścia: ' + blockers.join(', ') + '.' : ''}
         </p>
       </div>
     </section>

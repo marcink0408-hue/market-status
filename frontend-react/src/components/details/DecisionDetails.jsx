@@ -44,7 +44,6 @@ export default function DecisionDetails({ instrument }) {
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-[var(--text-muted)]">{instrument.name || instrument.symbol} · decyzja 4H</p>
         <div className={`signal-direction ${color}`}>{decision === 'LONG' ? '↑ LONG' : decision === 'SHORT' ? '↓ SHORT' : '— BRAK'}</div>
         <div className="mt-2 text-3xl font-black text-white md:text-4xl">{instrument.confidence ?? '—'}<span className="text-lg text-[var(--text-muted)]">/100</span></div>
-        <p className="mt-1 text-[0.68rem] text-[var(--text-muted)]">Punktacja modelu, nie prawdopodobieństwo zysku.</p>
       </div>
       <div className={`signal-status ${canEnter ? 'signal-status-pending' : ''}`} role="status">
         <strong>{STATUS[status] || status}</strong>

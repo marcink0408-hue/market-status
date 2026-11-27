@@ -393,7 +393,8 @@ Usunięcie duplikatów w `entry_readiness.blockers` oraz naprawa komunikatu „B
 11H — ukonczony (ograniczenie i poprawka rysowania stref S/R w PriceChart.jsx)
 11I — ukonczony (ujednolicenie prezentacji zgodności interwałów w SetupSummary.jsx i TimeframeAlignment.jsx)
 11J — ukonczony (propagacja poziomów Entry/SL/TP z 4H na 1H i 1D w getChartPayload())
-11K–11M — oczekuja na komende
+11K — ukonczony (uzasadnienie sygnału na podstawie rzeczywistych danych)
+11L–11M — oczekuja na komende
 
 ## Etap 11H — Ograniczenie i poprawka rysowania stref S/R
 
@@ -494,3 +495,42 @@ W `analyzer.py` poziomy Entry/SL/TP/RR są obliczane wyłącznie dla 4H (make_de
 - Zatwierdzone i wsunięte na gałąź `main`.
 
 
+
+## Etap 11K — Uzasadnienie sygnału na podstawie rzeczywistych danych (ukończony)
+
+### Zakres zmiany
+Wyłącznie `frontend-react/src/components/details/SignalJustification.jsx`, `frontend-react/src/components/details/InstrumentDetails.jsx` oraz `docs/PROGRESS.md`.
+
+### Opis działania
+Rozbudowano istniejący `SignalJustification.jsx` o siedem obszarów prezentacji, z clasificacióną każdej informacji (fakt potwierdzony / warunek niespełniony / brak danych) zamiast jednego statusu na całą sekcję:
+
+1. **Kontekst 1D** — z `timeframe_alignment.1D` (bias, confidence/score, status). Gdy niedostępny → „Brak danych”.
+2. **Struktura 4H** — z `entry_readiness.criteria` (id `structure_4h`), punkty/max.
+3. **Potwierdzenie 1H (wyzwalacz)** — z `entry_readiness.criteria` (id `trigger`) oraz `trigger_level`. Sekcja dotyczy wyłącznie triggera, nie formacji świec.
+4. **Formacje świecowe (1H · 4H · 1D)** — z `timeframes.*.candles` (O/C ostatniej świecy). Opis descriptive, bez automatycznego traktowania braku formacji jako blokady. Każda formacja pokazana tylko raz, w swoim interwale.
+5. **Strefy S/R (4H)** — z `timeframes.4H.sr_zones` (typ, center, liczba reakcji).
+6. **Entry / SL / TP / RR** — z jednego źródła setupu 4H: `entry_readiness.entry/stop/target/rr` (z fallbackiem na pola główne instrumentu). Brak przeliczeń w React; przy braku → „Brak danych”.
+7. **Blokady i brakujące warunki** — z `entry_readiness.blockers` i `entry_readiness.missing` (po deduplikacji). Brak harmonicznej/świecowej nie jest automatycznie blokadą.
+
+Readiness präsentowane jako stopień spełnienia warunków, nie jako szansa na zysk. Komponent renderowany wewnątrz istniejącego kontenera szczegółów w `InstrumentDetails.jsx` (brak nowej sekcji na poziomie strony).
+
+### Nie zmieniono
+- `frontend/index.html`, `app.py`, `analysis/`, `data/`, `config.py`, `run_daily.py`, `.github/workflows/` — bez zmian.
+- Backend Python, algorytmy decyzji, wagi, progi, readiness, lifecycle — nienaruszone.
+- Entry/SL/TP/RR, OHLC, precyzja cen, harmoniczne, strefy S/R — bez zmian.
+- Żadnych nowych bibliotek ani rozbudowanej infrastruktury testowej.
+
+### Wyniki weryfikacji (na rzeczywistych danych `output/status.json`)
+- Instrument z LONG (us500): Entry/SL/TP/RR z jednego źródła 4H, blockers/missing zgodne z silnikiem, gotowość nie jako szansa na zysk.
+- Instrument z BRAK: Entry/SL/TP = null → „Brak danych”, brak fikcyjnych przyczyn.
+- Brak danych / null: pola puste pokazywane jako „Brak danych”, bez domysłów.
+- Blokady odpowiadają dokładnie danym `entry_readiness.blockers` / `missing`.
+- `SignalJustification` widoczny w `InstrumentDetails`.
+- `npm test` — 8/8 przechodzi.
+- `npm run build` — zakończone sukcesem (52 moduły, bez błędów).
+- `git diff --check` — czysty.
+
+### Zmienione pliki
+- `frontend-react/src/components/details/SignalJustification.jsx` — rozbudowany o siedem obszarów uzasadnienia.
+- `frontend-react/src/components/details/InstrumentDetails.jsx` — import i renderowanie `SignalJustification`.
+- `docs/PROGRESS.md` — ten dziennik.

@@ -2,6 +2,7 @@ import TimeframeAlignment from './TimeframeAlignment';
 import HarmonicPatterns from './HarmonicPatterns';
 import LatestCandles from './LatestCandles';
 import SetupSummary from './SetupSummary';
+import SignalJustification from './SignalJustification';
 
 export default function InstrumentDetails({ instrument }) {
   if (!instrument) return null;
@@ -12,6 +13,7 @@ export default function InstrumentDetails({ instrument }) {
       <div className="space-y-5">
         <HarmonicPatterns instrument={instrument} />
         <LatestCandles instrument={instrument} />
+        <SignalJustification instrument={instrument} />
       </div>
     </section>
   );

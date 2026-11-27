@@ -120,7 +120,30 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
 
   const terminal = ['STOP_LOSS', 'TAKE_PROFIT', 'EXPIRED', 'INVALIDATED', 'NO_DATA'];
   const legacyHistoricalLevels = !source.signal_status && source.harmonics?.length > 0 && harmonics.length === 0;
-  const levels = terminal.includes(source.signal_status) || legacyHistoricalLevels ? {} : source.levels || {};
+
+  let levels;
+  let effectiveLevelsTimeframe;
+
+  if (timeframe === '4H') {
+    // 4H: poziomy zawsze z bieżącego interwału (źródło prawdy)
+    levels = terminal.includes(source.signal_status) || legacyHistoricalLevels ? {} : (source.levels || {});
+    effectiveLevelsTimeframe = source.levels_timeframe || timeframe;
+  } else {
+    // 1H i 1D: poziomy ZAWSZE z setupu 4H (timeframes.4H.levels w głównym obiekcie instrumentu).
+    // Nigdy nie pobieraj poziomów z source.levels bieżącego interwału — 4H jest jedynym źródłem prawdy.
+    const levels4h = container.timeframes?.['4H']?.levels || {};
+    levels = {
+      entry: levels4h.entry != null ? Number(levels4h.entry) : null,
+      stop: levels4h.stop != null ? Number(levels4h.stop) : null,
+      target: levels4h.target != null ? Number(levels4h.target) : null,
+    };
+    // Jeśli wszystkie trzy są null (brak poziomów 4H), nie rysuj żadnych poziomów
+    const allNull = Object.values(levels).every((v) => v == null);
+    if (allNull) {
+      levels = {};
+    }
+    effectiveLevelsTimeframe = '4H';
+  }
 
   return {
     ...source,
@@ -130,7 +153,7 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
     markers,
     harmonics,
     levels,
-    levels_timeframe: source.levels_timeframe || timeframe,
+    levels_timeframe: effectiveLevelsTimeframe,
     sr_zones: Array.isArray(source.sr_zones) ? source.sr_zones : [],
     sr_zones_timeframe: source.sr_zones_timeframe || timeframe,
     sr_zones_current_price: source.sr_zones_current_price != null ? source.sr_zones_current_price : null,

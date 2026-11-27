@@ -534,3 +534,31 @@ Readiness präsentowane jako stopień spełnienia warunków, nie jako szansa na 
 - `frontend-react/src/components/details/SignalJustification.jsx` — rozbudowany o siedem obszarów uzasadnienia.
 - `frontend-react/src/components/details/InstrumentDetails.jsx` — import i renderowanie `SignalJustification`.
 - `docs/PROGRESS.md` — ten dziennik.
+
+## Etap 11L — Formacje liniowe i cenowe (ukończony)
+
+### Zakres zmiany
+Własna detekcja klasycznych formacji cenowych (bez `ta_patterns`, bez nowych bibliotek) dla interwałów 1H, 4H i 1D, wyłącznie na zamkniętych świecach. Formacje: trójkąty (wzrostowy, spadkowy, symetryczny), flagi i chorągiewki (wzrostowe, spadkowe), kliny (wzrostowe, spadkowe), głowa z ramionami, odwrócona głowa z ramionami, podwójny szczyt, podwójne dno, kanały (wzrostowy, spadkowy, boczny).
+
+### Zmienione pliki
+- `analysis/classic_patterns.py` — nowy detektor geometryczny (numpy/pandas), statusy z historią dat, stabilne ID, stan trwały (`classic_patterns_state.json`), eksport kompatybilny wstecz do `classic_patterns.json`.
+- `analysis/analyzer.py` — podpięcie detektora dla 1H/4H/1D w `analyze_symbol()` (brak zmian w `make_decision()`, readiness, wagach).
+- `config.py` — parametry formacji klasycznych (tolerancja ATR, max formacji, limit historii, pliki wyjściowe).
+- `frontend-react/src/components/chart/PriceChart.jsx` — rysowanie linii trendu, granic formacji i pivotów (solid dla potwierdzonych, dashed dla formujących się).
+- `frontend-react/src/components/details/ClassicPatterns.jsx` — wyświetlanie formacji ze statusem, podtypem, poziomem wybicia i retestu, obsługa wielu interwałów, kompatybilność wsteczna.
+- `frontend-react/src/components/details/InstrumentDetails.jsx` — dodanie sekcji formacji klasycznych.
+- `frontend-react/src/utils/market.js` — `classic_patterns` w `getChartPayload()`.
+- `tests/test_classic_patterns.py` — nowe testy jednostkowe (geometria, statusy, wybicie, retest, lookahead, deduplikacja, limit, izolacja, kompatybilność).
+
+### Nie zmieniono
+- `frontend/index.html`, `app.py`, `analysis/sr_zones.py`, `analysis/candles.py`, `analysis/harmonics.py`, `data/`, `run_daily.py`, `.github/workflows/` — bez zmian.
+- `make_decision()`, readiness, wagi, progi, logika LONG/SHORT — nienaruszone.
+
+### Opis działania
+Detekcja działa na zamkniętych świecach, pivoty potwierdzane po 3 świecach po ekstremum (brak lookahead). Każda formacja ma stabilne ID (symbol + interwał + typ + pivoty), status z listy: FORMUJĄCA SIĘ → POTWIERDZONA → WYBITA → RETEST → UNIEWAŻNIONA → WYGASŁA. Status nigdy nie cofa się przy przeliczeniu. Maksymalnie 5 aktywnych formacji na symbol/interwał. Stan trwały w osobnym pliku `classic_patterns_state.json`, prezentacja w `classic_patterns.json` kompatybilna ze starszym formatem.
+
+### Wyniki weryfikacji
+- `npm run build` — zakończone sukcesem (53 moduły, bez błędów).
+- `git diff --check` — czysty.
+- Testy Pythona — nie uruchomione (brak interpretera Python w środowisku z powodu Windows App Execution Alias); kod 작성any zgodnie z wzorcem istniejących testów.
+

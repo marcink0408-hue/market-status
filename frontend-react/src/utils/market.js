@@ -145,6 +145,18 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
     effectiveLevelsTimeframe = '4H';
   }
 
+  const classicAll = ohlc?.classic;
+  let classicPatterns = [];
+  if (classicAll) {
+    const tfData = classicAll.timeframes?.[timeframe] || classicAll.timeframes?.[timeframe === '1D' ? 'Daily' : timeframe];
+    const symPatterns = tfData?.symbols?.[symbol] || [];
+    classicPatterns = symPatterns.map((p) => ({
+      ...p,
+      timeframe,
+      symbol,
+    }));
+  }
+
   return {
     ...source,
     symbol,
@@ -152,6 +164,7 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
     candles,
     markers,
     harmonics,
+    classic_patterns: classicPatterns,
     levels,
     levels_timeframe: effectiveLevelsTimeframe,
     sr_zones: Array.isArray(source.sr_zones) ? source.sr_zones : [],

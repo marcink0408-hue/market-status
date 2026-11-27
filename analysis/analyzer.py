@@ -7,7 +7,7 @@ from data.fetcher import fetch_all
 from analysis.renko import build_renko, renko_status
 from analysis.harmonics import detect_harmonics
 from analysis.candles import detect_candlestick_patterns, analyze_candle
-from analysis.classic_patterns import detect_classic_patterns
+from analysis.classic_patterns import detect_for_symbol_tf, update_patterns_for_symbol_tf, save_state, save_presentation, load_state
 from analysis.decision import make_decision
 from analysis.lifecycle import evaluate_harmonic, evaluate_signal, harmonic_is_visible
 from analysis.sr_zones import compute_zones_for_symbol, zones_for_chart, validate_zones
@@ -30,14 +30,12 @@ def analyze_tf(df, tf: str, symbol: str = "") -> dict:
             item["created_at"] = item.get("time_D") or item.get("time_C")
             harms.append(item)
         cands = [dict(p, symbol=symbol, timeframe=canonical_tf) for p in detect_candlestick_patterns(df)]
-        classic = detect_classic_patterns(df) if tf == "4H" else []
         recent = df.tail(20)
         return {
             "symbol": symbol, "timeframe": canonical_tf,
             "renko": rstat,
             "harmonics": harms,
             "candles": cands,
-            "classic_patterns": classic,
             "market_levels": {
                 "recent_high": float(recent["high"].max()),
                 "recent_low": float(recent["low"].min()),
@@ -644,6 +642,28 @@ def analyze_symbol(symbol_key: str) -> dict:
         else "Brak wejscia – czekaj"
     )
     result["overall_summary"] = result["summary"]
+
+    # --- ETAP 11L: detekcja formacji klasycznych (1H, 4H, 1D) ---
+    try:
+        from config import CLASSIC_PATTERN_TIMEFRAMES
+        classic_state = load_state()
+        all_presentations = {}
+        for raw_tf, df in data.items():
+            canonical = "1D" if raw_tf == "Daily" else raw_tf
+            if canonical not in CLASSIC_PATTERN_TIMEFRAMES:
+                continue
+            if df is None or df.empty:
+                continue
+            candidates = detect_for_symbol_tf(df, symbol_key, canonical)
+            _, presentation, classic_state = update_patterns_for_symbol_tf(
+                symbol_key, canonical, df, candidates, classic_state
+            )
+            all_presentations[canonical] = presentation
+        save_state(classic_state)
+        save_presentation(all_presentations)
+    except Exception as _e:
+        print(f"[CLASSIC] Błąd detekcji dla {symbol_key}: {_e}")
+
     return result
 
 

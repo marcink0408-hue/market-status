@@ -69,3 +69,32 @@ STALE_DATA_WARN_HOURS = 5
 DECISIONS_LOG_MAX = 200
 DECISIONS_SCHEMA_VERSION = 1
 PRIMARY_TIMEFRAME = "4H"
+
+# --- Parametry formacji klasycznych (ETAP 11L) ---
+# Interwały obsługiwane przez detektor formacji klasycznych.
+CLASSIC_PATTERN_TIMEFRAMES = ("1H", "4H", "1D")
+
+# Tolerancja geometryczna dopasowania ceny do linii trendu/granicy (w wielokrotnościach ATR).
+CLASSIC_PATTERN_TOLERANCE_ATR_MULT = 0.5
+# Tolerancja dla kanałów bocznych (węższa).
+CLASSIC_CHANNEL_TOLERANCE_ATR_MULT = 0.3
+# Minimalny impuls poprzedzający flagę/chorągiewkę (w wielokrotnościach ATR).
+CLASSIC_FLAG_IMPULSE_ATR_MULT = 2.0
+# Minimalna liczba świec konsolidacji dla flagi/chorągiewki.
+CLASSIC_FLAG_MIN_CONSOLIDATION_BARS = 4
+# Maksymalna liczba świec konsolidacji przed unieważnieniem.
+CLASSIC_FLAG_MAX_CONSOLIDATION_BARS = 20
+# Maksymalna liczba formacji prezentowanych na symbol/interwał.
+CLASSIC_MAX_PATTERNS_PER_TF = 5
+# Limit historii (liczba świec) branych pod uwagę przy detekcji.
+CLASSIC_HISTORY_BARS = 500
+# Liczba świec wstecz sprawdzanych przy aktualizacji istniejących formacji.
+CLASSIC_UPDATE_WINDOW_BARS = 50
+# Bufor unieważnienia w ATR (poza granicą formacji).
+CLASSIC_INVALIDATION_BUFFER_ATR_MULT = 1.5
+# Plik stanu trwałego (oddzielony od pliku prezentacyjnego).
+CLASSIC_STATE_FILE = "classic_patterns_state.json"
+# Plik prezentacyjny (zachowany, kompatybilny wstecz).
+CLASSIC_OUTPUT_FILE = "classic_patterns.json"
+# Wersja schematu prezentacyjnego.
+CLASSIC_SCHEMA_VERSION = 2

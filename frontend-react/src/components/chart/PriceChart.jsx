@@ -2,6 +2,14 @@ import { createChart, LineStyle } from 'lightweight-charts';
 import { useEffect, useRef } from 'react';
 import { chartMarkers, getPricePrecision, formatPrice, harmonicLinePoints } from '../../utils/market';
 
+function classicColor(direction) {
+  return direction === 'bullish' ? '#35d07f' : direction === 'bearish' ? '#ff4d42' : '#bb86fc';
+}
+
+function classicLineStyle(status) {
+  return status === 'FORMUJĄCA SIĘ' ? LineStyle.Dashed : LineStyle.Solid;
+}
+
 const LEVEL_CONFIG = [
   { key: 'entry', title: 'WEJŚCIE', color: '#70b7ff' },
   { key: 'stop', title: 'STOP LOSS', color: '#ff6376' },
@@ -153,6 +161,44 @@ export default function PriceChart({ payload }) {
       });
       line.setData(points);
       overlaySeries.push(line);
+    });
+
+    // --- Formacje klasyczne: linie trendu, granice, pivoty ---
+    (payload.classic_patterns || []).forEach((pattern) => {
+      const status = pattern.status || 'POTWIERDZONA';
+      const color = classicColor(pattern.direction);
+      const lineStyle = classicLineStyle(status);
+
+      // Linie trendu (opór / wsparcie / neckline)
+      pattern.trendlines?.forEach((tl) => {
+        const pts = (tl.points || []).map((p) => ({ time: p.time, value: p.value }));
+        if (pts.length < 2) return;
+        const line = chart.addLineSeries({
+          color,
+          lineWidth: 1,
+          lineStyle,
+          priceLineVisible: false,
+          lastValueVisible: false,
+          crosshairMarkerVisible: false,
+          autoscaleInfoProvider: () => null,
+        });
+        line.setData(pts);
+        overlaySeries.push(line);
+      });
+
+      // Linie graniczne (poziome)
+      const boundary = pattern.boundary || {};
+      [boundary.upper, boundary.lower].forEach((price) => {
+        if (price == null) return;
+        candleSeries.createPriceLine({
+          price,
+          color,
+          lineWidth: 1,
+          lineStyle,
+          axisLabelVisible: false,
+          title: `Formacja ${pattern.type || pattern.name} · ${pattern.status || ''}`,
+        });
+      });
     });
 
     chart.timeScale().fitContent();

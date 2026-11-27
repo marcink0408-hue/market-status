@@ -603,3 +603,66 @@ Rozbudowa wizualizacji formacji klasycznych w `PriceChart.jsx` tak, aby pokazywa
 11L — ukończony (formacje liniowe i cenowe)
 11M — ukończony (dynamiczne rysowanie formacji podczas ich powstawania)
 
+## Etap 11N — Integracja markerów formacji świecowych (ukończony)
+
+### Zakres zmiany
+Połączenie wykrytych przez Python formacji świecowych (`detect_candlestick_patterns` w `analysis/candles.py`) z markerami na wykresie Lightweight Charts w `PriceChart.jsx`. Panel `CandlePatterns.jsx` i wykres korzystają z tych samych danych źródłowych: `status.json` → `instrument.timeframes[tf].candles`.
+
+### Zmienione pliki
+- `frontend-react/src/utils/market.js` — dodano funkcje `findInstrumentInStatus()` i `candlePatternMarkers()`; zmodyfikowano `getChartPayload()` aby przyjmować `statusData` i łączyć markery z `ohlc.json` z formacjami świecowymi ze `status.json`.
+- `frontend-react/src/components/workspace/MainWorkspace.jsx` — przekazuje `data.status` jako drugi argument do `getChartPayload()`.
+- `docs/PROGRESS.md` — ten wpis.
+
+### Sposób integracji
+1. `getChartPayload(ohlc, statusData, symbol, timeframe)` odbiera `statusData` (tablica instrumentów z `status.json`).
+2. `findInstrumentInStatus(statusData, symbol)` znajduje instrument po symbolu (wielkość liter ignorowana).
+3. `candlePatternMarkers(statusData, symbol, timeframe, times)` pobiera `instrument.timeframes[timeframe].candles` (z obsługą `Daily` → `1D`), filtruje po symbolu i interwale, konwertuje czas formacji na Unix timestamp (sekundy), sprawdza czy czas istnieje wśród świec OHLC (`times`), pomija duplikaty (po czasie), tworzy markery Lightweight Charts.
+4. Markery z `ohlc.json` (`source.markers`) i markery z formacji świecowych są scalane w jedną tablicę `markers` w payload.
+5. `PriceChart.jsx` nie wymaga zmian — `chartMarkers(payload)` już obsługuje wszystkie markery z `payload.markers`.
+
+### Format markera świecowego
+- `time`: Unix timestamp w sekundach (wyliczony z pola `time` formacji, np. `"2026-11-26 09:00:00+00:00"`)
+- `position`: `belowBar` dla bullish/neutral, `aboveBar` dla bearish
+- `color`: zielony `#35d07f` (bullish), czerwony `#ff4d42` (bearish), szary `#94a3b8` (neutral)
+- `shape`: `circle`
+- `text`: skrócona nazwa formacji + kierunek, np. `Doji · neutral`, `Engulfing · bullish`
+
+### Zabezpieczenia
+- Filtruj po symbolu i interwale (brak mieszania danych między instrumentami)
+- Obsługa `Daily` → `1D`
+- Pomijaj rekordy z nieprawidłowym czasem (`Number.isFinite` sprawdzenie)
+- Pomijaj duplikaty po czasie (`seenTimes` set)
+- Nie modyfikuj surowych danych OHLC
+- Nie zmieniaj wyglądu markerów harmonicznych i z `ohlc.json`
+- Nie dodawaj nowych bibliotek
+
+### Wyniki weryfikacji
+- `npm run build` — zakończone sukcesem (53 moduły, bez błędów).
+- `git diff --check` — czysty (brak błędów whitespace).
+- `git diff --stat` — tylko `market.js` (+56/−3) i `MainWorkspace.jsx` (+1/−1).
+- Testy Pythona — nie uruchomione (brak interpretera Python w środowisku).
+- Weryfikacja w przeglądarce — nie możliwa (brak dostępu do Chrome w tym środowisku).
+- Dane `status.json` zawierają rzeczywiste formacje świecowe (np. w20 1H: Doji, us500 1H: Morning Star/Doji/Bearish Engulfing, us500 4H: Bullish Engulfing/Doji) — mapowanie powinno działać na tych danych.
+
+### Nie zmieniono
+- `analysis/candles.py`, `analysis/analyzer.py` — backend nienaruszony.
+- `output/*.json` — nie modyfikowane.
+- `CandlePatterns.jsx` — nie wymagało zmian (już używa `status.json`).
+- `PriceChart.jsx` — nie wymagało zmian.
+- Logika harmonicznych, setupu, readiness, lifecycle, Entry/SL/TP — nienaruszone.
+
+### Ograniczenia i niezweryfikowane
+- Czas formacji w formacie `"2026-11-26 09:00:00+00:00"` jest parsowany przez `new Date(String(p.time).replace(' ', 'T'))` — zakładamy poprawne działanie w nowoczesnych przeglądarkach.
+- Brak danych o `is_closed` w formacjach świecowych — markery są tworzone dla wszystkich wykrytych formacji, nie tylko zamkniętych świec.
+- Nie można potwierdzić renderowania markerów na wykresie bez dostępu do przeglądarki.
+
+### Drzewo etapów 11G–11N
+11G — ukończony (naprawa podsumowania setupu i blokad)
+11H — ukończony (ograniczenie i poprawka rysowania stref S/R w PriceChart.jsx)
+11I — ukończony (ujednolicenie prezentacji zgodności interwałów w SetupSummary.jsx i TimeframeAlignment.jsx)
+11J — ukończony (propagacja poziomów Entry/SL/TP z 4H na 1H i 1D w getChartPayload())
+11K — ukończony (uzasadnienie sygnału na podstawie rzeczywistych danych)
+11L — ukończony (formacje liniowe i cenowe)
+11M — ukończony (dynamiczne rysowanie formacji podczas ich powstawania)
+11N — ukończony (integracja markerów formacji świecowych)
+

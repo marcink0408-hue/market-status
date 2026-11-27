@@ -7,7 +7,7 @@ import { getChartPayload, statusItems, TIMEFRAMES } from '../../utils/market';
 export default function MainWorkspace({ activeInstrument, data, timeframe, setTimeframe }) {
   const symbol = activeInstrument?.symbol;
   const instrument = useMemo(() => statusItems(data.status).find((item) => String(item.symbol).toLowerCase() === String(symbol).toLowerCase()) || activeInstrument, [data.status, activeInstrument, symbol]);
-  const payload = useMemo(() => getChartPayload(data.ohlc, symbol, timeframe), [data.ohlc, symbol, timeframe]);
+  const payload = useMemo(() => getChartPayload(data.ohlc, data.status, symbol, timeframe), [data.ohlc, data.status, symbol, timeframe]);
 
   return (
     <section className="space-y-7" aria-label="Panel decyzyjny">

@@ -71,6 +71,57 @@ function identityMatches(item, symbol, timeframe) {
     && (itemTimeframe == null || itemTimeframe === timeframe);
 }
 
+function findInstrumentInStatus(statusData, symbol) {
+  if (!Array.isArray(statusData)) return null;
+  const key = String(symbol).toLowerCase();
+  return statusData.find((item) => String(item?.symbol).toLowerCase() === key) || null;
+}
+
+function candlePatternMarkers(statusData, symbol, timeframe, times) {
+  const instrument = findInstrumentInStatus(statusData, symbol);
+  if (!instrument) return [];
+
+  const tfKey = timeframe === '1D' ? '1D' : timeframe;
+  const tfData = instrument.timeframes?.[tfKey]
+    || (timeframe === '1D' ? instrument.timeframes?.Daily : null)
+    || {};
+  const patterns = Array.isArray(tfData.candles) ? tfData.candles : [];
+
+  const markers = [];
+  const seenTimes = new Set();
+
+  patterns.forEach((p) => {
+    const t = Number(new Date(String(p.time || '').replace(' ', 'T')));
+    if (!Number.isFinite(t)) return;
+    const tSec = Math.floor(t / 1000);
+    if (!times.has(tSec)) return;
+    if (seenTimes.has(tSec)) return;
+    seenTimes.add(tSec);
+
+    const dir = String(p.direction || '').toLowerCase();
+    let position, color;
+    if (dir === 'bullish') { position = 'belowBar'; color = '#35d07f'; }
+    else if (dir === 'bearish') { position = 'aboveBar'; color = '#ff4d42'; }
+    else { position = 'belowBar'; color = '#94a3b8'; }
+
+    const shortName = String(p.name || 'Formacja')
+      .replace('Bullish ', '')
+      .replace('Bearish ', '')
+      .replace(' engulfing', '')
+      .trim();
+
+    markers.push({
+      time: tSec,
+      position,
+      color,
+      shape: 'circle',
+      text: `${shortName} · ${dir || 'neutral'}`,
+    });
+  });
+
+  return markers;
+}
+
 function validCandles(candles) {
   const byTime = new Map();
   (Array.isArray(candles) ? candles : []).forEach((candle) => {
@@ -83,7 +134,7 @@ function validCandles(candles) {
   return [...byTime.values()].sort((a, b) => a.time - b.time);
 }
 
-export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
+export function getChartPayload(ohlc, statusData, selectedSymbol, timeframe = '4H') {
   const symbol = String(selectedSymbol || '').toLowerCase();
   const container = ohlc?.symbols?.[symbol] || ohlc?.symbols?.[selectedSymbol];
   if (!symbol || !container) return null;
@@ -97,9 +148,11 @@ export function getChartPayload(ohlc, selectedSymbol, timeframe = '4H') {
   const candles = validCandles(source.candles);
   if (!candles.length) return null;
   const times = new Set(candles.map((candle) => candle.time));
-  const markers = (source.markers || []).filter((marker) => (
+  const ohlcMarkers = (source.markers || []).filter((marker) => (
     identityMatches(marker, symbol, timeframe) && times.has(Number(marker.time)) && marker.shape !== 'circle'
   ));
+  const patternMarkers = candlePatternMarkers(statusData, symbol, timeframe, times);
+  const markers = [...ohlcMarkers, ...patternMarkers];
   const lastTime = Math.max(...candles.map((candle) => candle.time));
   const harmonics = (source.harmonics || [])
     .filter((pattern) => {

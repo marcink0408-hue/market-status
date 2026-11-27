@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import PriceChart from '../chart/PriceChart';
 import InstrumentDetails from '../details/InstrumentDetails';
 import DecisionDetails from '../details/DecisionDetails';
 import { getChartPayload, statusItems, TIMEFRAMES } from '../../utils/market';
 
-export default function MainWorkspace({ activeInstrument, data }) {
-  const [timeframe, setTimeframe] = useState('4H');
+export default function MainWorkspace({ activeInstrument, data, timeframe, setTimeframe }) {
   const symbol = activeInstrument?.symbol;
-  useEffect(() => setTimeframe('4H'), [symbol]);
   const instrument = useMemo(() => statusItems(data.status).find((item) => String(item.symbol).toLowerCase() === String(symbol).toLowerCase()) || activeInstrument, [data.status, activeInstrument, symbol]);
   const payload = useMemo(() => getChartPayload(data.ohlc, symbol, timeframe), [data.ohlc, symbol, timeframe]);
 

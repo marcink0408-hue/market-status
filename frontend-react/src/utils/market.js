@@ -1,5 +1,25 @@
 export const TIMEFRAMES = ['1H', '4H', '1D'];
 
+const SYMBOL_DISPLAY_NAMES = {
+  w20: 'WIG20',
+  us500: 'US500',
+  gold: 'GOLD',
+  silver: 'SILVER',
+  eurpln: 'EUR/PLN',
+  eurusd: 'EUR/USD',
+  usdpln: 'USD/PLN',
+  usdjpy: 'USD/JPY',
+  copper: 'COPPER',
+  eu50: 'EU50',
+  uk100: 'UK100',
+};
+
+export function formatSymbolName(symbol) {
+  if (!symbol) return '—';
+  const key = String(symbol).toLowerCase();
+  return SYMBOL_DISPLAY_NAMES[key] || String(symbol).toUpperCase();
+}
+
 export function currentDecision(instrument) {
   const terminal = ['STOP_LOSS', 'TAKE_PROFIT', 'EXPIRED', 'INVALIDATED', 'NO_DATA'];
   if (terminal.includes(instrument?.signal_status)) return 'BRAK';

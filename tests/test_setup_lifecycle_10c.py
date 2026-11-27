@@ -24,6 +24,18 @@ def df_at(bar_index, base=100.0):
     return make_4h_df(bar_index + 1, base=base)
 
 
+def make_1h_df(closes, now=None):
+    if now is None:
+        now = datetime.now(timezone.utc)
+    n = len(closes)
+    index = [now - timedelta(hours=n - i) for i in range(n)]
+    close = pd.Series(closes, index=index)
+    return pd.DataFrame({
+        "open": close - 0.05, "high": close + 0.2,
+        "low": close - 0.2, "close": close,
+    }, index=pd.DatetimeIndex(index))
+
+
 def base_update(lifecycle, direction="LONG", readiness_pct=40,
                 trigger_confirmed=False, blockers=None, bar_index=40,
                 invalidation_level=90.0, entry=100.0, stop=95.0, target=110.0):
@@ -397,6 +409,7 @@ class InvalidationTests(unittest.TestCase):
             direction="LONG", readiness_pct=40, trigger_confirmed=False,
             blockers=[], invalidation_level=90.0, entry=100.0, stop=95.0, target=110.0,
             df_4h=df_mod, current_bar_index=42, data_fresh=True,
+            df_1h=make_1h_df([100.0, 85.0]),
         )
         self.assertEqual(result["status"], STATUS_UNIEWAŻNIONY)
         self.assertEqual(result["last_setup_bar_index"], 42)

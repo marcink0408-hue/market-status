@@ -343,4 +343,34 @@ PozostaĹ‚e etapy (6, 7) zachowujÄ… swojÄ… numeracjÄ™ i zakres bez zm
 - `ChartPlaceholder.jsx` z Etapu 2 nie jest juĹĽ uĹĽywany, ale pozostawiony bez zmian (nie usuwa siÄ™ kodu z poprzednich etapĂłw)
 - Formacje klasyczne w `status.json` (pole `timeframes.4H.classic_patterns`) sÄ… puste dla wszystkich aktualnych instrumentĂłw; dane klasyczne pochodzÄ… wyĹ‚Ä…cznie z `output/classic_patterns.json`
 
+## Etap 10D — Część 3: izolacja stanu setupów per instrument i bezpieczna migracja (ukończony)
+
+## Status etapu
+Ukończony
+
+## Wykonane zadania
+- `analysis/setup_lifecycle.py`:
+  - `_load_state()` waliduje `state["symbol"] == self.symbol`; obcy symbol, nieprawidłowa struktura i uszkodzony JSON → bezpieczny stan pusty, czytelny komunikat diagnostyczny, plik źródłowy nienaruszony (nie nadpisywany, nie usuwany, nie przenoszony).
+  - Nowa funkcja `migrate_legacy_state(source_path, output_dir)` — jednorazowa, idempotentna migracja `output/setup_state.json` do `output/setup_state_<symbol>.json` dla 11 symboli z `config.SYMBOLS`; brak pliku źródłowego = bez zmian; brak symbolu / zły JSON / nieznany symbol / konflikt = brak migracji i komunikat; oryginał zawsze zachowany jako kopia bezpieczeństwa.
+- `analysis/analyzer.py`:
+  - `manage_lifecycle` wywoływane ze `state_path=OUTPUT_DIR / f"setup_state_{symbol_key}.json"` per instrument (kanoniczne klucze z `config.SYMBOLS`).
+  - `analyze_all()` uruchamia `migrate_legacy_state()` raz przed pętlą instrumentów (nie w każdym wywołaniu lifecycle).
+- `tests/test_setup_lifecycle_10d_part3.py` (nowy): 12 testów — izolacja dwóch instrumentów, odtworzenie obu stanów po restarcie obiektów, poprawna migracja legacy, zachowanie oryginalnego `setup_state.json`, idempotencja, brak symbolu, nieprawidłowy JSON, symbol spoza listy, konflikt z istniejącym plikiem docelowym, odrzucenie pliku ze Symbolem obcym w `_load_state()`. Wszystkie testy używają katalogów tymczasowych i `state_path`; nie modyfikują `output/`.
+
+## Testy
+- 216/216 testów pytest przechodzi (12 nowych + test_setup_lifecycle_10c.py i test_setup_lifecycle_10d.py + pozostałe).
+- Import `from analysis.analyzer import analyze_all` OK.
+- Build Vite (`npm run build`) przechodzi pomyślnie.
+- `git diff --check` czysty.
+
+## Zmienione pliki
+- `analysis/setup_lifecycle.py` — walidacja symbolu w `_load_state()` + `migrate_legacy_state()`
+- `analysis/analyzer.py` — `state_path` per instrument, migracja w `analyze_all()`
+- `tests/test_setup_lifecycle_10d_part3.py` — nowe testy
+- `docs/PROGRESS.md` — ten dziennik
+
+## Bez zmian
+- Logika triggera 1H, unieważnienia, zmiany kierunku, wygasania setupów (10C), readiness, wagi, progi, blokady, Entry/SL/TP/RR — nienaruszone.
+- `frontend/index.html`, `app.py`, `analysis/` (poza setup_lifecycle.py), `data/`, `config.py`, `run_daily.py`, `.github/workflows/` — bez zmian.
+
 

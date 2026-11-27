@@ -12,7 +12,7 @@ from analysis.decision import make_decision
 from analysis.lifecycle import evaluate_harmonic, evaluate_signal, harmonic_is_visible
 from analysis.sr_zones import compute_zones_for_symbol, zones_for_chart, validate_zones
 from analysis.readiness import calculate_readiness
-from analysis.setup_lifecycle import manage_lifecycle
+from analysis.setup_lifecycle import manage_lifecycle, OUTPUT_DIR, migrate_legacy_state
 from analysis.chart_data import build_chart_payload
 from config import SYMBOLS, MAX_DATA_AGE, INVALIDATION_BUFFER_ATR_MULT
 import json
@@ -609,7 +609,9 @@ def analyze_symbol(symbol_key: str) -> dict:
             entry=lifecycle_entry,
             stop=lifecycle_stop,
             target=lifecycle_target,
+            state_path=OUTPUT_DIR / f"setup_state_{symbol_key}.json",
             df_4h=df_4h,
+            df_1h=df_1h,
             current_bar_index=len(df_4h) - 1 if df_4h is not None else 0,
             next_check_time=entry_readiness.get("next_check_time"),
             data_fresh=data_fresh,
@@ -646,6 +648,7 @@ def analyze_symbol(symbol_key: str) -> dict:
 
 
 def analyze_all() -> list:
+    migrate_legacy_state()
     results = []
     for key in SYMBOLS:
         print(f"Analyzing {key}...")

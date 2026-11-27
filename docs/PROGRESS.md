@@ -560,5 +560,7 @@ Detekcja działa na zamkniętych świecach, pivoty potwierdzane po 3 świecach p
 ### Wyniki weryfikacji
 - `npm run build` — zakończone sukcesem (53 moduły, bez błędów).
 - `git diff --check` — czysty.
-- Testy Pythona — nie uruchomione (brak interpretera Python w środowisku z powodu Windows App Execution Alias); kod 작성any zgodnie z wzorcem istniejących testów.
+- Testy Pythona (`tests/test_classic_patterns.py`) — **nie mogły zostać uruchomione**.
+  Przyczyna: virtualenv w `.venv/` został przeniesiony z innego komputera (użytkownik `Dom`). Plik `pyvenv.cfg` wskazuje na nieistniejący `C:\Users\Dom\AppData\Local\Programs\Python\Python315\python.exe`, a katalog `.venv\Lib\` nie zawiera biblioteki standardowej Python (tylko `site-packages`). Nie ma też systemowego interpretera Python w typowych lokalizacjach (`AppData\Local\Programs\Python`, `Program Files\Python`). Każde wywołanie `python.exe` z virtualenv kończy się błędem "did not find executable at 'C:\Users\Dom\AppData\Local\Programs\Python\Python315\python.exe'".
+  Kod testów został napisany zgodnie z wzorcem istniejących testów (np. `test_sr_zones.py`) i syntaktycznie sprawdzony przez strukturalną analizę pliku, ale nie został wykonany przez interpretera.
 

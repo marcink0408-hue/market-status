@@ -392,7 +392,8 @@ Usunięcie duplikatów w `entry_readiness.blockers` oraz naprawa komunikatu „B
 11G — ukonczony (naprawa podsumowania setupu i blokad)
 11H — ukonczony (ograniczenie i poprawka rysowania stref S/R w PriceChart.jsx)
 11I — ukonczony (ujednolicenie prezentacji zgodności interwałów w SetupSummary.jsx i TimeframeAlignment.jsx)
-11J–11M — oczekuja na komende
+11J — ukonczony (propagacja poziomów Entry/SL/TP z 4H na 1H i 1D w getChartPayload())
+11K–11M — oczekuja na komende
 
 ## Etap 11H — Ograniczenie i poprawka rysowania stref S/R
 
@@ -457,6 +458,39 @@ SetupSummary.jsx wyświetlał sekcję "ZGODNOŚĆ INTERWAŁÓW" używając danyc
 - `npm run build` — zakończone sukcesem (51 modułów, bez błędów).
 - `git diff --check` — czysty (brak błędów whitespace).
 - `git diff --stat` — 2 pliki: SetupSummary.jsx (+46/−6), TimeframeAlignment.jsx (+16/−4).
+- Zatwierdzone i wsunięte na gałąź `main`.
+
+## Etap 11J — Propagacja poziomów Entry / SL / TP na 1H i 1D (ukończony)
+
+### Zakres zmiany
+Wyłącznie `frontend-react/src/utils/market.js` oraz `docs/PROGRESS.md`.
+
+### Przyczyna braku poziomów na 1H i 1D
+W `analyzer.py` poziomy Entry/SL/TP/RR są obliczane wyłącznie dla 4H (make_decision + calculate_sl/tp/rr) i zapisywane na poziomie głównym `result["entry"]` itp. oraz w `timeframes.4H.levels`. Dla interwałów 1H i 1D w `ohlc.json` zapisywane są same `null` (lub w niektórych przypadkach legacy wartości z 1H). Funkcja `getChartPayload()` w `market.js` pobierała poziomy wyłącznie z `source.levels` bieżącego interwału, co oznaczało brak linii Entry/SL/TP na wykresach 1H i 1D.
+
+### Źródło prawdy
+`timeframes.4H.levels` w `ohlc.json` (generowane przez `analyzer.py`, obliczone na podstawie `sr_zones_4h` przez `calculate_sl`/`calculate_tp`/`calculate_rr`) — jedyne źródło poziomów Entry/SL/TP.
+
+### Zmiany w kodzie
+**`frontend-react/src/utils/market.js` — funkcja `getChartPayload()`:**
+- Dla 4H: zachowane obecne zachowanie (poziomy z `source.levels` bieżącego interwału).
+- Dla 1H i 1D: poziomy pobierane **zawsze** z `container.timeframes['4H'].levels` (setup 4H), nigdy z `source.levels` bieżącego interwału.
+- Jeśli wszystkie trzy poziomy (entry, stop, target) z 4H są `null` → `levels = {}` (brak rysowania linii).
+- `levels_timeframe` ustawiane na `"4H"` dla 1H i 1D, więc etykiety w wykresie wskazują źródło 4H.
+- Nie miesza poziomów z różnych interwałów — wszystkie trzy (entry, stop, target) pochodzą z tego samego źródła 4H.
+
+### Nie zmieniono
+- `analysis/analyzer.py`, `analysis/readiness.py`, `output/status.json`, `output/ohlc.json`, `config.py`, `run_daily.py`, `.github/workflows/` — bez zmian.
+- Logika obliczeniowa silnika Pythona — nienaruszona.
+- RR, readiness, lifecycle — bez zmian.
+- Precyzja ceny, harmoniczne, strefy S/R — bez zmian.
+
+### Wyniki weryfikacji (na rzeczywistych danych `output/ohlc.json`)
+- **us500 (z poziomami 4H: entry=7128.96, stop=7006.31, target=7312.93):** identyczne poziomy na 1H, 4H, 1D z `levels_timeframe=4H`.
+- **usdpln (bez poziomów 4H, mimo legacy wartości na 1H):** `levels={}` na wszystkich interwałach — legacy poziomy z 1H nie zostały użyte.
+- `npm run build` — zakończone sukcesem (51 modułów, bez błędów).
+- `git diff --check` — czysty.
+- `git diff --stat` — tylko `market.js` (25 dodanych, 2 usuniętych linii).
 - Zatwierdzone i wsunięte na gałąź `main`.
 
 

@@ -88,34 +88,39 @@ function candlePatternMarkers(statusData, symbol, timeframe, times) {
   const patterns = Array.isArray(tfData.candles) ? tfData.candles : [];
 
   const markers = [];
-  const seenTimes = new Set();
+  const seenKeys = new Set();
 
   patterns.forEach((p) => {
     const t = Number(new Date(String(p.time || '').replace(' ', 'T')));
     if (!Number.isFinite(t)) return;
     const tSec = Math.floor(t / 1000);
     if (!times.has(tSec)) return;
-    if (seenTimes.has(tSec)) return;
-    seenTimes.add(tSec);
 
     const dir = String(p.direction || '').toLowerCase();
-    let position, color;
-    if (dir === 'bullish') { position = 'belowBar'; color = '#35d07f'; }
-    else if (dir === 'bearish') { position = 'aboveBar'; color = '#ff4d42'; }
-    else { position = 'belowBar'; color = '#94a3b8'; }
+    if (dir !== 'bullish' && dir !== 'bearish' && dir !== 'neutral') return;
 
     const shortName = String(p.name || 'Formacja')
       .replace('Bullish ', '')
       .replace('Bearish ', '')
       .replace(' engulfing', '')
       .trim();
+    if (!shortName || shortName === 'Formacja') return;
+
+    const dedupKey = `${tSec}|${shortName}|${dir}`;
+    if (seenKeys.has(dedupKey)) return;
+    seenKeys.add(dedupKey);
+
+    let position, color;
+    if (dir === 'bullish') { position = 'belowBar'; color = '#35d07f'; }
+    else if (dir === 'bearish') { position = 'aboveBar'; color = '#ff4d42'; }
+    else { position = 'belowBar'; color = '#94a3b8'; }
 
     markers.push({
       time: tSec,
       position,
       color,
       shape: 'circle',
-      text: `${shortName} · ${dir || 'neutral'}`,
+      text: `${shortName} · ${dir}`,
     });
   });
 
@@ -135,6 +140,12 @@ function validCandles(candles) {
 }
 
 export function getChartPayload(ohlc, statusData, selectedSymbol, timeframe = '4H') {
+  // Wsteczna kompatybilność: getChartPayload(ohlc, symbol, timeframe)
+  if (!Array.isArray(statusData)) {
+    timeframe = selectedSymbol;
+    selectedSymbol = statusData;
+    statusData = null;
+  }
   const symbol = String(selectedSymbol || '').toLowerCase();
   const container = ohlc?.symbols?.[symbol] || ohlc?.symbols?.[selectedSymbol];
   if (!symbol || !container) return null;

@@ -656,6 +656,36 @@ Połączenie wykrytych przez Python formacji świecowych (`detect_candlestick_pa
 - Brak danych o `is_closed` w formacjach świecowych — markery są tworzone dla wszystkich wykrytych formacji, nie tylko zamkniętych świec.
 - Nie można potwierdzić renderowania markerów na wykresie bez dostępu do przeglądarki.
 
+### Korekta ETAPU 11N — Deduplikacja markerów formacji świecowych (ukończona)
+
+### Zakres zmiany
+Naprawa deduplikacji w `candlePatternMarkers()` w `frontend-react/src/utils/market.js`. Poprzednia logika `seenTimes` deduplikowała tylko po czasie świecy, co powodowało usuwanie różnych formacji występujących na tej samej świecy.
+
+### Zmienione pliki
+- `frontend-react/src/utils/market.js` — zmieniono `seenTimes` (Set po czasie) na `seenKeys` (Set po kluczu złożonym: czas + nazwa formacji + kierunek).
+- `docs/PROGRESS.md` — ten wpis.
+
+### Nowa logika deduplikacji
+- Klucz dedup: `${tSec}|${shortName}|${dir}` — czas + nazwa formacji + kierunek.
+- Ten sam marker (ten sam czas, nazwa i kierunek) — dodawany tylko raz.
+- Różne formacje na tej samej świecy — oba markery pozostają (różna nazwa → różny klucz).
+- Ta sama nazwa i czas, ale inny kierunek — oba rekordy pozostają (różny kierunek → różny klucz).
+- Formacje na różnych świecach — wszystkie pozostają (różny czas → różny klucz).
+- Nieprawidłowy czas lub brak nazwy/kierunku — rekord pominięty.
+
+### Walidacja wejść
+- `direction` musi być jednym z: `bullish`, `bearish`, `neutral` — w przeciwnym razie rekord pomijany.
+- `name` po oczyszczeniu nie może być puste ani równe `'Formacja'` — w przeciwnym razie rekord pomijany.
+- Czas musi być poprawnym timestampem i istnieć wśród świec OHLC — w przeciwnym razie rekord pomijany.
+
+### Wyniki weryfikacji
+- `npm test` — 8/8 testów przechodzi (w tym testy `getChartPayload` z wsteczną kompatybilnością).
+- `npm run build` — zakończone sukcesem (53 moduły, bez błędów).
+- `git diff --check` — czysty.
+- `git diff --stat` — tylko `market.js` (+19/−8).
+- Testy Pythona — nie uruchomione (brak interpretera Python w środowisku).
+- Weryfikacja w przeglądarce — nie możliwa (brak dostępu do Chrome).
+
 ### Drzewo etapów 11G–11N
 11G — ukończony (naprawa podsumowania setupu i blokad)
 11H — ukończony (ograniczenie i poprawka rysowania stref S/R w PriceChart.jsx)
@@ -664,5 +694,5 @@ Połączenie wykrytych przez Python formacji świecowych (`detect_candlestick_pa
 11K — ukończony (uzasadnienie sygnału na podstawie rzeczywistych danych)
 11L — ukończony (formacje liniowe i cenowe)
 11M — ukończony (dynamiczne rysowanie formacji podczas ich powstawania)
-11N — ukończony (integracja markerów formacji świecowych)
+11N — ukończony (integracja markerów formacji świecowych + korekta deduplikacji)
 

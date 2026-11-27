@@ -3,6 +3,7 @@ import { formatDate, formatPrice } from '../../utils/market';
 export default function SetupSummary({ instrument }) {
   const er = instrument?.entry_readiness;
   const hasReadiness = !!er;
+  const tfAlignment = instrument?.timeframe_alignment || {};
 
   if (!instrument) return null;
 
@@ -30,6 +31,45 @@ export default function SetupSummary({ instrument }) {
   const stop = hasReadiness ? er.stop : null;
   const target = hasReadiness ? er.target : null;
   const rr = hasReadiness ? er.rr : null;
+
+  const renderTimeframeRow = (tf, role, alignment) => {
+    if (!alignment || !alignment.available) {
+      return (
+        <div key={`tf-${tf}`} className="text-sm">
+          {tf} — {role}: <span className="text-[var(--text-muted)]">BRAK DANYCH</span>
+        </div>
+      );
+    }
+    const bias = alignment.bias || 'BRAK';
+    const directionLabel =
+      bias === 'LONG' ? '↑ LONG' : bias === 'SHORT' ? '↓ SHORT' : '— BRAK';
+    const directionClass =
+      bias === 'LONG' ? 'direction-long' : bias === 'SHORT' ? 'direction-short' : 'direction-none';
+    const score = alignment.confidence != null ? alignment.confidence : alignment.score;
+    const scoreText = score != null ? `${score}/100` : '—/100';
+    const statusLabel =
+      alignment.status === 'main'
+        ? 'GŁÓWNY'
+        : alignment.status === 'conflict'
+          ? 'KONFLIKT'
+          : alignment.status === 'neutral'
+            ? 'NEUTRALNY'
+            : 'BRAK DANYCH';
+    const statusClass =
+      alignment.status === 'conflict'
+        ? 'text-red-400'
+        : alignment.status === 'main'
+          ? 'text-green-400'
+          : 'text-[var(--text-muted)]';
+    return (
+      <div key={`tf-${tf}`} className="text-sm">
+        {tf} — {role}:
+        <span className={`ml-1 font-bold ${directionClass}`}>{directionLabel}</span>
+        <span className="ml-1">{scoreText}</span>
+        <span className={`ml-1 text-xs font-bold ${statusClass}`}>({statusLabel})</span>
+      </div>
+    );
+  };
 
   const scores = hasReadiness ? er.scores : {};
   const longScore = scores.LONG ? scores.LONG.readiness_pct : null;
@@ -120,9 +160,19 @@ export default function SetupSummary({ instrument }) {
           <div className="px-4 py-3 rounded-lg border border-border bg-panel2">
             <div className="text-xs text-muted">ZGODNOŚĆ INTERWAŁÓW</div>
             <div className="mt-1 space-y-1 text-sm">
-              <div>1D — kierunek: {longScore != null ? longScore + '%' : '—'} / {shortScore != null ? shortScore + '%' : '—'}</div>
-              <div>4H — setup: {readiness}%</div>
-              <div>1H — wyzwalacz: {er.trigger_level != null ? 'potwierdzony' : 'brak potwierdzenia'}</div>
+              {renderTimeframeRow('1D', 'Kontekst', tfAlignment['1D'])}
+              {renderTimeframeRow('4H', 'Setup główny', tfAlignment['4H'])}
+              {renderTimeframeRow('1H', 'Potwierdzenie', tfAlignment['1H'])}
+              {er && er.trigger_level != null && (
+                <div className="mt-0.5 text-[0.65rem] text-[var(--text-muted)]">
+                  1H — wyzwalacz: potwierdzony
+                </div>
+              )}
+              {er && er.trigger_level == null && (
+                <div className="mt-0.5 text-[0.65rem] text-[var(--text-muted)]">
+                  1H — wyzwalacz: brak potwierdzenia
+                </div>
+              )}
             </div>
           </div>
         </>

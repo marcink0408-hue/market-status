@@ -391,7 +391,8 @@ Usunięcie duplikatów w `entry_readiness.blockers` oraz naprawa komunikatu „B
 ### Drzewo etapów 11G–11M
 11G — ukonczony (naprawa podsumowania setupu i blokad)
 11H — ukonczony (ograniczenie i poprawka rysowania stref S/R w PriceChart.jsx)
-11I–11M — oczekuja na komende
+11I — ukonczony (ujednolicenie prezentacji zgodności interwałów w SetupSummary.jsx i TimeframeAlignment.jsx)
+11J–11M — oczekuja na komende
 
 ## Etap 11H — Ograniczenie i poprawka rysowania stref S/R
 
@@ -420,6 +421,42 @@ Wyłącznie `frontend-react/src/components/chart/PriceChart.jsx` oraz `docs/PROG
 - `git diff --check` — czysty (brak błędów whitespace).
 - `git diff --stat` — tylko `PriceChart.jsx` (81 dodanych, 11 usuniętych linii).
 - Testy Pythona (`tests/test_sr_zones.py`) — nie uruchomione (brak interpretera Python w środowisku); kod Python nie był modyfikowany.
+- Zatwierdzone i wsunięte na gałąź `main`.
+
+## Etap 11I — Ujednolicenie prezentacji zgodności interwałów (ukończony)
+
+### Zakres zmiany
+Wyłącznie `frontend-react/src/components/details/SetupSummary.jsx`, `frontend-react/src/components/details/TimeframeAlignment.jsx` oraz `docs/PROGRESS.md`.
+
+### Przyczyna rozbieżności
+SetupSummary.jsx wyświetlał sekcję "ZGODNOŚĆ INTERWAŁÓW" używając danych z `entry_readiness.scores.LONG/SHORT.readiness_pct` — czyli wyników gotowości setupu dla obu stron — i etykietował je mylnie jako "1D kierunek" i "4H setup". TimeframeAlignment.jsx korzystał z `timeframe_alignment` z `status.json`, ale z mieszanym źródłem danych (`instrument.confidence`, `frame.confidence`, `alignment.bias` z fallbackami). Skutkiem były sprzeczne informacje dla tych samych interwałów (np. USDPLN: SetupSummary pokazywał "1D kierunek: 42% / 25%", TimeframeAlignment pokazywał "1D: BRAK 0/100 NEUTRALNY", "1H: SHORT 60/100 KONFLIKT").
+
+### Źródło prawdy
+`timeframe_alignment` w `status.json` (generowane przez `make_decision()` w `analyzer.py`, linia 371) — zawiera `bias`, `confidence`/`score`, `status` (main/neutral/conflict/missing) oraz `available` dla każdego interwału 1D/4H/1H.
+
+### Zmiany w kodzie
+**SetupSummary.jsx:**
+- Dodano `const tfAlignment = instrument?.timeframe_alignment || {};`
+- Dodano funkcję `renderTimeframeRow(tf, role, alignment)` renderującą dla każdego interwału: kierunek (↑ LONG / ↓ SHORT / — BRAK), wynik punktowy (X/100) i status (GŁÓWNY / KONFLIKT / NEUTRALNY / BRAK DANYCH).
+- Sekcja "ZGODNOŚĆ INTERWAŁÓW" używa wyłącznie `tfAlignment['1D']`, `tfAlignment['4H']`, `tfAlignment['1H']`.
+- Informacja o triggerze 1H pochodzi z `er.trigger_level` (potwierdzony / brak potwierdzenia), oddzielnie od statusu kierunku.
+
+**TimeframeAlignment.jsx:**
+- Uproszczone do wyłącznego korzystania z `instrument.timeframe_alignment`.
+- Kierunek z `tfAlign.bias` przez `currentDecision()`.
+- Wynik z `tfAlign.confidence ?? tfAlign.score`.
+- Relacja z `tfAlign.status` (main → GŁÓWNY, conflict → KONFLIKT, neutral → NEUTRALNY, missing → BRAK DANYCH).
+- Usunięto niepewne fallbacki na `instrument.confidence`, `frame.confidence`, `source.decision`.
+- Etykietą `main` zmieniono z "GŁÓWNY KIERUNEK" na "GŁÓWNY" dla spójności z SetupSummary.
+
+### Nie zmieniono
+- `analysis/readiness.py`, `analysis/analyzer.py`, `output/status.json`, `frontend-react/src/utils/market.js`, `config.py`, `run_daily.py`, `.github/workflows/` — bez zmian.
+- Logika obliczeniowa silnika Pythona — nienaruszona.
+
+### Wyniki weryfikacji
+- `npm run build` — zakończone sukcesem (51 modułów, bez błędów).
+- `git diff --check` — czysty (brak błędów whitespace).
+- `git diff --stat` — 2 pliki: SetupSummary.jsx (+46/−6), TimeframeAlignment.jsx (+16/−4).
 - Zatwierdzone i wsunięte na gałąź `main`.
 
 

@@ -1,19 +1,21 @@
 import { currentDecision, timeframeData } from '../../utils/market';
 
-const RELATIONS = { main: 'GŁÓWNY KIERUNEK', confirms: 'ZGODNY', conflict: 'KONFLIKT', neutral: 'NEUTRALNY', missing: 'BRAK DANYCH' };
+const RELATIONS = { main: 'GŁÓWNY', confirms: 'ZGODNY', conflict: 'KONFLIKT', neutral: 'NEUTRALNY', missing: 'BRAK DANYCH' };
 
 export default function TimeframeAlignment({ instrument }) {
+  const alignment = instrument?.timeframe_alignment || {};
+
   return (
     <section className="info-card h-fit">
       <h3>ZGODNOŚĆ INTERWAŁÓW</h3>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         {['1D', '4H', '1H'].map((timeframe) => {
-          const frame = timeframeData(instrument, timeframe);
-          const alignment = instrument.timeframe_alignment?.[timeframe] || {};
-          const source = timeframe === '4H' ? instrument : frame;
-          const direction = currentDecision({ ...source, decision: alignment.bias || source.bias || source.decision });
-          const relation = alignment.status || (timeframe === '4H' ? 'main' : 'missing');
-          const score = timeframe === '4H' ? instrument.confidence : alignment.confidence ?? frame.confidence;
+          const tfAlign = alignment[timeframe] || {};
+          const available = tfAlign.available !== false;
+          const bias = tfAlign.bias || 'BRAK';
+          const direction = currentDecision({ decision: bias });
+          const score = tfAlign.confidence != null ? tfAlign.confidence : tfAlign.score;
+          const relation = tfAlign.status || (timeframe === '4H' ? 'main' : available ? 'neutral' : 'missing');
           const directionClass = direction === 'LONG' ? 'direction-long' : direction === 'SHORT' ? 'direction-short' : 'direction-none';
           return (
             <article key={timeframe} className={`alignment-card ${relation === 'conflict' ? 'alignment-conflict' : ''}`} data-timeframe-card={timeframe}>

@@ -564,3 +564,42 @@ Detekcja działa na zamkniętych świecach, pivoty potwierdzane po 3 świecach p
   Przyczyna: virtualenv w `.venv/` został przeniesiony z innego komputera (użytkownik `Dom`). Plik `pyvenv.cfg` wskazuje na nieistniejący `C:\Users\Dom\AppData\Local\Programs\Python\Python315\python.exe`, a katalog `.venv\Lib\` nie zawiera biblioteki standardowej Python (tylko `site-packages`). Nie ma też systemowego interpretera Python w typowych lokalizacjach (`AppData\Local\Programs\Python`, `Program Files\Python`). Każde wywołanie `python.exe` z virtualenv kończy się błędem "did not find executable at 'C:\Users\Dom\AppData\Local\Programs\Python\Python315\python.exe'".
   Kod testów został napisany zgodnie z wzorcem istniejących testów (np. `test_sr_zones.py`) i syntaktycznie sprawdzony przez strukturalną analizę pliku, ale nie został wykonany przez interpretera.
 
+## Etap 11M — Dynamiczne rysowanie formacji podczas ich powstawania (ukończony)
+
+### Zakres zmiany
+Rozbudowa wizualizacji formacji klasycznych w `PriceChart.jsx` tak, aby pokazywała geometrię i zmiany statusów z ETAPU 11L dla wszystkich typów: trójkąty, flagi i chorągiewki, kliny, głowa z ramionami i odwrócona, podwójne szczyty i dna, kanały.
+
+### Zmienione pliki
+- `frontend-react/src/components/chart/PriceChart.jsx` — nowa logika rysowania formacji klasycznych.
+
+### Opis działania
+1. Dodano `statusLineStyle(status)` — osobny styl dla każdego z 6 statusów: FORMUJĄCA SIĘ (dashed), POTWIERDZONA/WYBITA/RETEST (solid), UNIEWAŻNIONA/WYGASŁA (dotted).
+2. Dodano `statusColor(direction, status)` — kolor kierunku (bullish zielony, bearish czerwony, neutral fioletowy) z przezroczystością przez hex alpha: FORMUJĄCA SIĘ ~70%, UNIEWAŻNIONA ~35%, WYGASŁA ~25%, pozostałe 100%.
+3. Dodano `finitePoints(points)` — walidacja punktów trendu (odrzuca null, undefined, NaN, Infinity, time <= 0); linia rysowana tylko dla ≥2 poprawnych punktów.
+4. Linie graniczne (boundary.upper/lower) walidowane przez `toFiniteNumber()` — pomijane przy null/NaN.
+5. Poziom wybicia (`breakout_level`) rysowany tylko dla statusów WYBITA i RETEST, nigdy dla FORMUJĄCA SIĘ — linia solid, axisLabelVisible, tytuł „Wybicie”.
+6. Poziom retestu (`retest_level`) rysowany tylko dla statusu RETEST, nigdy dla FORMUJĄCA SIĘ — linia dashed, axisLabelVisible, tytuł „RETEST”.
+7. Zachowany istniejący mechanizm cleanup (chart.remove() przy zmianie payload/instrumentu/interwału) — brak śmieci z poprzedniego instrumentu.
+8. Nie zmieniono `market.js`, `ClassicPatterns.jsx`, backend Python, JSON, workflow ani Entry/SL/TP.
+
+### Nie zmieniono
+- `frontend/index.html`, `app.py`, `analysis/`, `data/`, `config.py`, `run_daily.py`, `.github/workflows/` — bez zmian.
+- `make_decision()`, readiness, wagi, progi, LONG/SHORT, lifecycle, Entry/SL/TP — nienaruszone.
+- `market.js` — dane `classic_patterns` już przekazywane poprawnie, nie wymagało poprawki.
+
+### Wyniki weryfikacji
+- `npm run build` — zakończone sukcesem (53 moduły, bez błędów).
+- `git diff --check` — czysty (brak błędów whitespace).
+- `git diff --stat` — tylko `PriceChart.jsx` (63 dodane, 11 usuniętych linii).
+- Testy Pythona — nie uruchomione (brak interpretera Python w środowisku); kod Python nie był modyfikowany.
+- Zatwierdzone i wsunięte na gałąź `main`.
+
+### Drzewo etapów 11G–11M
+11G — ukończony (naprawa podsumowania setupu i blokad)
+11H — ukończony (ograniczenie i poprawka rysowania stref S/R w PriceChart.jsx)
+11I — ukończony (ujednolicenie prezentacji zgodności interwałów w SetupSummary.jsx i TimeframeAlignment.jsx)
+11J — ukończony (propagacja poziomów Entry/SL/TP z 4H na 1H i 1D w getChartPayload())
+11K — ukończony (uzasadnienie sygnału na podstawie rzeczywistych danych)
+11L — ukończony (formacje liniowe i cenowe)
+11M — ukończony (dynamiczne rysowanie formacji podczas ich powstawania)
+

@@ -6,8 +6,29 @@ function classicColor(direction) {
   return direction === 'bullish' ? '#35d07f' : direction === 'bearish' ? '#ff4d42' : '#bb86fc';
 }
 
-function classicLineStyle(status) {
-  return status === 'FORMUJĄCA SIĘ' ? LineStyle.Dashed : LineStyle.Solid;
+function statusLineStyle(status) {
+  switch (status) {
+    case 'FORMUJĄCA SIĘ': return LineStyle.Dashed;
+    case 'UNIEWAŻNIONA': return LineStyle.Dotted;
+    case 'WYGASŁA': return LineStyle.Dotted;
+    default: return LineStyle.Solid;
+  }
+}
+
+function statusColor(direction, status) {
+  const base = classicColor(direction);
+  switch (status) {
+    case 'FORMUJĄCA SIĘ': return base + 'B3'; // ~70% opacity
+    case 'UNIEWAŻNIONA': return base + '59';  // ~35% opacity
+    case 'WYGASŁA': return base + '40';      // ~25% opacity
+    default: return base;
+  }
+}
+
+function finitePoints(points) {
+  return (points || [])
+    .map((p) => ({ time: Number(p?.time), value: Number(p?.value) }))
+    .filter((p) => Number.isFinite(p.time) && Number.isFinite(p.value) && p.time > 0);
 }
 
 const LEVEL_CONFIG = [
@@ -163,15 +184,15 @@ export default function PriceChart({ payload }) {
       overlaySeries.push(line);
     });
 
-    // --- Formacje klasyczne: linie trendu, granice, pivoty ---
+    // --- Formacje klasyczne: linie trendu, granice, wybicie i retest ---
     (payload.classic_patterns || []).forEach((pattern) => {
       const status = pattern.status || 'POTWIERDZONA';
-      const color = classicColor(pattern.direction);
-      const lineStyle = classicLineStyle(status);
+      const color = statusColor(pattern.direction, status);
+      const lineStyle = statusLineStyle(status);
 
-      // Linie trendu (opór / wsparcie / neckline)
+      // Linie trendu (opór / wsparcie / neckline) — rysowane tylko dla ≥2 poprawnych punktów
       pattern.trendlines?.forEach((tl) => {
-        const pts = (tl.points || []).map((p) => ({ time: p.time, value: p.value }));
+        const pts = finitePoints(tl.points);
         if (pts.length < 2) return;
         const line = chart.addLineSeries({
           color,
@@ -186,19 +207,50 @@ export default function PriceChart({ payload }) {
         overlaySeries.push(line);
       });
 
-      // Linie graniczne (poziome)
+      // Linie graniczne (poziome upper / lower)
       const boundary = pattern.boundary || {};
       [boundary.upper, boundary.lower].forEach((price) => {
-        if (price == null) return;
+        const p = toFiniteNumber(price);
+        if (p == null) return;
         candleSeries.createPriceLine({
-          price,
+          price: p,
           color,
           lineWidth: 1,
           lineStyle,
           axisLabelVisible: false,
-          title: `Formacja ${pattern.type || pattern.name} · ${pattern.status || ''}`,
+          title: `Formacja ${pattern.type || pattern.name} · ${status}`,
         });
       });
+
+      // Poziom wybicia — tylko dla WYBITA i RETEST, nigdy dla FORMUJĄCA SIĘ
+      if (status !== 'FORMUJĄCA SIĘ' && (status === 'WYBITA' || status === 'RETEST')) {
+        const breakout = toFiniteNumber(pattern.breakout_level);
+        if (breakout != null) {
+          candleSeries.createPriceLine({
+            price: breakout,
+            color,
+            lineWidth: 2,
+            lineStyle: LineStyle.Solid,
+            axisLabelVisible: true,
+            title: `Wybicie · ${formatPrice(breakout, payload.symbol)}`,
+          });
+        }
+      }
+
+      // Poziom retestu — tylko dla RETEST, nigdy dla FORMUJĄCA SIĘ
+      if (status === 'RETEST') {
+        const retest = toFiniteNumber(pattern.retest_level);
+        if (retest != null) {
+          candleSeries.createPriceLine({
+            price: retest,
+            color,
+            lineWidth: 2,
+            lineStyle: LineStyle.Dashed,
+            axisLabelVisible: true,
+            title: `RETEST · ${formatPrice(retest, payload.symbol)}`,
+          });
+        }
+      }
     });
 
     chart.timeScale().fitContent();

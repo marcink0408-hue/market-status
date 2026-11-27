@@ -92,7 +92,7 @@ export default function SetupSummary({ instrument }) {
           <div className="px-4 py-3 rounded-lg border border-border bg-panel2">
             <div className="text-xs text-muted">POZIOM UNIĄCZNIENIA</div>
             <div className="mt-1">
-              {invalidationLevel != null ? formatPrice(invalidationLevel) : '—'}
+              {invalidationLevel != null ? formatPrice(invalidationLevel, instrument.symbol) : '—'}
             </div>
           </div>
 
@@ -140,15 +140,15 @@ export default function SetupSummary({ instrument }) {
         <div className="grid gap-2 md:grid-cols-4">
           <div className="px-3 py-2 rounded-lg border border-border bg-panel2">
             <div className="text-xs text-muted">ENTRY</div>
-            <div className="font-bold">{formatPrice(entry)}</div>
+            <div className="font-bold">{formatPrice(entry, instrument.symbol)}</div>
           </div>
           <div className="px-3 py-2 rounded-lg border border-border bg-panel2">
             <div className="text-xs text-muted">STOP LOSS</div>
-            <div className="font-bold">{formatPrice(stop)}</div>
+            <div className="font-bold">{formatPrice(stop, instrument.symbol)}</div>
           </div>
           <div className="px-3 py-2 rounded-lg border border-border bg-panel2">
             <div className="text-xs text-muted">TAKE PROFIT</div>
-            <div className="font-bold">{formatPrice(target)}</div>
+            <div className="font-bold">{formatPrice(target, instrument.symbol)}</div>
           </div>
           <div className="px-3 py-2 rounded-lg border border-border bg-panel2">
             <div className="text-xs text-muted">R:R</div>

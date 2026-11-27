@@ -28,9 +28,16 @@ export function currentDecision(instrument) {
   return normalizeDecision(instrument?.decision);
 }
 
-export function formatPrice(value) {
-  return value == null || value === '' || !Number.isFinite(Number(value))
-    ? '—' : Math.round(Number(value)).toLocaleString('pl-PL', { maximumFractionDigits: 0 });
+const FOREX_PRECISION_SYMBOLS = ['eurusd', 'usdpln', 'eurpln', 'usdjpy', 'copper'];
+
+export function getPricePrecision(symbol) {
+  if (!symbol) return 0;
+  return FOREX_PRECISION_SYMBOLS.includes(String(symbol).toLowerCase()) ? 2 : 0;
+}
+
+export function formatPrice(value, symbol) {
+  if (value == null || value === '' || !Number.isFinite(Number(value))) return '—';
+  return Number(value).toLocaleString('pl-PL', { maximumFractionDigits: getPricePrecision(symbol) });
 }
 
 export function formatDate(value, includeTime = false) {

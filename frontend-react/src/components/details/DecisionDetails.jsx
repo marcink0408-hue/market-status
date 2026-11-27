@@ -56,7 +56,7 @@ export default function DecisionDetails({ instrument }) {
       {showLevels && (
         <div className="levels-grid">
           {[['WEJŚCIE', instrument.entry, 'level-entry'], ['STOP LOSS', instrument.stop, 'level-stop'], ['TAKE PROFIT', instrument.target, 'level-target']].map(([label, value, className]) => (
-            <div className={`level-card ${className}`} key={label}><span>{label}</span><strong>{formatPrice(value)}</strong><small>{instrument.levels_timeframe || '4H'}</small></div>
+            <div className={`level-card ${className}`} key={label}><span>{label}</span><strong>{formatPrice(value, instrument.symbol)}</strong><small>{instrument.levels_timeframe || '4H'}</small></div>
           ))}
           <div className="level-card"><span>RELACJA ZYSK/RYZYKO</span><strong>{instrument.rr == null ? '—' : `1:${Number(instrument.rr).toLocaleString('pl-PL', { maximumFractionDigits: 2 })}`}</strong><small>R:R</small></div>
         </div>

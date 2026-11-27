@@ -1,6 +1,6 @@
 import { createChart, LineStyle } from 'lightweight-charts';
 import { useEffect, useRef } from 'react';
-import { chartMarkers, harmonicLinePoints } from '../../utils/market';
+import { chartMarkers, getPricePrecision, harmonicLinePoints } from '../../utils/market';
 
 const LEVEL_CONFIG = [
   { key: 'entry', title: 'WEJŚCIE', color: '#70b7ff' },
@@ -14,11 +14,16 @@ export default function PriceChart({ payload }) {
   useEffect(() => {
     if (!containerRef.current || !payload?.candles?.length) return undefined;
 
+    const pricePrecision = getPricePrecision(payload.symbol);
+
     const chart = createChart(containerRef.current, {
       width: containerRef.current.clientWidth || 600,
       height: containerRef.current.clientHeight || 480,
       layout: { background: { type: 'solid', color: '#100d0d' }, textColor: '#b8b2b2' },
-      localization: { priceFormatter: (price) => Math.round(price).toLocaleString('pl-PL', { maximumFractionDigits: 0 }) },
+      localization: {
+        priceFormatter: (price) =>
+          price.toLocaleString('pl-PL', { maximumFractionDigits: pricePrecision }),
+      },
       grid: { vertLines: { color: '#2a1919' }, horzLines: { color: '#2a1919' } },
       rightPriceScale: { borderColor: '#4a2725' },
       timeScale: { borderColor: '#4a2725', timeVisible: true, secondsVisible: false },
@@ -27,7 +32,7 @@ export default function PriceChart({ payload }) {
       upColor: '#35d07f', downColor: '#ff6376',
       borderUpColor: '#35d07f', borderDownColor: '#ff6376',
       wickUpColor: '#35d07f', wickDownColor: '#ff4d42',
-      priceFormat: { type: 'price', precision: 0, minMove: 1 },
+      priceFormat: { type: 'price', precision: pricePrecision, minMove: pricePrecision === 2 ? 0.01 : 1 },
     });
     const overlaySeries = [];
 

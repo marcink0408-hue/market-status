@@ -373,4 +373,23 @@ Ukończony
 - Logika triggera 1H, unieważnienia, zmiany kierunku, wygasania setupów (10C), readiness, wagi, progi, blokady, Entry/SL/TP/RR — nienaruszone.
 - `frontend/index.html`, `app.py`, `analysis/` (poza setup_lifecycle.py), `data/`, `config.py`, `run_daily.py`, `.github/workflows/` — bez zmian.
 
+## Etap 11G — Naprawa podsumowania setupu i blokad (ukonczony)
+
+### Zakres zmiany
+Usunięcie duplikatów w `entry_readiness.blockers` oraz naprawa komunikatu „Brak brakujących warunków” w `SetupSummary.jsx`, gdy istnieją aktywne blokady wejścia. `blockers` staje się źródłem prawdy dla przyczyny braku możliwości wejścia.
+
+### Zmienione pliki
+- `analysis/readiness.py` — deduplikacja `blockers` w `calculate_readiness()` (zachowanie kolejności pierwszego wystąpienia za pomocą `dict.fromkeys`). Pole `missing` bez zmian.
+- `frontend-react/src/components/details/SetupSummary.jsx` — sekcja „Najważniejszy brakujący warunek” najpierw sprawdza `blockers`, potem `missing`, dopiero na końcu komunikat „Brak brakujących warunków”. Blokady w sekcji „Blokady wejścia” renderowane po deduplikacji (`[...new Set(blockers)]`).
+
+### Wyniki weryfikacji
+- 216/216 testów pytest przechodzi (w tym test_readiness.py).
+- Build Vite (`npm run build`) przechodzi bez błędów.
+- `git diff --check` czysty.
+- Zatwierdzone i wsunięte na gałąź `main`.
+
+### Drzewo etapów 11G–11M
+11G — ukonczony (naprawa podsumowania setupu i blokad)
+11H–11M — oczekuja na komende
+
 

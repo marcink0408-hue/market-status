@@ -81,7 +81,9 @@ export default function SetupSummary({ instrument }) {
           <div className="px-4 py-3 rounded-lg border border-border bg-panel2">
             <div className="text-xs text-muted">NAJWAŻNIEJSZY BRAKUJĄCY WARUNEK</div>
             <div className="mt-1 text-sm">
-              {missing.length > 0 ? (
+              {blockers.length > 0 ? (
+                <span>{blockers[0]}</span>
+              ) : missing.length > 0 ? (
                 <span>{missing[0]}</span>
               ) : (
                 <span className="text-[var(--text-muted)]">Brak brakujących warunków</span>
@@ -159,7 +161,7 @@ export default function SetupSummary({ instrument }) {
 
       <div className="border border-border rounded-lg bg-panel2 p-3">
         <p className="text-[0.65rem] text-[var(--text-muted)] leading-relaxed">
-          {blockers.length > 0 ? 'Blokady wejścia: ' + blockers.join(', ') + '.' : ''}
+          {blockers.length > 0 ? 'Blokady wejścia: ' + [...new Set(blockers)].join(', ') + '.' : ''}
         </p>
       </div>
     </section>

@@ -366,11 +366,11 @@ def calculate_readiness(
         "stage": stage,
         "setup_status": "AKTYWNY" if direction != "NONE" and long_readiness >= 30 else "BRAK SETUPU",
         "entry_allowed": bool(entry_allowed),
-        "blockers": (
+        "blockers": list(dict.fromkeys(
             (selected["missing"] if selected else [])
             + (long_blockers if direction == "LONG" else short_blockers if direction == "SHORT" else [])
             + (long_blockers + short_blockers if direction == "NONE" else [])
-        ),
+        )),
         "criteria": (selected["criteria"] if selected else []),
         "scores": {
             "LONG": {"readiness_pct": long_readiness, "blockers": long_blockers},

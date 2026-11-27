@@ -390,6 +390,36 @@ Usunięcie duplikatów w `entry_readiness.blockers` oraz naprawa komunikatu „B
 
 ### Drzewo etapów 11G–11M
 11G — ukonczony (naprawa podsumowania setupu i blokad)
-11H–11M — oczekuja na komende
+11H — ukonczony (ograniczenie i poprawka rysowania stref S/R w PriceChart.jsx)
+11I–11M — oczekuja na komende
+
+## Etap 11H — Ograniczenie i poprawka rysowania stref S/R
+
+### Zakres zmiany
+Wyłącznie `frontend-react/src/components/chart/PriceChart.jsx` oraz `docs/PROGRESS.md`.
+
+### Zmienione pliki
+- `frontend-react/src/components/chart/PriceChart.jsx` — nowa logika wyboru i renderowania stref S/R.
+
+### Opis działania
+1. Dodano helper `toFiniteNumber(value)` odrzucający `null`, `undefined`, pusty tekst oraz wartości niefinitywne; stosowany spójnie dla `currentPrice`, `center`, `lower`, `upper` oraz pól rankingu (`rank_score`, `rank_position`, `distance_from_price`).
+2. Cena referencyjna pobierana najpierw z `payload.sr_zones_current_price`, a przy braku z `close` ostatniej świecy z `payload.candles` — obie przez `toFiniteNumber()`. Przy braku prawidłowej ceny nie rysowane są żadne strefy (usunięto fallback `sorted.slice(0, 4)`).
+3. Prawidłowe strefy (walidacja `center`/`lower`/`upper`) dzielone są na dwie niezależne grupy: `above` (`center > cena`) i `below` (`center < cena`).
+4. Dla każdej grupy osobno wybierane jest jedno kryterium sortowania: `rank_score` malejąco (jeśli wszystkie w grupie go mają), w przeciwnym razie `rank_position` rosnąco, w przeciwnym razie `distance_from_price` rosnące, w przeciwnym razie `center`. Pola z różnych kategorii nigdy nie są ze sobą porównywane. Remisy rozstrzygane po `center`.
+5. Z każdej grupy wybierane są maksymalnie 2 strefy (łącznie max 2 nad + 2 pod ceną).
+6. Renderowana jest jedna linia na `center` każdej wybranej strefy, w oryginalnym kolorze typu (SUPPORT zielony #35d07f, RESISTANCE czerwony #ff6376).
+7. Etykieta zawiera typ i zakres: `WSPARCIE · lower – upper` lub `OPÓR · lower – upper`, gdzie `lower` i `upper` formatowane przez istniejące `formatPrice(value, payload.symbol)` (maksymalnie 2 miejsca po przecinku, polski separator). Wartości numeryczne używane do rysowania linii pozostają niezmienione.
+
+### Nie zmieniono
+- `frontend/index.html`, `app.py`, `analysis/`, `data/`, `config.py`, `run_daily.py`, `.github/workflows/` — bez zmian.
+- Poziomy Entry/SL/TP i harmoniczne — bez zmian.
+- Limit 2 stref nad i 2 pod ceną — zachowany.
+
+### Wyniki weryfikacji
+- `npm run build` — zakończone sukcesem (51 modułów, bez błędów).
+- `git diff --check` — czysty (brak błędów whitespace).
+- `git diff --stat` — tylko `PriceChart.jsx` (81 dodanych, 11 usuniętych linii).
+- Testy Pythona (`tests/test_sr_zones.py`) — nie uruchomione (brak interpretera Python w środowisku); kod Python nie był modyfikowany.
+- Zatwierdzone i wsunięte na gałąź `main`.
 
 

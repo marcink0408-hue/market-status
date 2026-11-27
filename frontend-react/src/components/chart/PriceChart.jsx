@@ -1,12 +1,24 @@
 import { createChart, LineStyle } from 'lightweight-charts';
 import { useEffect, useRef } from 'react';
-import { chartMarkers, getPricePrecision, harmonicLinePoints } from '../../utils/market';
+import { chartMarkers, getPricePrecision, formatPrice, harmonicLinePoints } from '../../utils/market';
 
 const LEVEL_CONFIG = [
   { key: 'entry', title: 'WEJŚCIE', color: '#70b7ff' },
   { key: 'stop', title: 'STOP LOSS', color: '#ff6376' },
   { key: 'target', title: 'TAKE PROFIT', color: '#35d07f' },
 ];
+
+function toFiniteNumber(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    (typeof value === 'string' && value.trim() === '')
+  ) {
+    return null;
+  }
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
 
 export default function PriceChart({ payload }) {
   const containerRef = useRef(null);
@@ -52,22 +64,80 @@ export default function PriceChart({ payload }) {
 
     // --- Strefy S/R: wsparcie (zielone) i opór (czerwone), bez rozszerzania autoskali ---
     const SR_CONFIG = [
-      { type: "SUPPORT", color: "#35d07f", titlePrefix: "WSPIERANIE" },
-      { type: "RESISTANCE", color: "#ff6376", titlePrefix: "OPÓR" },
+      { type: 'SUPPORT', color: '#35d07f', titlePrefix: 'WSPARCIE' },
+      { type: 'RESISTANCE', color: '#ff6376', titlePrefix: 'OPÓR' },
     ];
-    (payload.sr_zones || []).forEach((zone) => {
-      const cfg = SR_CONFIG.find((c) => c.type === zone.type);
-      if (!cfg) return;
-      [zone.lower, zone.upper].forEach((price) => {
-        if (price == null || !Number.isFinite(Number(price))) return;
+
+    // 1. Cena referencyjna
+    let effectivePrice = toFiniteNumber(payload.sr_zones_current_price);
+    if (effectivePrice == null && payload.candles?.length) {
+      const lastCandle = payload.candles[payload.candles.length - 1];
+      effectivePrice = toFiniteNumber(lastCandle.close);
+    }
+
+    // Jeśli brak ceny referencyjnej — nie wyświetlaj żadnych stref
+    if (effectivePrice != null) {
+      const zones = (payload.sr_zones || [])
+        .map((zone) => {
+          const cfg = SR_CONFIG.find((c) => c.type === zone.type);
+          if (!cfg) return null;
+          return {
+            ...zone,
+            color: cfg.color,
+            titlePrefix: cfg.titlePrefix,
+            center: toFiniteNumber(zone.center),
+            lower: toFiniteNumber(zone.lower),
+            upper: toFiniteNumber(zone.upper),
+            rank_score: toFiniteNumber(zone.rank_score),
+            rank_position: toFiniteNumber(zone.rank_position),
+            distance_from_price: toFiniteNumber(zone.distance_from_price),
+          };
+        })
+        .filter(Boolean)
+        .filter((z) => z.center != null && z.lower != null && z.upper != null);
+
+      // 2. Podział na dwie grupy i ranking osobno dla każdej
+      const above = zones.filter((z) => z.center > effectivePrice);
+      const below = zones.filter((z) => z.center < effectivePrice);
+
+      const rankGroup = (group) => {
+        const hasScore = group.every((z) => z.rank_score != null);
+        const hasPosition = group.every((z) => z.rank_position != null);
+        const hasDistance = group.every((z) => z.distance_from_price != null);
+
+        return [...group].sort((a, b) => {
+          if (hasScore) {
+            if (b.rank_score !== a.rank_score) return b.rank_score - a.rank_score;
+            return a.center - b.center;
+          }
+          if (hasPosition) {
+            if (a.rank_position !== b.rank_position) return a.rank_position - b.rank_position;
+            return a.center - b.center;
+          }
+          if (hasDistance) {
+            if (a.distance_from_price !== b.distance_from_price) return a.distance_from_price - b.distance_from_price;
+            return a.center - b.center;
+          }
+          return a.center - b.center;
+        });
+      };
+
+      const selectedAbove = rankGroup(above).slice(0, 2);
+      const selectedBelow = rankGroup(below).slice(0, 2);
+      const selected = [...selectedAbove, ...selectedBelow];
+
+      // 3. Render: jedna linia na center, etykieta z formatowanym zakresem
+      selected.forEach((zone) => {
         candleSeries.createPriceLine({
-          price: Number(price), color: cfg.color, lineWidth: 1,
+          price: zone.center,
+          color: zone.color,
+          lineWidth: 1,
           lineStyle: LineStyle.Dashed,
           axisLabelVisible: true,
-          title: `${cfg.titlePrefix} · ${zone.center} · ${zone.interval}`,
+          title: `${zone.titlePrefix} · ${formatPrice(zone.lower, payload.symbol)} – ${formatPrice(zone.upper, payload.symbol)}`,
         });
       });
-    });
+    }
 
     payload.harmonics.forEach((pattern) => {
       const points = harmonicLinePoints(pattern);

@@ -6,7 +6,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 from data.fetcher import fetch_all
 from analysis.renko import build_renko, renko_status
 from analysis.harmonics import detect_harmonics
-from analysis.candles import detect_candlestick_patterns, analyze_candle
+from analysis.candles import detect_candlestick_patterns, analyze_candle, candle_analysis_summary
 from analysis.classic_patterns import detect_for_symbol_tf, update_patterns_for_symbol_tf, save_state, save_presentation, load_state
 from analysis.decision import make_decision
 from analysis.lifecycle import evaluate_harmonic, evaluate_signal, harmonic_is_visible
@@ -31,6 +31,7 @@ def analyze_tf(df, tf: str, symbol: str = "") -> dict:
             harms.append(item)
         cands = [dict(p, symbol=symbol, timeframe=canonical_tf) for p in detect_candlestick_patterns(df)]
         recent = df.tail(20)
+        lcc = candle_analysis_summary(df, symbol=symbol, timeframe=canonical_tf)
         return {
             "symbol": symbol, "timeframe": canonical_tf,
             "renko": rstat,
@@ -44,6 +45,7 @@ def analyze_tf(df, tf: str, symbol: str = "") -> dict:
             "bars": len(df),
             "last_close": float(df["close"].iloc[-1]),
             "last_time": str(df.index[-1]),
+            "last_closed_candle": lcc["last_closed_candle"],
         }
     except Exception as e:
         return {"symbol": symbol, "timeframe": "1D" if tf == "Daily" else tf, "error": str(e)}
@@ -465,6 +467,15 @@ def analyze_symbol(symbol_key: str) -> dict:
                     elif dist is not None and dist <= 0.5:
                         sr_position_short = {"price_in_zone": False, "zone_distance_atr": dist,
                                              "zone_type": "RESISTANCE", "note": "W odległości <= 0.5 ATR od oporu"}
+        # Poziomy Entry/SL/TP pochodzą wyłącznie z decyzji 4H (reguła 11J).
+        decision_4h = decisions.get("4H") or {}
+        levels_4h_raw = (decision_4h.get("levels_by_timeframe") or {}).get("4H") or {
+            "entry": decision_4h.get("entry"), "stop": decision_4h.get("stop"),
+            "target": decision_4h.get("target"),
+        }
+        signal_status_4h = decision_4h.get("signal_status")
+        levels_4h_active = signal_status_4h in {"PENDING", "ACTIVE"}
+
         charts = {}
         for raw_tf, canonical in (("1H", "1H"), ("4H", "4H"), ("Daily", "1D")):
             df = data.get(raw_tf)
@@ -472,16 +483,14 @@ def analyze_symbol(symbol_key: str) -> dict:
             frame_decision = decisions.get(canonical)
             if df is None or not frame or not frame_decision:
                 continue
-            own_levels = (frame_decision.get("levels_by_timeframe") or {}).get(canonical) or {
-                "entry": frame_decision.get("entry"), "stop": frame_decision.get("stop"),
-                "target": frame_decision.get("target"),
-            }
-            if frame_decision.get("signal_status") not in {"PENDING", "ACTIVE"}:
-                own_levels = {}
+            # 4H: własne poziomy 4H; 1H i 1D: poziomy z 4H.
+            # Poziomy dopuszczane tylko gdy decyzja 4H ma status PENDING lub ACTIVE.
+            own_levels = levels_4h_raw if levels_4h_active else {}
             visible_harmonics = [h for h in (frame.get("harmonics") or []) if harmonic_is_visible(h, df)]
             charts[canonical] = build_chart_payload(
                 df, frame.get("candles") or [], visible_harmonics, own_levels,
-                symbol=symbol_key, timeframe=canonical, levels_timeframe=canonical,
+                symbol=symbol_key, timeframe=canonical,
+                levels_timeframe=("4H" if levels_4h_active else canonical),
                 signal_status=frame_decision.get("signal_status"),
                 can_enter=frame_decision.get("can_enter", False),
                 sr_zones=(frame or {}).get("sr_zones", []),

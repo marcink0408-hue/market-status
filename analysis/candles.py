@@ -5,6 +5,83 @@ from datetime import datetime, timezone
 
 TF_SECONDS = {"1H": 3600, "4H": 4 * 3600, "1D": 24 * 3600}
 
+# --- Progi klasyfikacji geometrii świecy (znormalizowane względem zakresu H-L) ---
+
+# Udział korpusu w zakresie świecy
+BODY_VERY_SMALL_MAX = 0.10   # < 10% zakresu
+BODY_SMALL_MAX = 0.33        # 10-33% zakresu
+BODY_MEDIUM_MAX = 0.66       # 33-66% zakresu
+# >= 66% zakresu = large
+
+# Udział knota w zakresie świecy
+WICK_SHORT_MAX = 0.15        # < 15% zakresu
+WICK_MEDIUM_MAX = 0.40       # 15-40% zakresu
+# >= 40% zakresu = long
+
+# Próg Doji: korpus poniżej 5% zakresu i zakres > 0
+DOJI_BODY_PCT_MAX = 0.05
+
+
+def classify_body(body_pct):
+    """Klasyfikacja wielkości korpusu: very_small / small / medium / large."""
+    if body_pct is None:
+        return None
+    if body_pct < BODY_VERY_SMALL_MAX:
+        return "very_small"
+    if body_pct < BODY_SMALL_MAX:
+        return "small"
+    if body_pct < BODY_MEDIUM_MAX:
+        return "medium"
+    return "large"
+
+
+def classify_wick(wick_pct):
+    """Klasyfikacja wielkości knota: short / medium / long."""
+    if wick_pct is None:
+        return None
+    if wick_pct < WICK_SHORT_MAX:
+        return "short"
+    if wick_pct < WICK_MEDIUM_MAX:
+        return "medium"
+    return "long"
+
+
+def candle_description(c):
+    """Generuje opis tekstowy świecy wyłącznie z jej właściwości OHLC."""
+    if c is None:
+        return "Brak danych świecy"
+    if not c.get("is_closed"):
+        return "Świeca otwarta — brak danych zamknięcia"
+
+    direction_pl = {
+        "bullish": "wzrostowa",
+        "bearish": "spadkowa",
+        "neutral": "neutralna",
+    }.get(c.get("body_direction"), "nieznana")
+
+    body_class = c.get("body_class")
+    upper_wick_class = c.get("upper_wick_class")
+    lower_wick_class = c.get("lower_wick_class")
+
+    body_part = f"{body_class} korpusie" if body_class else "korpusie"
+    upper_part = f", {upper_wick_class} górnym knotem" if upper_wick_class else ""
+    lower_part = f", {lower_wick_class} dolnym knotem" if lower_wick_class else ""
+
+    close_loc = c.get("close_location")
+    close_part = ""
+    if close_loc in ("upper", "middle", "lower"):
+        loc_pl = {"upper": "górnej", "middle": "środkowej", "lower": "dolnej"}
+        close_part = f". Zamknięcie w {loc_pl[close_loc]} części zakresu."
+
+    is_doji = (c.get("body_class") == "very_small" and c.get("range", 0) > 0
+               and c.get("body_pct", 1) < DOJI_BODY_PCT_MAX)
+    doji_part = " (Doji)" if is_doji else ""
+
+    return (
+        f"Świeca {direction_pl}z {body_part}{upper_part}{lower_part}{doji_part}"
+        f"{close_part}"
+    )
+
 
 def detect_candlestick_patterns(df: pd.DataFrame, lookback: int = 10) -> list:
     if len(df) < 5:
@@ -129,6 +206,7 @@ def analyze_candle(df, index=-1, timeframe="4H", now=None):
         close_location = "undefined"
     bar_time = str(df.index[idx])
     is_closed = _is_candle_closed(bar_time, timeframe, now)
+    body_pct = (body / range_) if range_ > 0 else None
     return {
         "time": bar_time,
         "open": round(o, 5),
@@ -139,7 +217,11 @@ def analyze_candle(df, index=-1, timeframe="4H", now=None):
         "upper_wick": round(upper_wick, 5),
         "lower_wick": round(lower_wick, 5),
         "range": round(range_, 5),
+        "body_pct": round(body_pct, 4) if body_pct is not None else None,
         "body_direction": body_direction,
+        "body_class": classify_body(body_pct),
+        "upper_wick_class": classify_wick((upper_wick / range_) if range_ > 0 else None),
+        "lower_wick_class": classify_wick((lower_wick / range_) if range_ > 0 else None),
         "close_position": round(close_position, 4) if close_position is not None else None,
         "close_location": close_location,
         "is_closed": bool(is_closed),
@@ -189,7 +271,7 @@ def analyze_candle_sequence(df, lookback=5, timeframe="4H", now=None):
     }
 
 
-def candle_analysis_summary(df, timeframe="4H", now=None, lookback=5):
+def candle_analysis_summary(df, symbol="", timeframe="4H", now=None, lookback=5):
     """Zwraca podsumowanie analizy świec: ostatnia zamknięta świeca, sekwencja,
     interwał i czas analizy. Opis wynika wyłącznie z rzeczywistych danych OHLC."""
     if df is None or df.empty:
@@ -207,21 +289,24 @@ def candle_analysis_summary(df, timeframe="4H", now=None, lookback=5):
     for i in range(n - 1, -1, -1):
         c = analyze_candle(df, i, timeframe, now)
         if c and c["is_closed"]:
-            last_closed = c
+            last_closed = dict(c)
+            last_closed["symbol"] = symbol
+            # closed_at = czas końca świecy (początek + interwał), ISO 8601 UTC
+            try:
+                stamp = pd.Timestamp(c["time"])
+                if stamp.tzinfo is None:
+                    stamp = stamp.tz_localize("UTC")
+                else:
+                    stamp = stamp.tz_convert("UTC")
+                end_time = stamp + pd.Timedelta(seconds=TF_SECONDS.get(timeframe, 3600))
+                last_closed["closed_at"] = end_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+            except (TypeError, ValueError, OverflowError):
+                last_closed["closed_at"] = None
+            last_closed["description"] = candle_description(last_closed)
             break
     last_desc = "Brak zamkniętej świecy do analizy"
     if last_closed:
-        dir_pl = {
-            "bullish": "wzrostowa",
-            "bearish": "spadkowa",
-            "neutral": "neutralna",
-        }[last_closed["body_direction"]]
-        last_desc = (
-            f"Ostatnia zamknięta świeca ({timeframe}) o {last_closed['time']}: "
-            f"{dir_pl}, korpus {last_closed['body']}, "
-            f"zamknięcie w {last_closed['close_location']} części zakresu, "
-            f"górny cień {last_closed['upper_wick']}, dolny cień {last_closed['lower_wick']}."
-        )
+        last_desc = last_closed["description"]
     return {
         "timeframe": timeframe,
         "analyzed_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),

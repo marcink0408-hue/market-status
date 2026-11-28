@@ -372,8 +372,40 @@ class CandleDescriptionTests(unittest.TestCase):
     def test_description_none(self):
         self.assertEqual(candle_description(None), "Brak danych świecy")
 
+    def test_all_body_classes(self):
+        cases = {
+            "very_small": "bardzo małym korpusem",
+            "small": "małym korpusem",
+            "medium": "średnim korpusem",
+            "large": "dużym korpusem",
+        }
+        for body_class, expected in cases.items():
+            c = self.make_candle("neutral", body_class, None, None, "middle", is_closed=True)
+            d = candle_description(c)
+            self.assertIn(expected, d, f"body_class={body_class} nie daje opisu '{expected}'")
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_all_wick_classes(self):
+        cases = {
+            "short": "krótkim",
+            "medium": "średnim",
+            "long": "długim",
+        }
+        for wick_class, expected in cases.items():
+            c = self.make_candle("neutral", "medium", wick_class, None, "middle", is_closed=True)
+            d = candle_description(c)
+            self.assertIn(expected, d, f"upper_wick_class={wick_class} nie daje opisu '{expected}'")
+
+    def test_doji_description(self):
+        c = self.make_candle("bullish", "very_small", "short", "short", "middle", body_pct=0.02, is_closed=True)
+        d = candle_description(c)
+        self.assertIn("(Doji)", d)
+
+    def test_no_english_class_names_in_description(self):
+        c = self.make_candle("bullish", "large", "long", "short", "upper", is_closed=True)
+        d = candle_description(c)
+        for english in ("very_small", "small", "medium", "large", "short", "long"):
+            self.assertNotIn(english, d, f"Angielska nazwa klasy '{english}' występuje w opisie: {d}")
+
+
 if __name__ == "__main__":
     unittest.main()

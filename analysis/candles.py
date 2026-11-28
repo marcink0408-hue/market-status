@@ -63,9 +63,38 @@ def candle_description(c):
     upper_wick_class = c.get("upper_wick_class")
     lower_wick_class = c.get("lower_wick_class")
 
-    body_part = f"{body_class} korpusie" if body_class else "korpusie"
-    upper_part = f", {upper_wick_class} górnym knotem" if upper_wick_class else ""
-    lower_part = f", {lower_wick_class} dolnym knotem" if lower_wick_class else ""
+    BODY_LABELS = {
+        "very_small": "bardzo małym",
+        "small": "małym",
+        "medium": "średnim",
+        "large": "dużym",
+    }
+    WICK_LABELS = {
+        "short": "krótkim",
+        "medium": "średnim",
+        "long": "długim",
+    }
+
+    body_label = BODY_LABELS.get(body_class, body_class) if body_class else None
+    upper_wick_label = WICK_LABELS.get(upper_wick_class, upper_wick_class) if upper_wick_class else None
+    lower_wick_label = WICK_LABELS.get(lower_wick_class, lower_wick_class) if lower_wick_class else None
+
+    parts = []
+    if body_label:
+        parts.append(f"ze {body_label} korpusem")
+    if upper_wick_label:
+        parts.append(f"{upper_wick_label} górnym knotem")
+    if lower_wick_label:
+        parts.append(f"{lower_wick_label} dolnym knotem")
+
+    if not parts:
+        geometry_part = "brak danych geometrii"
+    elif len(parts) == 1:
+        geometry_part = parts[0]
+    elif len(parts) == 2:
+        geometry_part = f"{parts[0]}, {parts[1]}"
+    else:
+        geometry_part = f"{parts[0]}, {parts[1]} i {parts[2]}"
 
     close_loc = c.get("close_location")
     close_part = ""
@@ -78,8 +107,7 @@ def candle_description(c):
     doji_part = " (Doji)" if is_doji else ""
 
     return (
-        f"Świeca {direction_pl}z {body_part}{upper_part}{lower_part}{doji_part}"
-        f"{close_part}"
+        f"Świeca {direction_pl} {geometry_part}{doji_part}{close_part}"
     )
 
 
